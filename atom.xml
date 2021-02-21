@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://www.shiguangping.com</id>
     <title>時光瓶</title>
-    <updated>2021-02-21T03:20:53.182Z</updated>
+    <updated>2021-02-21T03:23:32.532Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://www.shiguangping.com"/>
     <link rel="self" href="https://www.shiguangping.com/atom.xml"/>
@@ -684,6 +684,111 @@ public class MyBatisPlusConfiguration {
 </code></pre>
 <h2 id="测试">测试</h2>
 <p>配置好之后，不管是查询、新增、修改删除方法，MP都会自动在SQL上拼接租户ID的标识<code>WHERE tenant_id = 1</code>。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[看过的影片]]></title>
+        <id>https://www.shiguangping.com/post/movies/</id>
+        <link href="https://www.shiguangping.com/post/movies/">
+        </link>
+        <updated>2021-01-24T17:46:55.000Z</updated>
+        <content type="html"><![CDATA[<p>观影日期：2021年2月20日</p>
+<table>
+<thead>
+<tr>
+<th>封面</th>
+<th>影片名称</th>
+<th>演员</th>
+<th>年代</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="https://images.shiguangping.com/imgs/20210221015329.webp" style="width: 120px"/></td>
+<td>旺达幻视 WandaVision</td>
+<td>伊丽莎白·奥尔森 / 保罗·贝坦尼</td>
+<td>2021</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p>观影日期：2021年1月31日</p>
+<table>
+<thead>
+<tr>
+<th>封面</th>
+<th>影片名称</th>
+<th>演员</th>
+<th>年代</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="https://images.shiguangping.com/imgs/20210131135526.webp" style="width: 120px"/></td>
+<td>通缉令 Wanted</td>
+<td><a href="https://movie.douban.com/celebrity/1006958/">詹姆斯·麦卡沃伊</a> / <a href="https://movie.douban.com/celebrity/1054534/">摩根·弗里曼</a> / <a href="https://movie.douban.com/celebrity/1054447/">安吉丽娜·朱莉</a></td>
+<td>2008</td>
+</tr>
+<tr>
+<td><img src="https://images.shiguangping.com//imgs/20210201093756.webp" style="width: 120px;" /></td>
+<td>傲慢与偏见 Pride &amp; Prejudice</td>
+<td><a href="https://movie.douban.com/celebrity/1054448/">凯拉·奈特莉</a> / <a href="https://movie.douban.com/celebrity/1025138/">马修·麦克费登</a></td>
+<td>2005</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p>观影时间：2021年1月</p>
+<table>
+<thead>
+<tr>
+<th>封面</th>
+<th>影片名称</th>
+<th>演员</th>
+<th>年代</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="https://images.shiguangping.com//imgs/20210126114425.webp" width="120px"/></td>
+<td>我是大哥大 电影版 今日から俺は！！劇場版</td>
+<td><a href="https://movie.douban.com/celebrity/1275257/">贺来贤人</a> / <a href="https://movie.douban.com/celebrity/1350151/">伊藤健太郎</a> / <a href="https://movie.douban.com/celebrity/1340151/">清野菜名</a> / <a href="https://movie.douban.com/celebrity/1322189/">桥本环奈</a></td>
+<td>2020</td>
+</tr>
+<tr>
+<td><img src="https://images.shiguangping.com//imgs/20210125132732.webp" style="width: 120px;" /></td>
+<td>康斯坦丁 Constantine</td>
+<td>马特·瑞安/ Lucy Griffiths</td>
+<td>2014</td>
+</tr>
+<tr>
+<td><img src="https://images.shiguangping.com//imgs/20210125112337.webp" width="120px"/></td>
+<td>A Discovery of Witches Season 2</td>
+<td><a href="https://movie.douban.com/celebrity/1000008/">马修·古迪</a> / <a href="https://movie.douban.com/celebrity/1031836/">泰莉莎·帕尔墨</a></td>
+<td>2021</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p>观影时间：更早</p>
+<table>
+<thead>
+<tr>
+<th>封面</th>
+<th>影片名称</th>
+<th>演员</th>
+<th>年代</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="https://images.shiguangping.com//imgs/20210125112201.webp" width="120px"/></td>
+<td>A Discovery of Witches Season 1</td>
+<td><a href="https://movie.douban.com/celebrity/1000008/">马修·古迪</a> / <a href="https://movie.douban.com/celebrity/1031836/">泰莉莎·帕尔墨</a></td>
+<td>2018</td>
+</tr>
+</tbody>
+</table>
 ]]></content>
     </entry>
     <entry>
@@ -1445,227 +1550,6 @@ public class FirstSpringApplication {
 </code></pre>
 <p>:::</p>
 <h3 id="创建可执行jar包">创建可执行Jar包</h3>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[初学算法]]></title>
-        <id>https://www.shiguangping.com/post/algorithms/</id>
-        <link href="https://www.shiguangping.com/post/algorithms/">
-        </link>
-        <updated>2021-01-02T16:00:00.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="前言">前言</h2>
-<p>在计算机科学中，算法是让计算机程序完成一个任务的一系列步骤。算法使科学融入计算机科学（Computer Science）。</p>
-<p>怎么才能算是一个好的算法？两个关键的标准：</p>
-<ul>
-<li>Correctness 正确</li>
-<li>Efficiency 有效</li>
-</ul>
-<h2 id="算法的意义">算法的意义</h2>
-<p><strong>算法让代码可行、高效，降低程序运行时所占用的资源。</strong></p>
-<p>举个小栗子：</p>
-<blockquote>
-<p>已知a+b+c=1000，且a<sup>2+b</sup>2=c^2，求a，b，c的所有自然数解</p>
-</blockquote>
-<p>解决一：</p>
-<pre><code class="language-python">import time
-
-start_time = time.time()
-
-for a in range(1, 1001):  # 第一层
-    for b in range(1, 1001):  # 第二层
-        for c in range(1, 1001):  # 第三层
-            if a ** 2 + b ** 2 == c ** 2 and a + b + c == 1000:
-                print('a:%3d, b:%3d, c:%3d' % (a, b, c))
-                
-end_time = time.time()
-
-print(&quot;程序已完成，总计用时：%f&quot; % (end_time - start_time))
-</code></pre>
-<p>运行结果：(用时957秒)</p>
-<pre><code>a:200, b:375, c:425
-a:375, b:200, c:425
-程序已完成，总计用时：957.906259
-</code></pre>
-<p>解决二</p>
-<pre><code class="language-python">import time
-
-start_time = time.time()
-
-for a in range(1, 1001):  # 第一层
-    for b in range(1, 1001):  # 第二层
-        if a ** 2 + b ** 2 == (1000 - a - b) ** 2:
-            print('a:%3d, b:%3d, c:%3d' % (a, b, 1000 - a - b))
-
-end_time = time.time()
-
-print(&quot;程序已完成，总计用时：%f&quot; % (end_time - start_time))
-</code></pre>
-<p>运行结果：（用时约1秒）</p>
-<pre><code>a:200, b:375, c:425
-a:375, b:200, c:425
-程序已完成，总计用时：1.077217
-</code></pre>
-<p>::: details Java实现</p>
-<pre><code class="language-java">package net.zkyc.demo;
-
-import cn.hutool.core.date.DateUtil;
-
-/**
- * @author liyan
- */
-public class Demo01 {
-
-    public static void main(String[] args) {
-
-        long startTime = DateUtil.currentSeconds();
-
-        for (int a = 1; a &lt; 1001; a++) {
-            for (int b = 1; b &lt; 1001; b++) {
-                for (int c = 1; c &lt; 1001; c++) {
-                    if (a * a + b * b == c * c &amp;&amp; a + b + c == 1000) {
-                        System.out.println(&quot;a:&quot; + a + &quot;, b:&quot; + b + &quot;, c:&quot; + c);
-                    }
-                }
-            }
-        }
-
-        long endTime = DateUtil.currentSeconds();
-
-        System.out.println(&quot;程序已完成，总计用时：&quot; + (endTime - startTime));
-    }
-}
-</code></pre>
-<p>运行结果：</p>
-<pre><code>a:200, b:375, c:425
-a:375, b:200, c:425
-程序已完成，总计用时：1
-</code></pre>
-<p>:::</p>
-<p>::: details Go实现</p>
-<pre><code class="language-go">package main
-
-import (
-	&quot;fmt&quot;
-	&quot;time&quot;
-)
-
-func main() {
-	startTime := time.Now().Second()
-
-	for a := 1; a &lt; 1001; a++ {
-		for b := 1; b &lt; 1001; b++ {
-			for c := 1; c &lt; 1001; c++ {
-				if a*a+b*b == c*c &amp;&amp; a+b+c == 1000 {
-					fmt.Printf(&quot;a:%3d, b:%3d, c:%3d\n&quot;, a, b, c)
-				}
-			}
-		}
-	}
-
-	endTime := time.Now().Second()
-
-	fmt.Printf(&quot;程序已完成，总耗时：%v\n&quot;, endTime-startTime)
-}
-</code></pre>
-<p>运行结果：</p>
-<pre><code>a:200, b:375, c:425
-a:375, b:200, c:425
-程序已完成，总耗时：1
-</code></pre>
-<p>:::</p>
-<p><strong>学会算法，可以明白代码底层逻辑，方便和阅读源代码。</strong></p>
-<h2 id="时间复杂度与大o表示法">时间复杂度与大O表示法</h2>
-<ul>
-<li>算法的速度不能简单的以执行时间作为衡量标准。</li>
-<li>随着输入数据的量级不断增大，操作数的增速是不同的。</li>
-<li>这个才是衡量算法的更好方式。</li>
-</ul>
-<p>时间复杂度：</p>
-<p>我们将算法执行运算的操作数丢弃掉低阶项，再去掉所有的系数。</p>
-<p>在它前面加上一个O，就是大O表示法</p>
-<p>小栗子：</p>
-<pre><code class="language-python">n = 1000 # 执行1次
-k = 0 # 执行1次
-
-print(k) # 执行1次
-
-# 算法总共执行了3次
-</code></pre>
-<p>去掉低阶项3，以上代码的时间复杂度是 <strong>O(1)</strong></p>
-<pre><code class="language-python">n = 1000 # 执行1次
-k = 0 # 执行1次
-for a in range (n): # 执行n次
-  k += 1 # 执行n次
-
-print(k) # 执行1次
-
-# 算法总共执行 2n+3 次
-</code></pre>
-<p>去掉低阶项3，去掉系数2，以上代码的时间复杂度是 <strong>O(n)</strong></p>
-<pre><code class="language-python">a = 5
-b = 6
-c = 10
-n = 1000
-for i in range(n):
-  for j in range(n):
-    x = i * i
-    y = j * j
-    z = i * j
-for k in range(n):
-  w = a * k + 45
-  v = b * b
-d = 33
-
-# 3n^2 + 2n + 5
-</code></pre>
-<p>去掉低阶项5，去掉系数3、2，以上代码的时间复杂度是: <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><msup><mn>2</mn><mi>n</mi></msup><mo>)</mo></mrow><annotation encoding="application/x-tex">O(2^n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">n</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></p>
-<h2 id="常见的时间复杂度">常见的时间复杂度</h2>
-<table>
-<thead>
-<tr>
-<th>操作数</th>
-<th>时间复杂度</th>
-<th>名称</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>3</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>105long + 2</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>2n + 4</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>7n + 9nlogn + 39</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
 ]]></content>
     </entry>
 </feed>
