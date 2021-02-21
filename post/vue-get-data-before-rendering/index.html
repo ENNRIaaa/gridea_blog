@@ -12,6 +12,15 @@
 <link rel="stylesheet" href="https://www.shiguangping.com/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="Vue在渲染前获取数据 - 時光瓶 - Atom Feed" href="https://www.shiguangping.com/atom.xml">
 
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120591185-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-120591185-1');
+  </script>
     
 
   <meta name="description" content="写Vue时总会碰到这种情况，希望先从后端获取到数据之后再渲染页面上的某个组件。
@@ -278,7 +287,7 @@
     pageSize: 10,
     notify: false,
     avatar: 'mp',
-    verify: false,
+    verify: true,
     placeholder: '来都来了，不妨评论一下',
     visitor: true,
     highlight: false,

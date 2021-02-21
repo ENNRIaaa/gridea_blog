@@ -12,6 +12,15 @@
 <link rel="stylesheet" href="https://www.shiguangping.com/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="搭建Docker镜像仓库Harbor - 時光瓶 - Atom Feed" href="https://www.shiguangping.com/atom.xml">
 
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120591185-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-120591185-1');
+  </script>
     
 
   <meta name="description" content="在本地环境下（或者公司局域网），将Docker镜像推送到Docker Hub速度比较慢，推荐的做法是安装一个第三方的Docker镜像仓库，这里推荐使用Harbor。Harbor是一款开源的Docker镜像存储仓库，其扩展了Docker Di..." />
@@ -312,7 +321,7 @@ vim harbor.yml
     pageSize: 10,
     notify: false,
     avatar: 'mp',
-    verify: false,
+    verify: true,
     placeholder: '来都来了，不妨评论一下',
     visitor: true,
     highlight: false,
