@@ -1,0 +1,1037 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Mybatis-Plus入门 - 時光瓶</title>
+<link rel="shortcut icon" href="https://www.shiguangping.com/favicon.ico">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.2.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css">
+<link rel="stylesheet" href="https://www.shiguangping.com/media/css/tailwind.css">
+<link rel="stylesheet" href="https://www.shiguangping.com/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Mybatis-Plus入门 - 時光瓶 - Atom Feed" href="https://www.shiguangping.com/atom.xml">
+
+    
+
+  <meta name="description" content="一周学一个技术---第一周。
+快速入门小栗子
+新建一个Maven项目，我取名mybatis-plus-demo，创建好后编辑pom.xml添加依赖：
+::: details pom.xml
+&amp;lt;?xml version=&amp;quot;1...." />
+  <meta property="og:title" content="Mybatis-Plus入门 - 時光瓶">
+  <meta property="og:description" content="一周学一个技术---第一周。
+快速入门小栗子
+新建一个Maven项目，我取名mybatis-plus-demo，创建好后编辑pom.xml添加依赖：
+::: details pom.xml
+&amp;lt;?xml version=&amp;quot;1...." />
+  <meta property="og:type" content="articles">
+  <meta property="og:url" content="https://www.shiguangping.com/post/mybatis-plus-1/" />
+  <meta property="og:image" content="https://www.shiguangping.com/images/avatar.png">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:width" content="1200">
+  <meta name="twitter:title" content="Mybatis-Plus入门 - 時光瓶">
+  <meta name="twitter:description" content="一周学一个技术---第一周。
+快速入门小栗子
+新建一个Maven项目，我取名mybatis-plus-demo，创建好后编辑pom.xml添加依赖：
+::: details pom.xml
+&amp;lt;?xml version=&amp;quot;1....">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://www.shiguangping.com/post/mybatis-plus-1/">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css">
+ 
+  
+    <link rel="stylesheet" href="https://www.shiguangping.com/media/css/prism-atom-dark.css">
+  
+
+  
+</head>
+
+<body>
+  <div class="antialiased flex flex-col min-h-screen" id="app">
+    <a href="https://www.shiguangping.com" class="fixed top-0 left-0 mt-4 bg-black text-white dark:text-gray-700 dark:bg-yellow-50 dark:hover:bg-black dark:hover:text-white inline-flex p-2 pl-8 hover:text-gray-700 hover:bg-yellow-50 font-bold z-10 transition-fast animated fadeInLeft">
+      時光瓶
+    </a>
+    <div class="max-w-4xl w-full mx-auto">
+      <div class="shadow-box bg-white dark:bg-gray-600 rounded-lg pt-32 md:pt-64 px-4 md:px-8 pb-8 animated fadeIn mb-8">
+        <h1 class="text-5xl font-semibold leading-normal pb-8 mb-8 border-b-8 border-gray-700">
+          Mybatis-Plus入门
+        </h1>
+        
+        <div class="mb-8 flex flex-wrap">
+          <div class="text-gray-400 text-sm mr-4">2020-12-06 · 20 min read</div>
+          
+            <a href="https://www.shiguangping.com/tag/fd0trMaq5/" class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
+              <i class="ri-hashtag"></i>
+              Mybatis Plus
+            </a>
+          
+        </div>
+        <div class="markdown mb-8" v-pre>
+          <p><em>一周学一个技术---第一周。</em></p>
+<h2 id="快速入门小栗子">快速入门小栗子</h2>
+<p>新建一个Maven项目，我取名<code>mybatis-plus-demo</code>，创建好后编辑<code>pom.xml</code>添加依赖：</p>
+<p>::: details pom.xml</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+    &lt;groupId&gt;org.example&lt;/groupId&gt;
+    &lt;artifactId&gt;mybatis-plus-demo&lt;/artifactId&gt;
+    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+		
+  	&lt;!-- 引入Spring Boot父工程 --&gt;
+    &lt;parent&gt;
+        &lt;artifactId&gt;spring-boot-dependencies&lt;/artifactId&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;version&gt;2.3.4.RELEASE&lt;/version&gt;
+    &lt;/parent&gt;
+
+    &lt;dependencies&gt;
+      	&lt;!-- Spring Boot启动器 --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+      
+				&lt;!-- Spring Boot测试启动器 --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+
+      	&lt;!-- lombok --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.projectlombok&lt;/groupId&gt;
+            &lt;artifactId&gt;lombok&lt;/artifactId&gt;
+            &lt;optional&gt;true&lt;/optional&gt;
+        &lt;/dependency&gt;
+				
+      	&lt;!-- mybatis-plus启动器 --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;com.baomidou&lt;/groupId&gt;
+            &lt;artifactId&gt;mybatis-plus-boot-starter&lt;/artifactId&gt;
+            &lt;version&gt;3.4.0&lt;/version&gt;
+        &lt;/dependency&gt;
+      
+				&lt;!-- mysql驱动 --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;mysql&lt;/groupId&gt;
+            &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+
+    &lt;build&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+                &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
+                &lt;configuration&gt;
+                    &lt;source&gt;8&lt;/source&gt;
+                    &lt;target&gt;8&lt;/target&gt;
+                &lt;/configuration&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+
+&lt;/project&gt;
+</code></pre>
+<p>:::</p>
+<p><code>resources</code>下新建<code>application.yml</code>配置文件，配置数据源：</p>
+<p>::: details application.yml</p>
+<pre><code class="language-yaml">spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.3.6:3306/mybatis_plus_demo?useSSL=false&amp;serverTimezone=GMT%2B8
+    username: root
+    password: Liyan1234@
+    type: com.zaxxer.hikari.HikariDataSource
+
+logging:
+  level:
+    root: warn
+    com.mp.mapper: trace
+  pattern:
+    console: '%p%m%n'
+</code></pre>
+<p>:::</p>
+<p>创建SpringBoot项目启动类：</p>
+<p>:::details application.java</p>
+<pre><code class="language-java">package com.mp;
+
+import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+/**
+ * @author liyan
+ */
+@MapperScan(&quot;com.mp.mapper&quot;)
+@SpringBootApplication
+public class Application {
+
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+}
+</code></pre>
+<p><code>@MapperScan</code>注解，用于扫描Mapper接口</p>
+<p>:::</p>
+<p>创建数据库<code>mybatis-plus-demo</code>，新建数据表<code>user</code>：</p>
+<p>::: details user.sql</p>
+<pre><code class="language-sql">-- auto-generated definition
+create table user
+(
+    id          bigint auto_increment comment '主键'
+        primary key,
+    name        varchar(20) null comment '姓名',
+    age         int         null comment '年龄',
+    email       varchar(50) null comment '邮箱',
+    manager_id  bigint      null comment '直属上级id',
+    create_time datetime    null comment '创建时间'
+)
+    comment '用户表';
+    
+INSERT INTO mybatis_plus_demo.user (id, name, age, email, manager_id, create_time) VALUES (1, '李达康', 45, 'lidakang@qq.com', null, '2020-12-03 21:48:53');
+INSERT INTO mybatis_plus_demo.user (id, name, age, email, manager_id, create_time) VALUES (2, '赵东来', 57, 'zhaodonglai@qq.com', 1, '2020-12-03 21:49:28');
+INSERT INTO mybatis_plus_demo.user (id, name, age, email, manager_id, create_time) VALUES (3, '祁同伟', 44, 'qitongwei@qq.com', null, '2020-12-03 21:49:45');
+INSERT INTO mybatis_plus_demo.user (id, name, age, email, manager_id, create_time) VALUES (4, '程度', 38, 'chengdu.qq.com', 3, '2020-12-03 21:50:09');
+
+</code></pre>
+<p>:::</p>
+<p>创建User实体类：</p>
+<p>:::details User.java</p>
+<pre><code class="language-java">package com.mp.entity;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
+/**
+ * @author liyan
+ */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class User {
+
+    /**
+     * 主键
+     */
+    private Long id;
+
+    /**
+     * 姓名
+     */
+    private String name;
+    
+    /**
+     * 年龄
+     */
+    private Integer age;
+
+    /**
+     * 邮箱
+     */
+    private String email;
+
+    /**
+     * 直属上级id
+     */
+    private Long managerId;
+
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createTime;
+}
+</code></pre>
+<p>:::</p>
+<p>创建Mapper接口，并集成Mybatis-plus的<code>BaseMapper&lt;T&gt;</code>接口：</p>
+<p>:::details UserMapper.java</p>
+<pre><code class="language-java">package com.mp.mapper;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.mp.entity.User;
+
+/**
+ * @author liyan
+ */
+public interface UserMapper extends BaseMapper&lt;User&gt; {
+
+}
+</code></pre>
+<p>:::</p>
+<p>编写测试方法：</p>
+<p>::: details SimpleTest.java</p>
+<pre><code class="language-java">package com.mp;
+
+import com.mp.entity.User;
+import com.mp.mapper.UserMapper;
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.List;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class SimpleTest {
+
+    @Autowired
+    private UserMapper userMapper;
+
+    @Test
+    public void test() {
+      	// BaseMapper接口提供了基础的增删改查方法
+        List&lt;User&gt; users = userMapper.selectList(null);
+        Assert.assertEquals(4, users.size());
+        users.forEach(System.out::println);
+    }
+
+}
+</code></pre>
+<p>:::</p>
+<p>运行测试方法，控制台打印日志：</p>
+<figure data-type="image" tabindex="1"><img src="https://images.shiguangping.com/imgs/20201206175650.png" alt="image-20201206175650102" loading="lazy"></figure>
+<h2 id="传统ssm传统编程模式">传统SSM传统编程模式</h2>
+<ol>
+<li>接口中编写抽象方法</li>
+<li>XML或注解写SQL</li>
+<li>Service中调用接口</li>
+<li>Controller中调用Service方法</li>
+</ol>
+<h2 id="通用mapper">通用Mapper</h2>
+<h3 id="新增create">新增(Create)</h3>
+<p><code>insert()</code>方法：</p>
+<pre><code class="language-java">@Test
+public void insert(){
+  User user = User.builder()
+    .name(&quot;陈清泉&quot;)
+    .age(45)
+    .email(&quot;chenqingquan.qq.com&quot;)
+    .managerId(1L)
+    .createTime(LocalDateTime.now())
+    .build();
+  userMapper.insert(user);
+}
+</code></pre>
+<p>执行插入方法：</p>
+<figure data-type="image" tabindex="2"><img src="https://images.shiguangping.com/imgs/20201206180634.png" alt="image-20201206180634475" loading="lazy"></figure>
+<p><strong>如果实体中的属性为null，则该属性不会参与到插入或更新操作中。</strong></p>
+<h3 id="常用注解">常用注解</h3>
+<p>Mybatis-Plus默认开启驼峰命名，数据库表中下划线格式的字段名会自动映射成实体类的驼峰命名。</p>
+<p>实体中<code>id</code>字段为null，Mybatis-Plus会自动填充基于雪花算法的自增ID。</p>
+<p><code>@TableName</code>注解，作用在实体类上，用于映射实体类与数据库表。如：<code>@TableName(&quot;user&quot;)</code></p>
+<p><code>@TableId()</code>注解，作用在实体类主键属性上，用于标注该属性对应数据库表的主键。假设当主键字段不为<code>id</code>时，Mybatis-Plus找不到实体中对应的主键属性，所以在执行插入操作时会报主键id没有默认值的错误。因为MP只会默认去找名叫<code>id</code>的属性并自动填充。</p>
+<p><code>@TableField(&quot;name&quot;)</code>，作用在实体属性上，用于映射实体属性与数据库表字段。</p>
+<h3 id="排除非表字段的三种方式">排除非表字段的三种方式</h3>
+<p>实体中的属性不对应数据表中的任何字段，MP提供了三种排除非表字段的方法：</p>
+<ol>
+<li>
+<p>属性添加<code>transient</code>关键字修饰，使该属性不参与序列化，如：</p>
+<pre><code class="language-java">private transient String remark;
+</code></pre>
+</li>
+<li>
+<p>使用<code>static</code>关键字修饰：</p>
+<pre><code class="language-java">private static String remark;
+</code></pre>
+</li>
+<li>
+<p><code>@TableField(exist = false)</code>注解：</p>
+<pre><code class="language-java">@TableField(exist = false)
+private String remark;
+</code></pre>
+</li>
+</ol>
+<h3 id="查询retrieve">查询(Retrieve)</h3>
+<p><code>T selectById(Serializable id);</code>，通过id查询</p>
+<p><code>List&lt;T&gt; selectBatchIds(@Param(Constants.COLLECTION) Collection&lt;? extends Serializable&gt; idList)</code>，通过id列表批量查询</p>
+<p><code>List&lt;T&gt; selectByMap(@Param(Constants.COLUMN_MAP) Map&lt;String, Object&gt; columnMap);</code>，通过键值对查询：</p>
+<p>::: details 例如</p>
+<pre><code class="language-java">@Test
+public void selectByMap(){
+  Map&lt;String,Object&gt; map = new HashMap&lt;&gt;();
+  // 相当于 SELECT id,name,age,email,manager_id,create_time FROM user WHERE name = &quot;李达康&quot;;
+  // Map中的key是数据库表的字段名，不是实体中的属性名
+  map.put(&quot;name&quot;,&quot;李达康&quot;);
+  List&lt;User&gt; users = userMapper.selectByMap(map);
+  users.forEach(System.out::println);
+}
+</code></pre>
+<p>:::</p>
+<h3 id="条件构造器">条件构造器</h3>
+<p>基本使用：</p>
+<ol>
+<li>
+<p>名字中包含“李”，且年龄小于等于45岁：</p>
+<pre><code class="language-java">@Test
+public void selectByWrapper(){
+  // 实例化条件构造器，方式一
+  QueryWrapper&lt;User&gt; queryWrapper = new QueryWrapper&lt;&gt;();
+  // 实例化条件构造器，方式二
+  QueryWrapper&lt;User&gt; queryWrapper1 = Wrappers.&lt;User&gt;query();
+
+  queryWrapper1.like(&quot;name&quot;,&quot;李&quot;).le(&quot;age&quot;,45);
+  List&lt;User&gt; users = userMapper.selectList(queryWrapper1);
+  users.forEach(System.out::println);
+}
+</code></pre>
+<p>执行结果：</p>
+<figure data-type="image" tabindex="3"><img src="https://images.shiguangping.com/imgs/20201206235215.png" alt="image-20201206235215060" loading="lazy"></figure>
+</li>
+<li>
+<p>名字中包含“同伟”，且年龄大于40，并且managerId为空：</p>
+<pre><code class="language-java">@Test
+public void selectByWrapper2(){
+  QueryWrapper&lt;User&gt; queryWrapper = Wrappers.&lt;User&gt;query();
+
+  queryWrapper.like(&quot;name&quot;,&quot;同伟&quot;)
+    .gt(&quot;age&quot;,40)
+    .isNull(&quot;manager_id&quot;);
+
+  List&lt;User&gt; users = userMapper.selectList(queryWrapper);
+  users.forEach(System.out::println);
+}
+</code></pre>
+<p>执行结果：</p>
+<figure data-type="image" tabindex="4"><img src="https://images.shiguangping.com/imgs/20201207000017.png" alt="image-20201207000017619" loading="lazy"></figure>
+</li>
+</ol>
+<h3 id="select不列出全部字段">select不列出全部字段</h3>
+<h2 id="条件构造器-2">条件构造器</h2>
+<p>::: tip</p>
+<p>说明:</p>
+<ul>
+<li>以下出现的第一个入参<code>boolean condition</code>表示该条件<strong>是否</strong>加入最后生成的sql中</li>
+<li>以下代码块内的多个方法均为从上往下补全个别<code>boolean</code>类型的入参,默认为<code>true</code></li>
+<li>以下出现的泛型<code>Param</code>均为<code>Wrapper</code>的子类实例(均具有<code>AbstractWrapper</code>的所有方法)</li>
+<li>以下方法在入参中出现的<code>R</code>为泛型,在普通wrapper中是<code>String</code>,在LambdaWrapper中是<strong>函数</strong>(例:<code>Entity::getId</code>,<code>Entity</code>为实体类,<code>getId</code>为字段<code>id</code>的<strong>getMethod</strong>)</li>
+<li>以下方法入参中的<code>R column</code>均表示数据库字段,当<code>R</code>具体类型为<code>String</code>时则为数据库字段名(<strong>字段名是数据库关键字的自己用转义符包裹!</strong>)!而不是实体类数据字段名!!!,另当<code>R</code>具体类型为<code>SFunction</code>时项目runtime不支持eclipse自家的编译器!!!</li>
+<li>以下举例均为使用普通wrapper,入参为<code>Map</code>和<code>List</code>的均以<code>json</code>形式表现!</li>
+<li>使用中如果入参的<code>Map</code>或者<code>List</code>为<strong>空</strong>,则不会加入最后生成的sql中!!!</li>
+<li>有任何疑问就点开源码看,看不懂<strong>函数</strong>的<a href="https://www.jianshu.com/p/613a6118e2e0">点击我学习新知识</a></li>
+</ul>
+<p>:::</p>
+<p>:::danger</p>
+<p>警告:</p>
+<p>不支持以及不赞成在 RPC 调用中把 Wrapper 进行传输</p>
+<ol>
+<li>wrapper 很重</li>
+<li>传输 wrapper 可以类比为你的 controller 用 map 接收值(开发一时爽,维护火葬场)</li>
+<li>正确的 RPC 调用姿势是写一个 DTO 进行传输,被调用方再根据 DTO 执行相应的操作</li>
+</ol>
+<p>:::</p>
+<h3 id="abstractwrapper">AbstractWrapper</h3>
+<p>::: tip</p>
+<p>说明:</p>
+<p>QueryWrapper(LambdaQueryWrapper) 和 UpdateWrapper(LambdaUpdateWrapper) 的父类<br>
+用于生成 sql 的 where 条件, entity 属性也用于生成 sql 的 where 条件<br>
+注意: entity 生成的 where 条件与 使用各个 api 生成的 where 条件<strong>没有任何关联行为</strong></p>
+<p>:::</p>
+<h3 id="alleq">allEq</h3>
+<pre><code class="language-java">allEq(Map&lt;R, V&gt; params)
+allEq(Map&lt;R, V&gt; params, boolean null2IsNull)
+allEq(boolean condition, Map&lt;R, V&gt; params, boolean null2IsNull)
+</code></pre>
+<ul>
+<li>全部<a href="https://baomidou.com/guide/wrapper.html#eq">eq</a>(或个别<a href="https://baomidou.com/guide/wrapper.html#isnull">isNull</a>)</li>
+</ul>
+<p>::: tip</p>
+<p>个别参数说明:</p>
+<p><code>params</code> : <code>key</code>为数据库字段名,<code>value</code>为字段值<br>
+<code>null2IsNull</code> : 为<code>true</code>则在<code>map</code>的<code>value</code>为<code>null</code>时调用 <a href="https://baomidou.com/guide/wrapper.html#isnull">isNull</a> 方法,为<code>false</code>时则忽略<code>value</code>为<code>null</code>的</p>
+<p>:::</p>
+<ul>
+<li>例1: <code>allEq({id:1,name:&quot;老王&quot;,age:null})</code>---&gt;<code>id = 1 and name = '老王' and age is null</code></li>
+<li>例2: <code>allEq({id:1,name:&quot;老王&quot;,age:null}, false)</code>---&gt;<code>id = 1 and name = '老王'</code></li>
+</ul>
+<pre><code class="language-java">allEq(BiPredicate&lt;R, V&gt; filter, Map&lt;R, V&gt; params)
+allEq(BiPredicate&lt;R, V&gt; filter, Map&lt;R, V&gt; params, boolean null2IsNull)
+allEq(boolean condition, BiPredicate&lt;R, V&gt; filter, Map&lt;R, V&gt; params, boolean null2IsNull) 
+</code></pre>
+<p>::: tip</p>
+<p>个别参数说明:</p>
+<p><code>filter</code> : 过滤函数,是否允许字段传入比对条件中<br>
+<code>params</code> 与 <code>null2IsNull</code> : 同上</p>
+<p>:::</p>
+<ul>
+<li>例1: <code>allEq((k,v) -&gt; k.indexOf(&quot;a&quot;) &gt;= 0, {id:1,name:&quot;老王&quot;,age:null})</code>---&gt;<code>name = '老王' and age is null</code></li>
+<li>例2: <code>allEq((k,v) -&gt; k.indexOf(&quot;a&quot;) &gt;= 0, {id:1,name:&quot;老王&quot;,age:null}, false)</code>---&gt;<code>name = '老王'</code></li>
+</ul>
+<h3 id="eq-等于">eq 等于</h3>
+<pre><code class="language-java">eq(R column, Object val)
+eq(boolean condition, R column, Object val)
+</code></pre>
+<ul>
+<li>等于 =</li>
+<li>例: <code>eq(&quot;name&quot;, &quot;老王&quot;)</code>---&gt;<code>name = '老王'</code></li>
+</ul>
+<h3 id="ne-不等于">ne 不等于</h3>
+<pre><code class="language-java">ne(R column, Object val)
+ne(boolean condition, R column, Object val)
+</code></pre>
+<ul>
+<li>不等于 &lt;&gt;</li>
+<li>例: <code>ne(&quot;name&quot;, &quot;老王&quot;)</code>---&gt;<code>name &lt;&gt; '老王'</code></li>
+</ul>
+<h3 id="gt-大于">gt 大于</h3>
+<pre><code class="language-java">gt(R column, Object val)
+gt(boolean condition, R column, Object val)
+</code></pre>
+<ul>
+<li>大于 &gt;</li>
+<li>例: <code>gt(&quot;age&quot;, 18)</code>---&gt;<code>age &gt; 18</code></li>
+</ul>
+<h3 id="ge-大于等于">ge 大于等于</h3>
+<pre><code class="language-java">ge(R column, Object val)
+ge(boolean condition, R column, Object val)
+</code></pre>
+<ul>
+<li>大于等于 &gt;=</li>
+<li>例: <code>ge(&quot;age&quot;, 18)</code>---&gt;<code>age &gt;= 18</code></li>
+</ul>
+<h3 id="lt-小于">lt 小于</h3>
+<pre><code class="language-java">lt(R column, Object val)
+lt(boolean condition, R column, Object val)
+</code></pre>
+<ul>
+<li>小于 &lt;</li>
+<li>例: <code>lt(&quot;age&quot;, 18)</code>---&gt;<code>age &lt; 18</code></li>
+</ul>
+<h3 id="le-小于等于">le 小于等于</h3>
+<pre><code class="language-java">le(R column, Object val)
+le(boolean condition, R column, Object val)
+</code></pre>
+<ul>
+<li>小于等于 &lt;=</li>
+<li>例: <code>le(&quot;age&quot;, 18)</code>---&gt;<code>age &lt;= 18</code></li>
+</ul>
+<h3 id="between-区间">between 区间</h3>
+<pre><code class="language-java">between(R column, Object val1, Object val2)
+between(boolean condition, R column, Object val1, Object val2)
+</code></pre>
+<ul>
+<li>BETWEEN 值1 AND 值2</li>
+<li>例: <code>between(&quot;age&quot;, 18, 30)</code>---&gt;<code>age between 18 and 30</code></li>
+</ul>
+<h3 id="notbetween-不在区间">notBetween 不在区间</h3>
+<pre><code class="language-java">notBetween(R column, Object val1, Object val2)
+notBetween(boolean condition, R column, Object val1, Object val2)
+</code></pre>
+<ul>
+<li>NOT BETWEEN 值1 AND 值2</li>
+<li>例: <code>notBetween(&quot;age&quot;, 18, 30)</code>---&gt;<code>age not between 18 and 30</code></li>
+</ul>
+<h3 id="like-包含模糊查询">like 包含（模糊查询）</h3>
+<pre><code class="language-java">like(R column, Object val)
+like(boolean condition, R column, Object val)
+</code></pre>
+<ul>
+<li>LIKE '%值%'</li>
+<li>例: <code>like(&quot;name&quot;, &quot;王&quot;)</code>---&gt;<code>name like '%王%'</code></li>
+</ul>
+<h3 id="notlike-不包含">notLike 不包含</h3>
+<pre><code class="language-java">notLike(R column, Object val)
+notLike(boolean condition, R column, Object val)
+</code></pre>
+<ul>
+<li>NOT LIKE '%值%'</li>
+<li>例: <code>notLike(&quot;name&quot;, &quot;王&quot;)</code>---&gt;<code>name not like '%王%'</code></li>
+</ul>
+<h3 id="likeleft-左模糊查询">likeLeft 左模糊查询</h3>
+<pre><code class="language-java">likeLeft(R column, Object val)
+likeLeft(boolean condition, R column, Object val)
+</code></pre>
+<ul>
+<li>LIKE '%值'</li>
+<li>例: <code>likeLeft(&quot;name&quot;, &quot;王&quot;)</code>---&gt;<code>name like '%王'</code></li>
+</ul>
+<h3 id="likeright-右模糊查询">likeRight 右模糊查询</h3>
+<pre><code class="language-java">likeRight(R column, Object val)
+likeRight(boolean condition, R column, Object val)
+</code></pre>
+<ul>
+<li>LIKE '值%'</li>
+<li>例: <code>likeRight(&quot;name&quot;, &quot;王&quot;)</code>---&gt;<code>name like '王%'</code></li>
+</ul>
+<h3 id="isnull-为空">isNull 为空</h3>
+<pre><code class="language-java">isNull(R column)
+isNull(boolean condition, R column)
+</code></pre>
+<ul>
+<li>字段 IS NULL</li>
+<li>例: <code>isNull(&quot;name&quot;)</code>---&gt;<code>name is null</code></li>
+</ul>
+<h3 id="isnotnull-不为空">isNotNull 不为空</h3>
+<pre><code class="language-java">isNotNull(R column)
+isNotNull(boolean condition, R column)
+</code></pre>
+<ul>
+<li>字段 IS NOT NULL</li>
+<li>例: <code>isNotNull(&quot;name&quot;)</code>---&gt;<code>name is not null</code></li>
+</ul>
+<h3 id="in">in</h3>
+<pre><code class="language-java">in(R column, Collection&lt;?&gt; value)
+in(boolean condition, R column, Collection&lt;?&gt; value)
+</code></pre>
+<ul>
+<li>字段 IN (value.get(0), value.get(1), ...)</li>
+<li>例: <code>in(&quot;age&quot;,{1,2,3})</code>---&gt;<code>age in (1,2,3)</code></li>
+</ul>
+<pre><code class="language-java">in(R column, Object... values)
+in(boolean condition, R column, Object... values)
+</code></pre>
+<ul>
+<li>字段 IN (v0, v1, ...)</li>
+<li>例: <code>in(&quot;age&quot;, 1, 2, 3)</code>---&gt;<code>age in (1,2,3)</code></li>
+</ul>
+<h3 id="notin">notIn</h3>
+<pre><code class="language-java">notIn(R column, Collection&lt;?&gt; value)
+notIn(boolean condition, R column, Collection&lt;?&gt; value)
+</code></pre>
+<ul>
+<li>字段 NOT IN (value.get(0), value.get(1), ...)</li>
+<li>例: <code>notIn(&quot;age&quot;,{1,2,3})</code>---&gt;<code>age not in (1,2,3)</code></li>
+</ul>
+<pre><code class="language-java">notIn(R column, Object... values)
+notIn(boolean condition, R column, Object... values)
+</code></pre>
+<ul>
+<li>字段 NOT IN (v0, v1, ...)</li>
+<li>例: <code>notIn(&quot;age&quot;, 1, 2, 3)</code>---&gt;<code>age not in (1,2,3)</code></li>
+</ul>
+<h3 id="insql">inSql</h3>
+<pre><code class="language-java">inSql(R column, String inValue)
+inSql(boolean condition, R column, String inValue)
+</code></pre>
+<ul>
+<li>字段 IN ( sql语句 )</li>
+<li>例: <code>inSql(&quot;age&quot;, &quot;1,2,3,4,5,6&quot;)</code>---&gt;<code>age in (1,2,3,4,5,6)</code></li>
+<li>例: <code>inSql(&quot;id&quot;, &quot;select id from table where id &lt; 3&quot;)</code>---&gt;<code>id in (select id from table where id &lt; 3)</code></li>
+</ul>
+<h3 id="notinsql">notInSql</h3>
+<pre><code class="language-java">notInSql(R column, String inValue)
+notInSql(boolean condition, R column, String inValue)
+</code></pre>
+<ul>
+<li>字段 NOT IN ( sql语句 )</li>
+<li>例: <code>notInSql(&quot;age&quot;, &quot;1,2,3,4,5,6&quot;)</code>---&gt;<code>age not in (1,2,3,4,5,6)</code></li>
+<li>例: <code>notInSql(&quot;id&quot;, &quot;select id from table where id &lt; 3&quot;)</code>---&gt;<code>id not in (select id from table where id &lt; 3)</code></li>
+</ul>
+<h3 id="groupby">groupBy</h3>
+<pre><code class="language-java">groupBy(R... columns)
+groupBy(boolean condition, R... columns)
+</code></pre>
+<ul>
+<li>分组：GROUP BY 字段, ...</li>
+<li>例: <code>groupBy(&quot;id&quot;, &quot;name&quot;)</code>---&gt;<code>group by id,name</code></li>
+</ul>
+<h3 id="orderbyasc-升序默认">orderByAsc 升序（默认）</h3>
+<pre><code class="language-java">orderByAsc(R... columns)
+orderByAsc(boolean condition, R... columns)
+</code></pre>
+<ul>
+<li>排序：ORDER BY 字段, ... ASC</li>
+<li>例: <code>orderByAsc(&quot;id&quot;, &quot;name&quot;)</code>---&gt;<code>order by id ASC,name ASC</code></li>
+</ul>
+<h3 id="orderbydesc-降序">orderByDesc 降序</h3>
+<pre><code class="language-java">orderByDesc(R... columns)
+orderByDesc(boolean condition, R... columns)
+</code></pre>
+<ul>
+<li>排序：ORDER BY 字段, ... DESC</li>
+<li>例: <code>orderByDesc(&quot;id&quot;, &quot;name&quot;)</code>---&gt;<code>order by id DESC,name DESC</code></li>
+</ul>
+<h3 id="orderby">orderBy</h3>
+<pre><code class="language-java">orderBy(boolean condition, boolean isAsc, R... columns)
+</code></pre>
+<ul>
+<li>排序：ORDER BY 字段, ...</li>
+<li>例: <code>orderBy(true, true, &quot;id&quot;, &quot;name&quot;)</code>---&gt;<code>order by id ASC,name ASC</code></li>
+</ul>
+<h3 id="having">having</h3>
+<pre><code class="language-java">having(String sqlHaving, Object... params)
+having(boolean condition, String sqlHaving, Object... params)
+</code></pre>
+<ul>
+<li>HAVING ( sql语句 )</li>
+<li>例: <code>having(&quot;sum(age) &gt; 10&quot;)</code>---&gt;<code>having sum(age) &gt; 10</code></li>
+<li>例: <code>having(&quot;sum(age) &gt; {0}&quot;, 11)</code>---&gt;<code>having sum(age) &gt; 11</code></li>
+</ul>
+<h3 id="func">func</h3>
+<pre><code class="language-java">func(Consumer&lt;Children&gt; consumer)
+func(boolean condition, Consumer&lt;Children&gt; consumer)
+</code></pre>
+<ul>
+<li>func 方法(主要方便在出现if...else下调用不同方法能不断链)</li>
+<li>例: <code>func(i -&gt; if(true) {i.eq(&quot;id&quot;, 1)} else {i.ne(&quot;id&quot;, 1)})</code></li>
+</ul>
+<h3 id="or">or</h3>
+<pre><code class="language-java">or()
+or(boolean condition)
+</code></pre>
+<ul>
+<li>拼接 OR</li>
+</ul>
+<p>注意事项:</p>
+<p>主动调用<code>or</code>表示紧接着下一个<strong>方法</strong>不是用<code>and</code>连接!(不调用<code>or</code>则默认为使用<code>and</code>连接)</p>
+<ul>
+<li>例: <code>eq(&quot;id&quot;,1).or().eq(&quot;name&quot;,&quot;老王&quot;)</code>---&gt;<code>id = 1 or name = '老王'</code></li>
+</ul>
+<pre><code class="language-java">or(Consumer&lt;Param&gt; consumer)
+or(boolean condition, Consumer&lt;Param&gt; consumer)
+</code></pre>
+<ul>
+<li>OR 嵌套</li>
+<li>例: <code>or(i -&gt; i.eq(&quot;name&quot;, &quot;李白&quot;).ne(&quot;status&quot;, &quot;活着&quot;))</code>---&gt;<code>or (name = '李白' and status &lt;&gt; '活着')</code></li>
+</ul>
+<h3 id="and">and</h3>
+<pre><code class="language-java">and(Consumer&lt;Param&gt; consumer)
+and(boolean condition, Consumer&lt;Param&gt; consumer)
+</code></pre>
+<ul>
+<li>AND 嵌套</li>
+<li>例: <code>and(i -&gt; i.eq(&quot;name&quot;, &quot;李白&quot;).ne(&quot;status&quot;, &quot;活着&quot;))</code>---&gt;<code>and (name = '李白' and status &lt;&gt; '活着')</code></li>
+</ul>
+<h3 id="nested">nested</h3>
+<pre><code class="language-java">nested(Consumer&lt;Param&gt; consumer)
+nested(boolean condition, Consumer&lt;Param&gt; consumer)
+</code></pre>
+<ul>
+<li>正常嵌套 不带 AND 或者 OR</li>
+<li>例: <code>nested(i -&gt; i.eq(&quot;name&quot;, &quot;李白&quot;).ne(&quot;status&quot;, &quot;活着&quot;))</code>---&gt;<code>(name = '李白' and status &lt;&gt; '活着')</code></li>
+</ul>
+<h3 id="apply">apply</h3>
+<pre><code class="language-java">apply(String applySql, Object... params)
+apply(boolean condition, String applySql, Object... params)
+</code></pre>
+<ul>
+<li>拼接 sql</li>
+</ul>
+<p>注意事项:</p>
+<p>该方法可用于数据库<strong>函数</strong> 动态入参的<code>params</code>对应前面<code>applySql</code>内部的<code>{index}</code>部分.这样是不会有sql注入风险的,反之会有!</p>
+<ul>
+<li>例: <code>apply(&quot;id = 1&quot;)</code>---&gt;<code>id = 1</code></li>
+<li>例: <code>apply(&quot;date_format(dateColumn,'%Y-%m-%d') = '2008-08-08'&quot;)</code>---&gt;<code>date_format(dateColumn,'%Y-%m-%d') = '2008-08-08'&quot;)</code></li>
+<li>例: <code>apply(&quot;date_format(dateColumn,'%Y-%m-%d') = {0}&quot;, &quot;2008-08-08&quot;)</code>---&gt;<code>date_format(dateColumn,'%Y-%m-%d') = '2008-08-08'&quot;)</code></li>
+</ul>
+<h3 id="last">last</h3>
+<pre><code class="language-java">last(String lastSql)
+last(boolean condition, String lastSql)
+</code></pre>
+<ul>
+<li>无视优化规则直接拼接到 sql 的最后</li>
+</ul>
+<p>注意事项:</p>
+<p>只能调用一次,多次调用以最后一次为准 有sql注入的风险,请谨慎使用</p>
+<ul>
+<li>例: <code>last(&quot;limit 1&quot;)</code></li>
+</ul>
+<h3 id="exists">exists</h3>
+<pre><code class="language-java">exists(String existsSql)
+exists(boolean condition, String existsSql)
+</code></pre>
+<ul>
+<li>拼接 EXISTS ( sql语句 )</li>
+<li>例: <code>exists(&quot;select id from table where age = 1&quot;)</code>---&gt;<code>exists (select id from table where age = 1)</code></li>
+</ul>
+<h3 id="notexists">notExists</h3>
+<pre><code class="language-java">notExists(String notExistsSql)
+notExists(boolean condition, String notExistsSql)
+</code></pre>
+<ul>
+<li>拼接 NOT EXISTS ( sql语句 )</li>
+<li>例: <code>notExists(&quot;select id from table where age = 1&quot;)</code>---&gt;<code>not exists (select id from table where age = 1)</code></li>
+</ul>
+
+        </div>
+        <!-- Share to Twitter, Weibo, Telegram -->
+        <div class="flex items-center">
+          <div class="mr-4 flex items-center">
+            <i class="ri-share-forward-line text-gray-500"></i>
+          </div>
+          <div class="px-4 cursor-pointer text-blue-500 hover:bg-blue-100 dark:hover:bg-gray-600 inline-flex" @click="shareToTwitter">
+            <i class="ri-twitter-line"></i>
+          </div>
+          <div class="px-4 cursor-pointer text-red-500 hover:bg-red-100 dark:hover:bg-gray-600 inline-flex" @click="shareToWeibo">
+            <i class="ri-weibo-line"></i>
+          </div>
+          <div class="px-4 cursor-pointer text-indigo-500 hover:bg-indigo-100 dark:hover:bg-gray-600 inline-flex" @click="shareToTelegram">
+            <i class="ri-telegram-line"></i>
+          </div>
+        </div>
+      </div>
+
+      
+
+      
+        <div id="vlaine-comment"></div>
+      
+
+      <footer class="py-12 text-center px-4 md:px-0" v-pre>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">時光瓶</a>
+</footer>
+    </div>
+
+    <!-- TOC Container -->
+    <div class="fixed right-0 bottom-0 mb-16 mr-4 shadow w-8 h-8 rounded-full flex justify-center items-center z-10 cursor-pointer bg-white dark:bg-gray-500 dark:text-gray-200 hover:shadow-lg transition-all animated fadeInRight" @click="showToc = true">
+      <i class="ri-file-list-line"></i>
+    </div>
+
+    <div class="fixed right-0 top-0 bottom-0 overflow-y-auto w-64 bg-white dark:bg-gray-800 p-4 border-l border-gray-100 dark:border-gray-600 z-10 transition-fast" :class="{ '-mr-64': !showToc }">
+      <div class="flex mb-4 justify-end">
+        <div class="w-8 h-8 inline-flex justify-center items-center rounded-full cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-fast" @click="showToc = false">
+          <i class="ri-close-line text-lg"></i>
+        </div>
+      </div>
+      <div class="post-toc-container">
+        <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%B0%8F%E6%A0%97%E5%AD%90">快速入门小栗子</a></li>
+<li><a href="#%E4%BC%A0%E7%BB%9Fssm%E4%BC%A0%E7%BB%9F%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%BC%8F">传统SSM传统编程模式</a></li>
+<li><a href="#%E9%80%9A%E7%94%A8mapper">通用Mapper</a>
+<ul>
+<li><a href="#%E6%96%B0%E5%A2%9Ecreate">新增(Create)</a></li>
+<li><a href="#%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3">常用注解</a></li>
+<li><a href="#%E6%8E%92%E9%99%A4%E9%9D%9E%E8%A1%A8%E5%AD%97%E6%AE%B5%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F">排除非表字段的三种方式</a></li>
+<li><a href="#%E6%9F%A5%E8%AF%A2retrieve">查询(Retrieve)</a></li>
+<li><a href="#%E6%9D%A1%E4%BB%B6%E6%9E%84%E9%80%A0%E5%99%A8">条件构造器</a></li>
+<li><a href="#select%E4%B8%8D%E5%88%97%E5%87%BA%E5%85%A8%E9%83%A8%E5%AD%97%E6%AE%B5">select不列出全部字段</a></li>
+</ul>
+</li>
+<li><a href="#%E6%9D%A1%E4%BB%B6%E6%9E%84%E9%80%A0%E5%99%A8-2">条件构造器</a>
+<ul>
+<li><a href="#abstractwrapper">AbstractWrapper</a></li>
+<li><a href="#alleq">allEq</a></li>
+<li><a href="#eq-%E7%AD%89%E4%BA%8E">eq 等于</a></li>
+<li><a href="#ne-%E4%B8%8D%E7%AD%89%E4%BA%8E">ne 不等于</a></li>
+<li><a href="#gt-%E5%A4%A7%E4%BA%8E">gt 大于</a></li>
+<li><a href="#ge-%E5%A4%A7%E4%BA%8E%E7%AD%89%E4%BA%8E">ge 大于等于</a></li>
+<li><a href="#lt-%E5%B0%8F%E4%BA%8E">lt 小于</a></li>
+<li><a href="#le-%E5%B0%8F%E4%BA%8E%E7%AD%89%E4%BA%8E">le 小于等于</a></li>
+<li><a href="#between-%E5%8C%BA%E9%97%B4">between 区间</a></li>
+<li><a href="#notbetween-%E4%B8%8D%E5%9C%A8%E5%8C%BA%E9%97%B4">notBetween 不在区间</a></li>
+<li><a href="#like-%E5%8C%85%E5%90%AB%E6%A8%A1%E7%B3%8A%E6%9F%A5%E8%AF%A2">like 包含（模糊查询）</a></li>
+<li><a href="#notlike-%E4%B8%8D%E5%8C%85%E5%90%AB">notLike 不包含</a></li>
+<li><a href="#likeleft-%E5%B7%A6%E6%A8%A1%E7%B3%8A%E6%9F%A5%E8%AF%A2">likeLeft 左模糊查询</a></li>
+<li><a href="#likeright-%E5%8F%B3%E6%A8%A1%E7%B3%8A%E6%9F%A5%E8%AF%A2">likeRight 右模糊查询</a></li>
+<li><a href="#isnull-%E4%B8%BA%E7%A9%BA">isNull 为空</a></li>
+<li><a href="#isnotnull-%E4%B8%8D%E4%B8%BA%E7%A9%BA">isNotNull 不为空</a></li>
+<li><a href="#in">in</a></li>
+<li><a href="#notin">notIn</a></li>
+<li><a href="#insql">inSql</a></li>
+<li><a href="#notinsql">notInSql</a></li>
+<li><a href="#groupby">groupBy</a></li>
+<li><a href="#orderbyasc-%E5%8D%87%E5%BA%8F%E9%BB%98%E8%AE%A4">orderByAsc 升序（默认）</a></li>
+<li><a href="#orderbydesc-%E9%99%8D%E5%BA%8F">orderByDesc 降序</a></li>
+<li><a href="#orderby">orderBy</a></li>
+<li><a href="#having">having</a></li>
+<li><a href="#func">func</a></li>
+<li><a href="#or">or</a></li>
+<li><a href="#and">and</a></li>
+<li><a href="#nested">nested</a></li>
+<li><a href="#apply">apply</a></li>
+<li><a href="#last">last</a></li>
+<li><a href="#exists">exists</a></li>
+<li><a href="#notexists">notExists</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+      </div>
+    </div>
+
+    <!-- Back to top -->
+    <div class="fixed right-0 bottom-0 mb-4 mr-4 shadow w-8 h-8 rounded-full flex justify-center items-center z-10 cursor-pointer bg-white hover:shadow-lg transition-all dark:bg-gray-500 dark:text-gray-200" @click="backToUp" v-show="scrolled">
+      <i class="ri-arrow-up-line"></i>
+    </div>
+  </div>
+
+  <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+  <!-- Background of PhotoSwipe. 
+        It's a separate element as animating opacity is faster than rgba(). -->
+  <div class="pswp__bg">
+  </div>
+  <!-- Slides wrapper with overflow:hidden. -->
+  <div class="pswp__scroll-wrap">
+    <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+    <div class="pswp__container">
+      <div class="pswp__item">
+      </div>
+      <div class="pswp__item">
+      </div>
+      <div class="pswp__item">
+      </div>
+    </div>
+    <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+    <div class="pswp__ui pswp__ui--hidden">
+      <div class="pswp__top-bar">
+        <!--  Controls are self-explanatory. Order can be changed. -->
+        <div class="pswp__counter">
+        </div>
+        <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+        <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+        <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+        <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+        <!-- element will get class pswp__preloader--active when preloader is running -->
+        <div class="pswp__preloader">
+          <div class="pswp__preloader__icn">
+            <div class="pswp__preloader__cut">
+              <div class="pswp__preloader__donut">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+        <div class="pswp__share-tooltip">
+        </div>
+      </div>
+      <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+      </button>
+      <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+      </button>
+      <div class="pswp__caption">
+        <div class="pswp__caption__center">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://www.shiguangping.com/media/scripts/main.js"></script>
+  
+  <!-- Code Highlight -->
+  
+    <script src="https://www.shiguangping.com/media/prism.js"></script>
+    <script>
+      Prism.highlightAll()
+    </script>
+  
+
+  <script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+  <script>
+    //拿到预览框架，也就是上面的html代码
+    var pswpElement = document.querySelectorAll('.pswp')[0];
+    //定义图片数组变量
+    var imgitems;
+    /**
+    * 用于显示预览界面
+    * @param index 图片数组下标
+    */
+    function viewImg(index) {
+      //其它选项这里不做过多阐述，详情见官网
+      var pswpoptions = {
+        index: parseInt(index, 10), // 开始幻灯片索引。0是第一张幻灯片。必须是整数，而不是字符串。
+        bgOpacity: 0.7, // 背景透明度，0-1
+        maxSpreadZoom: 3, // 缩放级别，不要太大
+      };
+      //初始化并打开PhotoSwipe，pswpElement对应上面预览框架，PhotoSwipeUI_Default为皮肤，imgitems为图片数组，pswpoptions为选项
+      var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, imgitems, pswpoptions);
+      gallery.init()
+    }
+    /**
+    * 用于添加图片点击事件
+    * @param img 图片元素
+    * @param index 所属下标（在imgitems中的位置）
+    */
+    function addImgClick(img, index) {
+      img.onclick = function() {
+        viewImg(index)
+      }
+    }
+    /**
+    * 轮询所有图片，获取src、width、height等数据，加入imgitems，并给图片元素添加事件
+    * 最好在onload中执行该方法，本站因放在最底部，所以直接初始化
+    * 异步加载图片可在图片元素创建完成后调用此方法
+    */
+    function initImg() {
+      //重置图片数组
+      imgitems = [];
+      //查找class:markdown 下的所有img元素并遍历
+      var imgs = document.querySelectorAll('.markdown img');
+      for (var i = 0; i < imgs.length; i++) {
+        var img = imgs[i];
+        //本站相册初始为loading图片，真实图片放在data-src
+        var ds = img.getAttribute("data-src");
+        //创建image对象，用于获取图片宽高
+        var imgtemp = new Image();
+        //判断是否存在data-src
+        if (ds != null && ds.length > 0) {
+          imgtemp.src = ds
+        } else {
+          imgtemp.src = img.src
+        }
+        //判断是否存在缓存
+        if (imgtemp.complete) {
+          var imgobj = {
+            "src": imgtemp.src,
+            "w": imgtemp.width,
+            "h": imgtemp.height,
+          };
+          imgitems[i] = imgobj;
+          addImgClick(img, i);
+        } else {
+          console.log('进来了2')
+          imgtemp.index = i;
+          imgtemp.img = img;
+          imgtemp.onload = function() {
+            var imgobj = {
+              "src": this.src,
+              "w": this.width,
+              "h": this.height,
+            };
+            //不要使用push，因为onload前后顺序会不同
+            imgitems[this.index] = imgobj
+            //添加点击事件
+            addImgClick(this.img, this.index);
+          }
+        }
+      }
+    }
+    //初始化
+    initImg();
+  </script>
+  
+    <script type="application/javascript" src="https://unpkg.com/valine"></script>
+<script type="application/javascript">
+  new Valine({
+    el: '#vlaine-comment',
+    appId: 'iScdY0hF5Y8TgKyMtfvp9CcM-gzGzoHsz',
+    appKey: 'XH2m9KIiA88R6N2lYiSObDH7',
+    pageSize: 10,
+    notify: false,
+    avatar: 'mp',
+    verify: false,
+    placeholder: '来都来了，不妨评论一下',
+    visitor: true,
+    highlight: false,
+    recordIP: false,
+  })
+</script>
+  
+  
+</body>
+
+</html>

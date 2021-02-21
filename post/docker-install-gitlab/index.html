@@ -1,0 +1,426 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Docker部署Gitlab私有仓库 - 時光瓶</title>
+<link rel="shortcut icon" href="https://www.shiguangping.com/favicon.ico">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.2.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css">
+<link rel="stylesheet" href="https://www.shiguangping.com/media/css/tailwind.css">
+<link rel="stylesheet" href="https://www.shiguangping.com/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Docker部署Gitlab私有仓库 - 時光瓶 - Atom Feed" href="https://www.shiguangping.com/atom.xml">
+
+    
+
+  <meta name="description" content="使用Docker部署gitlab-ce（社区版），建议内存4G以上，低于2G的机器不要安装。
+拉取镜像
+docker pull gitlab/gitlab-ce
+
+
+创建容器
+镜像拉取完后，使用一下命令创建容器：
+docker run -d..." />
+  <meta property="og:title" content="Docker部署Gitlab私有仓库 - 時光瓶">
+  <meta property="og:description" content="使用Docker部署gitlab-ce（社区版），建议内存4G以上，低于2G的机器不要安装。
+拉取镜像
+docker pull gitlab/gitlab-ce
+
+
+创建容器
+镜像拉取完后，使用一下命令创建容器：
+docker run -d..." />
+  <meta property="og:type" content="articles">
+  <meta property="og:url" content="https://www.shiguangping.com/post/docker-install-gitlab/" />
+  <meta property="og:image" content="https://www.shiguangping.com/images/avatar.png">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:width" content="1200">
+  <meta name="twitter:title" content="Docker部署Gitlab私有仓库 - 時光瓶">
+  <meta name="twitter:description" content="使用Docker部署gitlab-ce（社区版），建议内存4G以上，低于2G的机器不要安装。
+拉取镜像
+docker pull gitlab/gitlab-ce
+
+
+创建容器
+镜像拉取完后，使用一下命令创建容器：
+docker run -d...">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://www.shiguangping.com/post/docker-install-gitlab/">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css">
+ 
+  
+    <link rel="stylesheet" href="https://www.shiguangping.com/media/css/prism-atom-dark.css">
+  
+
+  
+</head>
+
+<body>
+  <div class="antialiased flex flex-col min-h-screen" id="app">
+    <a href="https://www.shiguangping.com" class="fixed top-0 left-0 mt-4 bg-black text-white dark:text-gray-700 dark:bg-yellow-50 dark:hover:bg-black dark:hover:text-white inline-flex p-2 pl-8 hover:text-gray-700 hover:bg-yellow-50 font-bold z-10 transition-fast animated fadeInLeft">
+      時光瓶
+    </a>
+    <div class="max-w-4xl w-full mx-auto">
+      <div class="shadow-box bg-white dark:bg-gray-600 rounded-lg pt-32 md:pt-64 px-4 md:px-8 pb-8 animated fadeIn mb-8">
+        <h1 class="text-5xl font-semibold leading-normal pb-8 mb-8 border-b-8 border-gray-700">
+          Docker部署Gitlab私有仓库
+        </h1>
+        
+        <div class="mb-8 flex flex-wrap">
+          <div class="text-gray-400 text-sm mr-4">2020-11-22 · 4 min read</div>
+          
+            <a href="https://www.shiguangping.com/tag/Ar7lxpyYM/" class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
+              <i class="ri-hashtag"></i>
+              Docker
+            </a>
+          
+            <a href="https://www.shiguangping.com/tag/wQ54csqUA/" class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
+              <i class="ri-hashtag"></i>
+              Gitlab
+            </a>
+          
+        </div>
+        <div class="markdown mb-8" v-pre>
+          <p>使用Docker部署gitlab-ce（社区版），建议内存4G以上，低于2G的机器不要安装。</p>
+<h2 id="拉取镜像">拉取镜像</h2>
+<pre><code class="language-bash">docker pull gitlab/gitlab-ce
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://images.shiguangping.com//imgs/20201121181533.png" alt="image-20201121181527118" loading="lazy"></figure>
+<h2 id="创建容器">创建容器</h2>
+<p>镜像拉取完后，使用一下命令创建容器：</p>
+<pre><code class="language-bash">docker run -d \
+  --publish 30443:443 --publish 3080:80 --publish 3022:22 \
+  --name gitlab \
+  --restart always \
+  --volume /root/gitlab/config:/etc/gitlab \
+  --volume /root/gitlab/logs:/var/log/gitlab \
+  --volume /root/gitlab/data:/var/opt/gitlab \
+  gitlab/gitlab-ce
+</code></pre>
+<p>::: details 查看命令详情</p>
+<pre><code class="language-bash">docker run -d \ # 创建并后台运行容器
+  --publish 30443:443 --publish 3080:80 --publish 3022:22 \ # 端口映射 宿主机:容器
+  --name gitlab \ # 容器名称
+  --restart always \ # 服务器重启后容器也会随着重启
+  --volume /root/gitlab/config:/etc/gitlab \ # 挂载宿主机目录 宿主机:容器
+  --volume /root/gitlab/logs:/var/log/gitlab \
+  --volume /root/gitlab/data:/var/opt/gitlab \
+  gitlab/gitlab-ce # 创建容器的镜像
+</code></pre>
+<p>:::</p>
+<p>容器创建成功后，使用一下命令查看容器列表：</p>
+<pre><code class="language-bash">docker container ls
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://images.shiguangping.com//imgs/20201121182312.png" alt="image-20201121182312504" loading="lazy"></figure>
+<p>容器状态为<code>starting</code>表示容器正在启动，容器状态为<code>healthy</code>表示正在健康运行。</p>
+<h2 id="访问-gitlab">访问 Gitlab</h2>
+<p>通过域名及端口号（<a href="http://192.168.3.6:3080">http://192.168.3.6:3080</a>）访问部署好的gitlab，首次访问会要求设置root密码。</p>
+<figure data-type="image" tabindex="3"><img src="https://images.shiguangping.com//imgs/20201121202125.png" alt="image-20201121202125003" loading="lazy"></figure>
+<h2 id="基本设置">基本设置</h2>
+<h3 id="设置中文">设置中文</h3>
+<p>所有用户登录默认显示语言都是英文，通过以下方式设置中文：</p>
+<p>首先，登陆用户，管理员默认用户名是<code>root</code>，密码是首次访问gitlab时设置的。</p>
+<p>然后，点击右上角头像，按下图操作设置中文。</p>
+<figure data-type="image" tabindex="4"><img src="https://images.shiguangping.com//imgs/20201121182718.png" alt="image-20201121182718742" loading="lazy"></figure>
+<h3 id="配置邮件发送">配置邮件发送</h3>
+<p>发送系统邮件是一个比较常用的功能，例如忘记密码可以通过发送邮件设置新密码；创建新用户时，密码会发送到用户邮箱等等。</p>
+<p>配置邮件发送，首先发送邮件的邮箱要开启<strong>IMAP/SMTP</strong>设置，并获得SMTP服务器地址以及端口号。</p>
+<p>然后，终端进入gitlab挂载到宿主机的<code>/root/gitlab/config</code>目录，修改<code>gitlab.rb</code>配置文件：</p>
+<figure data-type="image" tabindex="5"><img src="https://images.shiguangping.com//imgs/20201121183606.png" alt="image-20201121183606044" loading="lazy"></figure>
+<p>使用vim或者vi工具编辑<code>gitlab.rb</code>配置文件：</p>
+<pre><code class="language-bash">vim gitlab.rb
+</code></pre>
+<p>找到<code>Gitlab email server setting</code>，打开一下配置项注释，按下图配置邮件发送：</p>
+<figure data-type="image" tabindex="6"><img src="https://images.shiguangping.com//imgs/20201121192003.png" alt="image-20201121192003462" loading="lazy"></figure>
+<p>使用下面的命令使配置生效：</p>
+<pre><code class="language-bash">docker exec gitlab gitlab-ctl reconfigure
+</code></pre>
+<p>重启容器：</p>
+<pre><code class="language-bash">docker restart gitlab
+</code></pre>
+<p>（Gitlab重启耗时较长，需要等待几分钟--!）</p>
+<h3 id="配置gitlab地址">配置Gitlab地址</h3>
+<p>邮件发送设置好后，可以尝试给<code>root</code>用户设置邮箱，并验证邮箱地址。</p>
+<p>如果可以正常接收到来自Gitlab的验证邮箱的邮件，说明邮件发送功能正常。但是，点击邮件中的确认邮件地址时，无法正常访问Gitlab。</p>
+<figure data-type="image" tabindex="7"><img src="https://images.shiguangping.com//imgs/20201121191843.png" alt="image-20201121191843912" loading="lazy"></figure>
+<p>修改<code>/opt/gitlab/embedded/service/gitlab-rails/config</code>中的<code>gitlab.yml</code>文件的<code>host</code>地址；</p>
+<p>修改<code>/root/gitlab/config</code>中的<code>gitlab.rb</code>文件，找到<code>external_url</code>并打开注释，设置地址。</p>
+<p>有了地址就可以正常拉取和推送代码。</p>
+<figure data-type="image" tabindex="8"><img src="https://images.shiguangping.com//imgs/20201121192505.png" alt="image-20201121192505719" loading="lazy"></figure>
+<p>重启配置并重启容器，至此，Gitlab可以正常使用了。</p>
+<hr>
+<p>::: details FAQ</p>
+<ol>
+<li>
+<p>遇到容器反复重启，查看日志显示没有操作权限：</p>
+<pre><code class="language-bash">sudo docker run -d \
+  --sysctl net.core.somaxconn=1024 \
+  --ulimit sigpending=62793 \
+  --ulimit nproc=131072 \
+  --ulimit nofile=60000 \
+  --ulimit core=0 \
+  --publish 30443:443 --publish 3080:80 --publish 3022:22 \
+  --name gitlab \
+  --restart always \
+  --volume /root/gitlab/config:/etc/gitlab \
+  --volume /root/gitlab/logs:/var/log/gitlab \
+  --volume /root/gitlab/data:/var/opt/gitlab \
+  --volume /root/gitlab/localtime:/etc/localtime \
+  gitlab/gitlab-ce
+</code></pre>
+</li>
+<li>
+<p>修改<code>gitlab.yml</code>中的host后，重启容器主机地址不生效。</p>
+<ul>
+<li>
+<p>修改完<code>gitlab.yml</code>后，在容器内执行重启命令：</p>
+<pre><code class="language-bash">gitlab-ctl restart 
+</code></pre>
+</li>
+</ul>
+</li>
+</ol>
+<p>:::</p>
+
+        </div>
+        <!-- Share to Twitter, Weibo, Telegram -->
+        <div class="flex items-center">
+          <div class="mr-4 flex items-center">
+            <i class="ri-share-forward-line text-gray-500"></i>
+          </div>
+          <div class="px-4 cursor-pointer text-blue-500 hover:bg-blue-100 dark:hover:bg-gray-600 inline-flex" @click="shareToTwitter">
+            <i class="ri-twitter-line"></i>
+          </div>
+          <div class="px-4 cursor-pointer text-red-500 hover:bg-red-100 dark:hover:bg-gray-600 inline-flex" @click="shareToWeibo">
+            <i class="ri-weibo-line"></i>
+          </div>
+          <div class="px-4 cursor-pointer text-indigo-500 hover:bg-indigo-100 dark:hover:bg-gray-600 inline-flex" @click="shareToTelegram">
+            <i class="ri-telegram-line"></i>
+          </div>
+        </div>
+      </div>
+
+      
+
+      
+        <div id="vlaine-comment"></div>
+      
+
+      <footer class="py-12 text-center px-4 md:px-0" v-pre>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">時光瓶</a>
+</footer>
+    </div>
+
+    <!-- TOC Container -->
+    <div class="fixed right-0 bottom-0 mb-16 mr-4 shadow w-8 h-8 rounded-full flex justify-center items-center z-10 cursor-pointer bg-white dark:bg-gray-500 dark:text-gray-200 hover:shadow-lg transition-all animated fadeInRight" @click="showToc = true">
+      <i class="ri-file-list-line"></i>
+    </div>
+
+    <div class="fixed right-0 top-0 bottom-0 overflow-y-auto w-64 bg-white dark:bg-gray-800 p-4 border-l border-gray-100 dark:border-gray-600 z-10 transition-fast" :class="{ '-mr-64': !showToc }">
+      <div class="flex mb-4 justify-end">
+        <div class="w-8 h-8 inline-flex justify-center items-center rounded-full cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-fast" @click="showToc = false">
+          <i class="ri-close-line text-lg"></i>
+        </div>
+      </div>
+      <div class="post-toc-container">
+        <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E6%8B%89%E5%8F%96%E9%95%9C%E5%83%8F">拉取镜像</a></li>
+<li><a href="#%E5%88%9B%E5%BB%BA%E5%AE%B9%E5%99%A8">创建容器</a></li>
+<li><a href="#%E8%AE%BF%E9%97%AE-gitlab">访问 Gitlab</a></li>
+<li><a href="#%E5%9F%BA%E6%9C%AC%E8%AE%BE%E7%BD%AE">基本设置</a>
+<ul>
+<li><a href="#%E8%AE%BE%E7%BD%AE%E4%B8%AD%E6%96%87">设置中文</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AE%E9%82%AE%E4%BB%B6%E5%8F%91%E9%80%81">配置邮件发送</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AEgitlab%E5%9C%B0%E5%9D%80">配置Gitlab地址</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+      </div>
+    </div>
+
+    <!-- Back to top -->
+    <div class="fixed right-0 bottom-0 mb-4 mr-4 shadow w-8 h-8 rounded-full flex justify-center items-center z-10 cursor-pointer bg-white hover:shadow-lg transition-all dark:bg-gray-500 dark:text-gray-200" @click="backToUp" v-show="scrolled">
+      <i class="ri-arrow-up-line"></i>
+    </div>
+  </div>
+
+  <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+  <!-- Background of PhotoSwipe. 
+        It's a separate element as animating opacity is faster than rgba(). -->
+  <div class="pswp__bg">
+  </div>
+  <!-- Slides wrapper with overflow:hidden. -->
+  <div class="pswp__scroll-wrap">
+    <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+    <div class="pswp__container">
+      <div class="pswp__item">
+      </div>
+      <div class="pswp__item">
+      </div>
+      <div class="pswp__item">
+      </div>
+    </div>
+    <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+    <div class="pswp__ui pswp__ui--hidden">
+      <div class="pswp__top-bar">
+        <!--  Controls are self-explanatory. Order can be changed. -->
+        <div class="pswp__counter">
+        </div>
+        <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+        <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+        <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+        <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+        <!-- element will get class pswp__preloader--active when preloader is running -->
+        <div class="pswp__preloader">
+          <div class="pswp__preloader__icn">
+            <div class="pswp__preloader__cut">
+              <div class="pswp__preloader__donut">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+        <div class="pswp__share-tooltip">
+        </div>
+      </div>
+      <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+      </button>
+      <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+      </button>
+      <div class="pswp__caption">
+        <div class="pswp__caption__center">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://www.shiguangping.com/media/scripts/main.js"></script>
+  
+  <!-- Code Highlight -->
+  
+    <script src="https://www.shiguangping.com/media/prism.js"></script>
+    <script>
+      Prism.highlightAll()
+    </script>
+  
+
+  <script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+  <script>
+    //拿到预览框架，也就是上面的html代码
+    var pswpElement = document.querySelectorAll('.pswp')[0];
+    //定义图片数组变量
+    var imgitems;
+    /**
+    * 用于显示预览界面
+    * @param index 图片数组下标
+    */
+    function viewImg(index) {
+      //其它选项这里不做过多阐述，详情见官网
+      var pswpoptions = {
+        index: parseInt(index, 10), // 开始幻灯片索引。0是第一张幻灯片。必须是整数，而不是字符串。
+        bgOpacity: 0.7, // 背景透明度，0-1
+        maxSpreadZoom: 3, // 缩放级别，不要太大
+      };
+      //初始化并打开PhotoSwipe，pswpElement对应上面预览框架，PhotoSwipeUI_Default为皮肤，imgitems为图片数组，pswpoptions为选项
+      var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, imgitems, pswpoptions);
+      gallery.init()
+    }
+    /**
+    * 用于添加图片点击事件
+    * @param img 图片元素
+    * @param index 所属下标（在imgitems中的位置）
+    */
+    function addImgClick(img, index) {
+      img.onclick = function() {
+        viewImg(index)
+      }
+    }
+    /**
+    * 轮询所有图片，获取src、width、height等数据，加入imgitems，并给图片元素添加事件
+    * 最好在onload中执行该方法，本站因放在最底部，所以直接初始化
+    * 异步加载图片可在图片元素创建完成后调用此方法
+    */
+    function initImg() {
+      //重置图片数组
+      imgitems = [];
+      //查找class:markdown 下的所有img元素并遍历
+      var imgs = document.querySelectorAll('.markdown img');
+      for (var i = 0; i < imgs.length; i++) {
+        var img = imgs[i];
+        //本站相册初始为loading图片，真实图片放在data-src
+        var ds = img.getAttribute("data-src");
+        //创建image对象，用于获取图片宽高
+        var imgtemp = new Image();
+        //判断是否存在data-src
+        if (ds != null && ds.length > 0) {
+          imgtemp.src = ds
+        } else {
+          imgtemp.src = img.src
+        }
+        //判断是否存在缓存
+        if (imgtemp.complete) {
+          var imgobj = {
+            "src": imgtemp.src,
+            "w": imgtemp.width,
+            "h": imgtemp.height,
+          };
+          imgitems[i] = imgobj;
+          addImgClick(img, i);
+        } else {
+          console.log('进来了2')
+          imgtemp.index = i;
+          imgtemp.img = img;
+          imgtemp.onload = function() {
+            var imgobj = {
+              "src": this.src,
+              "w": this.width,
+              "h": this.height,
+            };
+            //不要使用push，因为onload前后顺序会不同
+            imgitems[this.index] = imgobj
+            //添加点击事件
+            addImgClick(this.img, this.index);
+          }
+        }
+      }
+    }
+    //初始化
+    initImg();
+  </script>
+  
+    <script type="application/javascript" src="https://unpkg.com/valine"></script>
+<script type="application/javascript">
+  new Valine({
+    el: '#vlaine-comment',
+    appId: 'iScdY0hF5Y8TgKyMtfvp9CcM-gzGzoHsz',
+    appKey: 'XH2m9KIiA88R6N2lYiSObDH7',
+    pageSize: 10,
+    notify: false,
+    avatar: 'mp',
+    verify: false,
+    placeholder: '来都来了，不妨评论一下',
+    visitor: true,
+    highlight: false,
+    recordIP: false,
+  })
+</script>
+  
+  
+</body>
+
+</html>

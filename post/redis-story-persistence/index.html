@@ -1,0 +1,417 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>突然挂了！Redis缓存都在内存中，这下完了！ - 時光瓶</title>
+<link rel="shortcut icon" href="https://www.shiguangping.com/favicon.ico">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.2.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css">
+<link rel="stylesheet" href="https://www.shiguangping.com/media/css/tailwind.css">
+<link rel="stylesheet" href="https://www.shiguangping.com/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="突然挂了！Redis缓存都在内存中，这下完了！ - 時光瓶 - Atom Feed" href="https://www.shiguangping.com/atom.xml">
+
+    
+
+  <meta name="description" content="我是Redis，一个叫Antirez的男人把我带到了这个世界上。
+
+
+“快醒醒！快醒醒！”，隐隐约约，我听到有人在叫我。
+慢慢睁开眼睛，原来旁边是MySQL大哥。
+“我怎么睡着了？”
+“嗨，你刚才是不是出现了错误，整个进程都崩溃了！害得一大..." />
+  <meta property="og:title" content="突然挂了！Redis缓存都在内存中，这下完了！ - 時光瓶">
+  <meta property="og:description" content="我是Redis，一个叫Antirez的男人把我带到了这个世界上。
+
+
+“快醒醒！快醒醒！”，隐隐约约，我听到有人在叫我。
+慢慢睁开眼睛，原来旁边是MySQL大哥。
+“我怎么睡着了？”
+“嗨，你刚才是不是出现了错误，整个进程都崩溃了！害得一大..." />
+  <meta property="og:type" content="articles">
+  <meta property="og:url" content="https://www.shiguangping.com/post/redis-story-persistence/" />
+  <meta property="og:image" content="https://www.shiguangping.com/images/avatar.png">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:width" content="1200">
+  <meta name="twitter:title" content="突然挂了！Redis缓存都在内存中，这下完了！ - 時光瓶">
+  <meta name="twitter:description" content="我是Redis，一个叫Antirez的男人把我带到了这个世界上。
+
+
+“快醒醒！快醒醒！”，隐隐约约，我听到有人在叫我。
+慢慢睁开眼睛，原来旁边是MySQL大哥。
+“我怎么睡着了？”
+“嗨，你刚才是不是出现了错误，整个进程都崩溃了！害得一大...">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://www.shiguangping.com/post/redis-story-persistence/">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css">
+ 
+  
+    <link rel="stylesheet" href="https://www.shiguangping.com/media/css/prism-atom-dark.css">
+  
+
+  
+</head>
+
+<body>
+  <div class="antialiased flex flex-col min-h-screen" id="app">
+    <a href="https://www.shiguangping.com" class="fixed top-0 left-0 mt-4 bg-black text-white dark:text-gray-700 dark:bg-yellow-50 dark:hover:bg-black dark:hover:text-white inline-flex p-2 pl-8 hover:text-gray-700 hover:bg-yellow-50 font-bold z-10 transition-fast animated fadeInLeft">
+      時光瓶
+    </a>
+    <div class="max-w-4xl w-full mx-auto">
+      <div class="shadow-box bg-white dark:bg-gray-600 rounded-lg pt-32 md:pt-64 px-4 md:px-8 pb-8 animated fadeIn mb-8">
+        <h1 class="text-5xl font-semibold leading-normal pb-8 mb-8 border-b-8 border-gray-700">
+          突然挂了！Redis缓存都在内存中，这下完了！
+        </h1>
+        
+        <div class="mb-8 flex flex-wrap">
+          <div class="text-gray-400 text-sm mr-4">2020-09-26 · 8 min read</div>
+          
+            <a href="https://www.shiguangping.com/tag/BT4A1Iu4R/" class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
+              <i class="ri-hashtag"></i>
+              Redis
+            </a>
+          
+        </div>
+        <div class="markdown mb-8" v-pre>
+          <p>我是<strong>Redis</strong>，一个叫<strong>Antirez</strong>的男人把我带到了这个世界上。</p>
+<!--more-->
+<img src="https://images.shiguangping.com/imgs/20200926112705.jpg" alt="img" style="zoom:50%;" />
+<p>“快醒醒！快醒醒！”，隐隐约约，我听到有人在叫我。</p>
+<p>慢慢睁开眼睛，原来旁边是MySQL大哥。</p>
+<p>“我怎么睡着了？”</p>
+<p>“嗨，你刚才是不是出现了错误，整个进程都崩溃了！害得一大堆查询请求都给我怼过来了！”，MySQL说到。</p>
+<p>刚刚醒来，脑子还有点懵，MySQL大哥扶我起来继续工作。</p>
+<p>“糟了！我之前缓存的数据全都不见了！”</p>
+<p>“WTF？你没有做<strong>持久化</strong>吗？”，MySQL大哥一听脸色都变了。</p>
+<p>我尴尬的摇了摇头，“我都是保存在内存中的，所以才那么快啊”</p>
+<p>“那也可以在硬盘上保存一下啊，遇到这种情况全部从头再来建立缓存，这不浪费时间嘛！”</p>
+<img src="https://images.shiguangping.com/imgs/20200926112819.png" alt="img" style="zoom:50%;" />
+<p>我点了点头，“让我琢磨一下，看看怎么做这个持久化”。</p>
+<h2 id="rdb持久化">RDB持久化</h2>
+<p>没几天，我就拿出了一套方案：<strong>RDB</strong></p>
+<p>既然我的数据都在内存中存放着，最简单的就是遍历一遍把它们全都写入文件中。</p>
+<p>为了节约空间，我定义了一个二进制的格式，把数据一条一条码在一起，生成了一个RDB文件。</p>
+<img src="https://images.shiguangping.com/imgs/20200926112831.png" alt="img" style="zoom:50%;" />
+<p>不过我的数据量有点大，要是全部备份一次得花不少时间，所以不能太频繁的去做这事，要不然我不用干正事了，光花时间去备份了。</p>
+<p>还有啊，要是一直没有写入操作，都是读取操作，那我也不用重复备份，浪费时间。</p>
+<p>思来想去，我决定提供一个配置参数，既可以支持周期性备份，也可以避免做无用功。</p>
+<p>就像这样：</p>
+<blockquote>
+<ul>
+<li>save 900 1   # 900秒（15分钟）内有1个写入</li>
+<li>save 300 10   # 300秒（5分钟）内有10个写入</li>
+<li>save 60 10000  # 60秒（1分钟）内有10000个写入</li>
+</ul>
+</blockquote>
+<p>多个条件可以组合使用，只要上面一个条件满足，我就会去进行备份。</p>
+<p>后来我又想了一下，这样还是不行，我得<strong>fork</strong>出一个子进程去做这件事，不能浪费我的时间。</p>
+<p>有了备份文件，下次我再遇到崩溃退出，甚至服务器断电罢工了，只要我的备份文件还在，我就能在启动的时候读取，快速恢复之前的状态啦！</p>
+<img src="https://images.shiguangping.com/imgs/20200926112914.png" alt="img" style="zoom:50%;" />
+<h2 id="mysqlbinlog">MySQL:binlog</h2>
+<p>我带着这套方案，兴冲冲的拿给了MySQL大哥看了，期待他给我一些鼓励。</p>
+<p>“老弟，你这个方案有点问题啊”，没想到，他竟给我浇了一盆冷水。</p>
+<p>“问题？有什么问题？”</p>
+<p>“你看啊，你这个周期性去备份，周期还是分钟级别的，你可知道咱们这服务每秒钟都要响应多少请求，像你这样不得丢失多少数据？”，MySQL语重心长的说到。</p>
+<img src="https://images.shiguangping.com/imgs/20200926113004.png" alt="img" style="zoom:50%;" />
+<p>我一下有些气短了，“可是，这个备份一次要遍历全部数据，开销还是挺大的，不适合高频执行啊”</p>
+<p>“谁叫你一次遍历全部数据了？来来来，我给你看个东西”，MySQL大哥把我带到了一个文件目录下：</p>
+<blockquote>
+<ul>
+<li>mysql-bin.000001</li>
+<li>mysql-bin.000002</li>
+<li>mysql-bin.000003</li>
+<li>···</li>
+</ul>
+</blockquote>
+<p>“看，这些是我的<strong>二进制日志binlog</strong>，你猜猜看里面都装了些什么？”，MySQL大哥指着这一堆文件说到。</p>
+<p>我看了一眼，全是一堆二进制数据，这哪看得懂，我摇了摇头。</p>
+<p>“这里面呀记录了我对数据执行更改的所有操作，像是<strong>INSERT</strong>，<strong>UPDATE</strong>、<strong>DELETE</strong>等等动作，等我要进行数据恢复的时候就可以派上大用场了”</p>
+<p>听他这么一说，我一下来了灵感！告别了MySQL大哥，回去研究起新的方案来了。</p>
+<h2 id="aof持久化">AOF持久化</h2>
+<p>你们也知道，我也是基于命令式的，每天的工作就是响应业务程序发来的命令请求。</p>
+<p>回来以后，我决定照葫芦画瓢，学着MySQL大哥的样子，把我执行的所有写入命令都记录下来，专门写入了一个文件，并给这种持久化方式也取了一个名字：<strong>AOF（Append Only File）</strong>。</p>
+<img src="https://images.shiguangping.com/imgs/20200926113040.png" alt="img" style="zoom:50%;" />
+<p>不过我遇到了RDB方案同样的问题，我该多久写一次文件呢？</p>
+<p>我肯定不能每执行一条写入命令就记录到文件中，那会严重拖垮我的性能！我决定准备一个缓冲区，然后把要记录的命令先临时保存在这里，然后再择机写入文件，我把这个临时缓冲区叫做<strong>aof_buf</strong>。</p>
+<img src="https://images.shiguangping.com/imgs/20200926113055.png" alt="img" style="zoom:50%;" />
+<p>说干就干，我试了一下，竟然发现数据没有写入到文件中去。多方打听才知道，原来操作系统也有个缓存区，我写的数据被他缓存起来了，没有给我写入到文件中去，这不是坑爹呢嘛！</p>
+<p>看来，我写完了还得要去刷新一下，把数据真正给写下去，思来想去，我还是提供一个参数，让业务程序去设置什么时候刷新吧。</p>
+<blockquote>
+<p><code>appendfsync</code>参数，三个取值：</p>
+<ul>
+<li>always: 每个事件周期都同步刷新一次</li>
+<li>everysec: 每一秒都同步刷新一次</li>
+<li>no: 我只管写，让操作系统自己决定什么时候真正写入吧</li>
+</ul>
+</blockquote>
+<h2 id="aof重写">AOF重写</h2>
+<p>这一次我不像之前那么冲动，我决定先试运行一段时间再去告诉MySQL大哥，免得又被他戳到软肋。</p>
+<p>试用了一段时间，各方面都运行良好，不过我发现随着时间的推移，我写的这个AOF备份文件越来越大，越来越大！不仅非常占硬盘空间，复制移动，加载分析都非常的麻烦耗时。</p>
+<p>我得想个办法把文件给<strong>压缩</strong>一下，我把这个过程叫做<strong>AOF重写</strong>。</p>
+<img src="https://images.shiguangping.com/imgs/20200926113127.png" alt="img" style="zoom:50%;" />
+<p>一开始，我打算去分析原来的AOF文件，然后将其中的冗余指令去掉，来给AOF文件瘦瘦身，不过我很快放弃了这个想法，这工作量实在太大了，分析起来也颇为麻烦，浪费很多精力跟时间。</p>
+<p>原来的一条条记录这种方式实在是太笨了，数据改来改去，有很多中间状态都没用，我何不就把最终都数据状态记录下来就好了？</p>
+<p>比如：</p>
+<blockquote>
+<ul>
+<li>RPUSH name_list <strong>'编程技术宇宙'</strong></li>
+<li>RPUSH name_list <strong>'帅地玩编程'</strong></li>
+<li>RPUSH name_list <strong>'后端技术学堂'</strong></li>
+</ul>
+<p>可以合并成一条搞定：</p>
+<ul>
+<li>RPUSH name_list <strong>'编程技术宇宙'</strong> <strong>'帅地玩编程'</strong> <strong>'后端技术学堂'</strong></li>
+</ul>
+</blockquote>
+<p>AOF文件重写的思路我是有了，不过这件事干起来还是很耗时间，我决定和RDB方式一样，fork出一个子进程来做这件事情。</p>
+<p>谨慎如我，发现这样做之后，子进程在重写期间，我要是修改了数据，就会出现和重写的内容不一致的情况！MySQL大哥肯定会挑刺儿，我还得把这个漏洞给补上。</p>
+<img src="https://images.shiguangping.com/imgs/20200926113153.png" alt="img" style="zoom:50%;" />
+<p>于是，我在之前的<strong>aof_buf</strong>之外，又准备了一个缓冲区：<strong>AOF重写缓冲区</strong>。</p>
+<p>从创建重写子进程开始的那一刻起，我把后面来的写入命令也copy一份写到这个重写缓冲区中，等到子进程重写AOF文件结束之后，我再把这个缓冲区中的命令写入到新的AOF文件中。</p>
+<p>最后再重命名新的AOF文件，替换掉原来的那个臃肿不堪的大文件，终于大功告成！</p>
+<img src="https://images.shiguangping.com/imgs/20200926113208.png" alt="img" style="zoom:50%;" />
+<p>再三确定我的思路没有问题之后，我带着新的方案再次找到了MySQL大哥，我都做到这份儿上了，这一次，想必他应该无话可说了吧？</p>
+<p>MySQL大哥看了我的方案露出了满意的笑容，只是问了一个问题：</p>
+<blockquote>
+<p>这AOF方案这么好了，RDB方案是不是可以不要了呢？</p>
+</blockquote>
+<p>万万没想到，他居然问我这个问题，我竟陷入了沉思，你觉得我该怎么回答好呢？</p>
+<hr>
+<p><strong>转载自<a href="https://www.cnblogs.com/xuanyuan/p/13689484.html">https://www.cnblogs.com/xuanyuan/p/13689484.html</a></strong></p>
+
+        </div>
+        <!-- Share to Twitter, Weibo, Telegram -->
+        <div class="flex items-center">
+          <div class="mr-4 flex items-center">
+            <i class="ri-share-forward-line text-gray-500"></i>
+          </div>
+          <div class="px-4 cursor-pointer text-blue-500 hover:bg-blue-100 dark:hover:bg-gray-600 inline-flex" @click="shareToTwitter">
+            <i class="ri-twitter-line"></i>
+          </div>
+          <div class="px-4 cursor-pointer text-red-500 hover:bg-red-100 dark:hover:bg-gray-600 inline-flex" @click="shareToWeibo">
+            <i class="ri-weibo-line"></i>
+          </div>
+          <div class="px-4 cursor-pointer text-indigo-500 hover:bg-indigo-100 dark:hover:bg-gray-600 inline-flex" @click="shareToTelegram">
+            <i class="ri-telegram-line"></i>
+          </div>
+        </div>
+      </div>
+
+      
+
+      
+        <div id="vlaine-comment"></div>
+      
+
+      <footer class="py-12 text-center px-4 md:px-0" v-pre>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">時光瓶</a>
+</footer>
+    </div>
+
+    <!-- TOC Container -->
+    <div class="fixed right-0 bottom-0 mb-16 mr-4 shadow w-8 h-8 rounded-full flex justify-center items-center z-10 cursor-pointer bg-white dark:bg-gray-500 dark:text-gray-200 hover:shadow-lg transition-all animated fadeInRight" @click="showToc = true">
+      <i class="ri-file-list-line"></i>
+    </div>
+
+    <div class="fixed right-0 top-0 bottom-0 overflow-y-auto w-64 bg-white dark:bg-gray-800 p-4 border-l border-gray-100 dark:border-gray-600 z-10 transition-fast" :class="{ '-mr-64': !showToc }">
+      <div class="flex mb-4 justify-end">
+        <div class="w-8 h-8 inline-flex justify-center items-center rounded-full cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-fast" @click="showToc = false">
+          <i class="ri-close-line text-lg"></i>
+        </div>
+      </div>
+      <div class="post-toc-container">
+        <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#rdb%E6%8C%81%E4%B9%85%E5%8C%96">RDB持久化</a></li>
+<li><a href="#mysqlbinlog">MySQL:binlog</a></li>
+<li><a href="#aof%E6%8C%81%E4%B9%85%E5%8C%96">AOF持久化</a></li>
+<li><a href="#aof%E9%87%8D%E5%86%99">AOF重写</a></li>
+</ul>
+</li>
+</ul>
+
+      </div>
+    </div>
+
+    <!-- Back to top -->
+    <div class="fixed right-0 bottom-0 mb-4 mr-4 shadow w-8 h-8 rounded-full flex justify-center items-center z-10 cursor-pointer bg-white hover:shadow-lg transition-all dark:bg-gray-500 dark:text-gray-200" @click="backToUp" v-show="scrolled">
+      <i class="ri-arrow-up-line"></i>
+    </div>
+  </div>
+
+  <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+  <!-- Background of PhotoSwipe. 
+        It's a separate element as animating opacity is faster than rgba(). -->
+  <div class="pswp__bg">
+  </div>
+  <!-- Slides wrapper with overflow:hidden. -->
+  <div class="pswp__scroll-wrap">
+    <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+    <div class="pswp__container">
+      <div class="pswp__item">
+      </div>
+      <div class="pswp__item">
+      </div>
+      <div class="pswp__item">
+      </div>
+    </div>
+    <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+    <div class="pswp__ui pswp__ui--hidden">
+      <div class="pswp__top-bar">
+        <!--  Controls are self-explanatory. Order can be changed. -->
+        <div class="pswp__counter">
+        </div>
+        <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+        <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+        <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+        <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+        <!-- element will get class pswp__preloader--active when preloader is running -->
+        <div class="pswp__preloader">
+          <div class="pswp__preloader__icn">
+            <div class="pswp__preloader__cut">
+              <div class="pswp__preloader__donut">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+        <div class="pswp__share-tooltip">
+        </div>
+      </div>
+      <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+      </button>
+      <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+      </button>
+      <div class="pswp__caption">
+        <div class="pswp__caption__center">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://www.shiguangping.com/media/scripts/main.js"></script>
+  
+  <!-- Code Highlight -->
+  
+    <script src="https://www.shiguangping.com/media/prism.js"></script>
+    <script>
+      Prism.highlightAll()
+    </script>
+  
+
+  <script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+  <script>
+    //拿到预览框架，也就是上面的html代码
+    var pswpElement = document.querySelectorAll('.pswp')[0];
+    //定义图片数组变量
+    var imgitems;
+    /**
+    * 用于显示预览界面
+    * @param index 图片数组下标
+    */
+    function viewImg(index) {
+      //其它选项这里不做过多阐述，详情见官网
+      var pswpoptions = {
+        index: parseInt(index, 10), // 开始幻灯片索引。0是第一张幻灯片。必须是整数，而不是字符串。
+        bgOpacity: 0.7, // 背景透明度，0-1
+        maxSpreadZoom: 3, // 缩放级别，不要太大
+      };
+      //初始化并打开PhotoSwipe，pswpElement对应上面预览框架，PhotoSwipeUI_Default为皮肤，imgitems为图片数组，pswpoptions为选项
+      var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, imgitems, pswpoptions);
+      gallery.init()
+    }
+    /**
+    * 用于添加图片点击事件
+    * @param img 图片元素
+    * @param index 所属下标（在imgitems中的位置）
+    */
+    function addImgClick(img, index) {
+      img.onclick = function() {
+        viewImg(index)
+      }
+    }
+    /**
+    * 轮询所有图片，获取src、width、height等数据，加入imgitems，并给图片元素添加事件
+    * 最好在onload中执行该方法，本站因放在最底部，所以直接初始化
+    * 异步加载图片可在图片元素创建完成后调用此方法
+    */
+    function initImg() {
+      //重置图片数组
+      imgitems = [];
+      //查找class:markdown 下的所有img元素并遍历
+      var imgs = document.querySelectorAll('.markdown img');
+      for (var i = 0; i < imgs.length; i++) {
+        var img = imgs[i];
+        //本站相册初始为loading图片，真实图片放在data-src
+        var ds = img.getAttribute("data-src");
+        //创建image对象，用于获取图片宽高
+        var imgtemp = new Image();
+        //判断是否存在data-src
+        if (ds != null && ds.length > 0) {
+          imgtemp.src = ds
+        } else {
+          imgtemp.src = img.src
+        }
+        //判断是否存在缓存
+        if (imgtemp.complete) {
+          var imgobj = {
+            "src": imgtemp.src,
+            "w": imgtemp.width,
+            "h": imgtemp.height,
+          };
+          imgitems[i] = imgobj;
+          addImgClick(img, i);
+        } else {
+          console.log('进来了2')
+          imgtemp.index = i;
+          imgtemp.img = img;
+          imgtemp.onload = function() {
+            var imgobj = {
+              "src": this.src,
+              "w": this.width,
+              "h": this.height,
+            };
+            //不要使用push，因为onload前后顺序会不同
+            imgitems[this.index] = imgobj
+            //添加点击事件
+            addImgClick(this.img, this.index);
+          }
+        }
+      }
+    }
+    //初始化
+    initImg();
+  </script>
+  
+    <script type="application/javascript" src="https://unpkg.com/valine"></script>
+<script type="application/javascript">
+  new Valine({
+    el: '#vlaine-comment',
+    appId: 'iScdY0hF5Y8TgKyMtfvp9CcM-gzGzoHsz',
+    appKey: 'XH2m9KIiA88R6N2lYiSObDH7',
+    pageSize: 10,
+    notify: false,
+    avatar: 'mp',
+    verify: false,
+    placeholder: '来都来了，不妨评论一下',
+    visitor: true,
+    highlight: false,
+    recordIP: false,
+  })
+</script>
+  
+  
+</body>
+
+</html>

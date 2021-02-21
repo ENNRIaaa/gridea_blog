@@ -1,0 +1,1317 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Go语言入门 - 時光瓶</title>
+<link rel="shortcut icon" href="https://www.shiguangping.com/favicon.ico">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.2.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css">
+<link rel="stylesheet" href="https://www.shiguangping.com/media/css/tailwind.css">
+<link rel="stylesheet" href="https://www.shiguangping.com/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Go语言入门 - 時光瓶 - Atom Feed" href="https://www.shiguangping.com/atom.xml">
+
+    
+
+  <meta name="description" content="今天是圣诞节，开始学习Go语言，我认为它非常有潜力。
+什么是Go语言？
+
+Google开源的语言
+编译型语言
+21世纪的C语言
+
+Go语言特点
+
+语法简介
+开发效率高
+执行性能好
+
+Go开发环境安装
+官方下载地址：https://golan..." />
+  <meta property="og:title" content="Go语言入门 - 時光瓶">
+  <meta property="og:description" content="今天是圣诞节，开始学习Go语言，我认为它非常有潜力。
+什么是Go语言？
+
+Google开源的语言
+编译型语言
+21世纪的C语言
+
+Go语言特点
+
+语法简介
+开发效率高
+执行性能好
+
+Go开发环境安装
+官方下载地址：https://golan..." />
+  <meta property="og:type" content="articles">
+  <meta property="og:url" content="https://www.shiguangping.com/post/go-study-1/" />
+  <meta property="og:image" content="https://www.shiguangping.com/images/avatar.png">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:width" content="1200">
+  <meta name="twitter:title" content="Go语言入门 - 時光瓶">
+  <meta name="twitter:description" content="今天是圣诞节，开始学习Go语言，我认为它非常有潜力。
+什么是Go语言？
+
+Google开源的语言
+编译型语言
+21世纪的C语言
+
+Go语言特点
+
+语法简介
+开发效率高
+执行性能好
+
+Go开发环境安装
+官方下载地址：https://golan...">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://www.shiguangping.com/post/go-study-1/">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css">
+ 
+  
+    <link rel="stylesheet" href="https://www.shiguangping.com/media/css/prism-atom-dark.css">
+  
+
+  
+</head>
+
+<body>
+  <div class="antialiased flex flex-col min-h-screen" id="app">
+    <a href="https://www.shiguangping.com" class="fixed top-0 left-0 mt-4 bg-black text-white dark:text-gray-700 dark:bg-yellow-50 dark:hover:bg-black dark:hover:text-white inline-flex p-2 pl-8 hover:text-gray-700 hover:bg-yellow-50 font-bold z-10 transition-fast animated fadeInLeft">
+      時光瓶
+    </a>
+    <div class="max-w-4xl w-full mx-auto">
+      <div class="shadow-box bg-white dark:bg-gray-600 rounded-lg pt-32 md:pt-64 px-4 md:px-8 pb-8 animated fadeIn mb-8">
+        <h1 class="text-5xl font-semibold leading-normal pb-8 mb-8 border-b-8 border-gray-700">
+          Go语言入门
+        </h1>
+        
+        <div class="mb-8 flex flex-wrap">
+          <div class="text-gray-400 text-sm mr-4">2020-12-25 · 22 min read</div>
+          
+            <a href="https://www.shiguangping.com/tag/aZpurM-eO/" class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
+              <i class="ri-hashtag"></i>
+              Golang
+            </a>
+          
+        </div>
+        <div class="markdown mb-8" v-pre>
+          <p>今天是圣诞节，开始学习Go语言，我认为它非常有潜力。</p>
+<h2 id="什么是go语言">什么是Go语言？</h2>
+<ul>
+<li>Google开源的语言</li>
+<li>编译型语言</li>
+<li>21世纪的C语言</li>
+</ul>
+<h2 id="go语言特点">Go语言特点</h2>
+<ul>
+<li>语法简介</li>
+<li>开发效率高</li>
+<li>执行性能好</li>
+</ul>
+<h2 id="go开发环境安装">Go开发环境安装</h2>
+<p>官方下载地址：<a href="https://golang.org/">https://golang.org/</a></p>
+<p>官方下载地址：<a href="https://golang.google.cn/">https://golang.google.cn/</a></p>
+<p>安装后，通过命令查看Go版本：</p>
+<pre><code class="language-bash">go version
+</code></pre>
+<h2 id="第一个go程序">第一个Go程序</h2>
+<pre><code class="language-go">package main
+
+// 导入fmt包
+import &quot;fmt&quot;
+
+// main函数，程序入口
+func main() {
+	fmt.Println(&quot;Hello World&quot;)
+}
+</code></pre>
+<h3 id="编译">编译</h3>
+<p><strong>使用<code>go build</code>将.go文件编译成可执行文件。</strong></p>
+<p>例如Mac平台，终端进入.go文件所在目录，执行<code>go build</code>命令，随后会在当前目录下生成名为<code>helloworld</code>的可执行文件。<code>./helloworld</code>运行文件，控制台打印<code>Hello World</code>：</p>
+<img src="https://images.shiguangping.com/imgs/20201226010523.png" alt="image-20201226010522776" style="zoom:50%;" />
+<p><code>go build -o 文件名</code>：自定义编译的文件名：</p>
+<img src="https://images.shiguangping.com/imgs/20201226011221.png" alt="image-20201226011221822" style="zoom:50%;" />
+<h3 id="跨平台编译交叉编译">跨平台编译（交叉编译）</h3>
+<p>默认<code>go build</code>编译的是当前操作系统的可执行文件，如果要编译其他平台的可执行文件需要指定目标操作系统的平台和处理器架构：</p>
+<p><em>Windows下编译Linux平台的64位可执行程序：</em></p>
+<pre><code class="language-bash">SET CGO_ENABLED=0 //禁用CGO
+SET GOOS=linux // 目标平台是linux
+SET GOARCH=amd64 // 目标处理器架构是amd64
+go build
+</code></pre>
+<p>然后再执行<code>go build</code>命令，得到的就是Linux平台的可执行文件。</p>
+<p><em>Mac下编译Linux和Windows平台的64位可执行程序：</em></p>
+<pre><code class="language-bash">CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build
+CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build
+</code></pre>
+<p><em>Linux下编译Mac和Windows平台64位可执行程序：</em></p>
+<pre><code class="language-bash">CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build
+CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build
+</code></pre>
+<p><em>Windows下编译Mac平台64位可执行程序：</em></p>
+<pre><code class="language-bash">SET CGO_ENABLED=0 
+SET GOOS=darwin
+SET GOARCH=amd64
+go build
+</code></pre>
+<h2 id="标识符和关键字">标识符和关键字</h2>
+<h3 id="标识符">标识符</h3>
+<p>在编程语言中，标识符就是程序员定义的具有特殊意义的词，如变量名，常量名，函数名等等。Go语言中的标识符由**字母、数字、下划线(_)**组成，并且只能以字母或下划线开头。如：<code>abc</code>、<code>_abc</code>、<code>_123</code>等。</p>
+<h3 id="关键字">关键字</h3>
+<p>关键字是指编程语言中预先定义好的具有特殊含义的词，不能把关键字和保留字用作标识符。</p>
+<p>Go语言中共有25个关键字，按作用划分3类：包管理、程序实体声明与定义、程序流程控制。</p>
+<pre><code class="language-go">包管理（2个）：
+	import	package
+
+程序实体声明与定义（8个）：
+	chan	const	func	interface	map	struct	type	var
+
+程序流程控制（15个）：
+	break	case	continue	default	defer	else	fallthrough	
+	for		go		goto		if		range	return	select		switch
+</code></pre>
+<p>Go语言中还有37个保留字。</p>
+<pre><code class="language-go">Constants:
+		true  false  iota nil
+
+Types:
+		int  int8  int16  int32  int64
+		uint  uint8  uint16  uint32  uint64  uintptr
+		float32  float64  complex128  complex64
+		bool  byte  rune  string  error
+
+Functions: 
+		make  len  cap  new  append  copy  close  delete
+		complex  real  imag  panic  recover
+</code></pre>
+<h2 id="变量">变量</h2>
+<h3 id="变量的来历">变量的来历</h3>
+<p>程序在运行时，数据都是存储在内存当中。我们想要在代码中操作某个数据时需要到内存中找到这个数据，但是如果我们直接在代码中通过内存地址去操作数据是非常糟糕的，这使得代码的可读性变得非常差并且容易出错。所以我们就利用变量将数据的内存地址保存起来，以后我们直接通过这个变量就能找到内存上对应的数据了。</p>
+<h3 id="变量类型">变量类型</h3>
+<p>变量 (Variable) 的功能是存储数据。不同变量保存的数据类型可能会不一样。经过半个多世纪的发展，编程语言已经基本形成了一套固定的类型，常见变量的类型有：整型、浮点型、布尔型等。</p>
+<p>Go语言中每一个变量都有自己的类型，并且变量必须经过声明才能使用。</p>
+<h3 id="变量声明">变量声明</h3>
+<p>Go语言中的变量需要声明后才能使用，同一作用域内不支持重复声明。如果是局部变量，声明后必须使用，否则会编译时报错。</p>
+<h3 id="标准声明">标准声明</h3>
+<p>Go语言的变量声明格式为：</p>
+<pre><code class="language-go">var 变量名 变量类型
+</code></pre>
+<p>::: details 示例代码</p>
+<pre><code class="language-go">package main
+
+import &quot;fmt&quot;
+
+// 声明变量
+var name string
+var age int
+var isOk bool
+
+// 批量声明
+var (
+	mobile  string
+	address string
+	remark  string
+)
+
+func main() {
+	name = &quot;张三&quot;
+	age = 25
+	isOk = true
+
+	fmt.Printf(&quot;name is %s&quot;, name)
+}
+</code></pre>
+<p>:::</p>
+<h3 id="变量的初始化">变量的初始化</h3>
+<p>Go语言在声明变量的时候，会自动在指定的内存区域进行初始化操作。每个变量会根据其数据类型初始化默认值，如整型和浮点型的默认值（初始值）是<code>0</code>，string的默认值是<code>空字符串</code>，bool的默认值是<code>false</code>，切片、函数、指针变量的默认值是<code>nil</code>。</p>
+<p>我们也可以在声明变量的同时为其初始化值，变量声明并初始化的标准格式如下：</p>
+<pre><code class="language-go">var 变量名 变量类型 = 表达式
+</code></pre>
+<p>举个例子：</p>
+<pre><code class="language-go">var name string = &quot;张三&quot;
+var age int = 25
+</code></pre>
+<p>或者一次声明并初始化多个变量：</p>
+<pre><code class="language-go">var name, age = &quot;张三&quot;, 25
+</code></pre>
+<h3 id="类型推导">类型推导</h3>
+<p>Go语言中，变量可以根据其在声明初始化时所赋值的数据类型推断出变量具体的数据类型。</p>
+<p>举个例子：</p>
+<pre><code class="language-go">var name = &quot;张三&quot; // 初始化变量时将字符串赋值给name，则变量name的数据类型为string
+</code></pre>
+<p><em>这种方式只适用于在变量声明的同时并初始化时，并且Go是强类型语言。</em></p>
+<h3 id="短变量声明">短变量声明</h3>
+<p>在函数内部，可以使用更简略的<code>:=</code>方式声明并初始化变量。</p>
+<pre><code class="language-go">name := &quot;张三&quot; // 只能在函数内部使用（也就是局部变量）
+</code></pre>
+<h3 id="匿名变量">匿名变量</h3>
+<p>在使用多重赋值时，如果想要忽略某个值，可以使用<code>匿名变量（anonymous variable）</code>。匿名变量用一个下划线<code>_</code>表示，例如：</p>
+<pre><code class="language-go">func foo() (int, string) {
+	return 10, &quot;张三&quot;
+}
+
+func main() {
+  age, _ := foo()
+	_, name := foo()
+
+	fmt.Println(&quot;age:&quot;, age)
+	fmt.Println(&quot;name:&quot;, name)
+}
+</code></pre>
+<p>匿名变量不占用命名空间，不会被分配内存，所以匿名变量之间不存在重复声明。（在<code>Lua</code>等编程语言里，匿名变量也被叫做哑元变量）</p>
+<p>注意事项：</p>
+<ol>
+<li>函数外的每个语句都必须以关键字开始（<code>var</code>、<code>const</code>、<code>func</code>等）；</li>
+<li><code>:=</code>不能再函数外部使用；</li>
+<li><code>_</code>多用于占位，表示忽略值。</li>
+</ol>
+<h2 id="常量">常量</h2>
+<h3 id="声明常量">声明常量</h3>
+<p>相对于变量，常量是恒定不变的量（值），多用于定义程序运行期间不会改变的值。常量的声明和变量的声明非常类似，只是把关键字<code>var</code>换成了<code>const</code>，常量的定义的时候必须赋值。</p>
+<pre><code class="language-go">const pi = 3.1415
+const e = 2.7182
+</code></pre>
+<p>声明了<code>pi</code>和<code>e</code>这两个常量之后，在整个程序运行期间他们的值都不能再发生改变了。</p>
+<p>多个常量也可以一起声明：</p>
+<pre><code class="language-go">const (
+	OK = 200
+	NOTFOUND = 404
+)
+
+// 批量声明常量时，如果某一行声明没有赋值，默认同上一行
+const (
+	n1 = 100
+	n2
+	n3
+)
+</code></pre>
+<h3 id="iota">iota</h3>
+<p><code>iota</code>是Go语言的常量计数器，只能在常量的表达式中使用。</p>
+<p><code>iota</code>在<code>const</code>关键字出现时将被重置为0，const中每<strong>新增一行</strong>常量声明，<code>iota</code>计数+1。<code>iota</code>可以理解为const语句块中的行索引。使用<code>iota</code>能简化定义，在定义枚举时很有用。</p>
+<pre><code class="language-go">// iota
+const (
+	a1 = iota // 0
+	a2 	// 1
+	a3 	// 2
+	a4 	// 3
+)
+</code></pre>
+<h2 id="基本数据类型">基本数据类型</h2>
+<h3 id="整型">整型</h3>
+<p>整型分为两大类：按长度分为<code>int8</code>、<code>int16</code>、<code>int16</code>、<code>int64</code>，对应的无符号整型：<code>uint8</code>、<code>uint16</code>、<code>uint32</code>、<code>uint64</code>。其中，<code>uint8</code>就是我们熟知的<code>byte</code>型，<code>int16</code>对应C语言中的<code>short</code>型，<code>int64</code>对应C语言中的<code>long</code>型。</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>uint8</td>
+<td>无符号8位整型（0到255）</td>
+</tr>
+<tr>
+<td>uint16</td>
+<td>无符号16位整型（0到65535）</td>
+</tr>
+<tr>
+<td>uint32</td>
+<td>无符号32位整型（0到4294967295）</td>
+</tr>
+<tr>
+<td>uint64</td>
+<td>无符号64位整型（0到18446744073709551615）</td>
+</tr>
+<tr>
+<td>int8</td>
+<td>有符号8位整型（-128到127）</td>
+</tr>
+<tr>
+<td>int16</td>
+<td>有符号16位整型（-32768到32767）</td>
+</tr>
+<tr>
+<td>int32</td>
+<td>有符号32位整型（-2147483648到2147483647）</td>
+</tr>
+<tr>
+<td>int64</td>
+<td>有符号64位整型（-9223372036854775808到9223372036854775807）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="特殊整型">特殊整型</h3>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>uint</td>
+<td>32位操作系统上就是uint32，64位操作系统上就是uint64</td>
+</tr>
+<tr>
+<td>int</td>
+<td>32位操作系统上就是int32，64位操作系统上就是int64</td>
+</tr>
+<tr>
+<td>uintptr</td>
+<td>无符号整形，用于存放指针</td>
+</tr>
+</tbody>
+</table>
+<p>**注意：**在使用<code>int</code>和<code>uint</code>类型时，不能假定它是32位或是64位整型，而是考虑<code>int</code>和<code>uint</code>可能在不同平台上的差异。</p>
+<p>**注意事项：**获取对象的长度的内建<code>len()</code>函数返回的长度可以根据不同平台的字节长度进行变化。实际使用中，切片或map的元素数量等都可以用<code>int</code>来表示。在涉及到二进制传输、读写文件的结构描述时，为了保持文件的结构不会受到不同编译目标平台字节长度的影响，不要使用<code>int</code>和<code>uint</code>。</p>
+<h3 id="八进制十六进制">八进制&amp;十六进制</h3>
+<p>Go语言中无法直接定义二进制数，关于八进制和十六进制数的示例如下：</p>
+<pre><code class="language-go">package main
+
+import &quot;fmt&quot;
+
+func main() {
+	var i1 = 0145
+	fmt.Printf(&quot;%d\n&quot;, i1) // %d 输出十进制
+	fmt.Printf(&quot;%b\n&quot;, i1) // %b 输出二进制
+	fmt.Printf(&quot;%o\n&quot;, i1) // %o 输出八进制
+	fmt.Printf(&quot;%x\n&quot;, i1) // %x 输出十六进制数
+	fmt.Printf(&quot;%T\n&quot;, i1) // 查看变量类型
+
+	// 八进制
+	var i2 = 077
+	fmt.Printf(&quot;%d\n&quot;, i2)
+
+	// 十六进制
+	var i3 = 0xff
+	fmt.Printf(&quot;%d\n&quot;, i3)
+
+	// 声明int8类型变量
+	var i4 int8 = 9
+	fmt.Printf(&quot;%T\n&quot;, i4)
+
+	i5 := int8(9)
+	fmt.Printf(&quot;%T\n&quot;, i5)
+
+}
+</code></pre>
+<h3 id="c语言中的占位符">C语言中的占位符</h3>
+<table>
+<thead>
+<tr>
+<th>占位符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>%a</td>
+<td>读入一个浮点值(仅C99有效)</td>
+</tr>
+<tr>
+<td>%c</td>
+<td>用来输出单个字符</td>
+</tr>
+<tr>
+<td>%d</td>
+<td>用来输出有符号的十进制整数（包括<code>int</code>/<code>char</code>类型）</td>
+</tr>
+<tr>
+<td>%i</td>
+<td>读入十进制，八进制，十六进制整数</td>
+</tr>
+<tr>
+<td>%o</td>
+<td>用来输出无符号的八进制整数</td>
+</tr>
+<tr>
+<td>%x</td>
+<td>用来输出无符号的十六进制整数</td>
+</tr>
+<tr>
+<td>%s</td>
+<td>用来输出一个字符串</td>
+</tr>
+<tr>
+<td>%p</td>
+<td>读入指针</td>
+</tr>
+<tr>
+<td>%u</td>
+<td>用来输出无符号的十进制整数（包括<code>int</code>/<code>char</code>类型）</td>
+</tr>
+<tr>
+<td>%n</td>
+<td>至此已读入值的等价字符数</td>
+</tr>
+<tr>
+<td>%[]</td>
+<td>扫描字符集合</td>
+</tr>
+<tr>
+<td>%%</td>
+<td>读%符号</td>
+</tr>
+<tr>
+<td>%f</td>
+<td>用来输出小数形式的十进制浮点数（输入时小数形式和指数形式都可以识别）</td>
+</tr>
+<tr>
+<td>%e</td>
+<td>用来输出指数形式的十进制浮点数（输入时小数形式和指数形式都可以识别）</td>
+</tr>
+<tr>
+<td>%g</td>
+<td>用来输出指数形式和小数形式两者中较短的十进制浮点数（输入时小数形式和指数形式都可以识别）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="浮点型">浮点型</h3>
+<p>Go语言支持两种浮点数：<code>float32</code>和<code>float64</code>，这两种浮点型数据格式遵循<code>IEEE 754</code>标准。<code>float32</code>的浮点数最大范围约<code>3.4e38</code>，可以使用<code>math.MaxFloat32</code>查看。<code>float64</code>的浮点数的最大范围约为<code>1.8e308</code>，可以使用<code>math.MaxFloat64</code>查看。</p>
+<p>打印浮点数时，可以使用<code>fmt</code>包配合动词<code>%f</code>，代码如下：</p>
+<pre><code class="language-go">package main
+
+import (
+	&quot;fmt&quot;
+	&quot;math&quot;
+)
+
+func main() {
+
+	// 最大的float32数
+	fmt.Printf(&quot;%f\n&quot;, math.MaxFloat32)
+
+	// 最大的float64数
+	fmt.Printf(&quot;%f\n&quot;, math.MaxFloat64)
+
+	fmt.Printf(&quot;%f\n&quot;, math.Pi)
+	fmt.Printf(&quot;%.2f\n&quot;, math.Pi) // %.2f 小数点保留后两位
+}
+</code></pre>
+<h3 id="复数">复数</h3>
+<p><code>complex64</code>和<code>complex128</code></p>
+<pre><code class="language-go">package main
+
+import &quot;fmt&quot;
+
+func main() {
+	var c1 complex64
+	c1 = 1 + 2i
+
+	var c2 complex128
+	c2 = 2 + 3i
+
+	fmt.Println(c1)
+	fmt.Println(c2)
+}
+</code></pre>
+<p>复数有实部和虚部，<code>complex64</code>的实部和虚部为32位，<code>complex128</code>的实部和虚部为64位。</p>
+<h3 id="布尔值">布尔值</h3>
+<p>Go语言中以<code>bool</code>类型进行声明布尔类型数据，布尔类型数据只有<code>true</code>和<code>false</code>两个值。</p>
+<pre><code class="language-go">package main
+
+import &quot;fmt&quot;
+
+func main() {
+	b1 := true
+	var b2 bool
+
+	fmt.Printf(&quot;%T b1=%v\n&quot;, b1, b1) // %v 输出变量的值
+	fmt.Printf(&quot;%T b2=%v\n&quot;, b2, b2)
+
+	var n = 100
+	var s = &quot;Hello Go&quot;
+
+	// 常用的占位符
+	fmt.Printf(&quot;%T \n&quot;, n)       // 输出变量的数据类型
+	fmt.Printf(&quot;%v %v \n&quot;, n, s) // 输出变量的值（任意类型数据）
+	fmt.Printf(&quot;%b \n&quot;, n)       // 输出变量的二进制数
+	fmt.Printf(&quot;%d \n&quot;, n)       // 输出变量的十进制数
+	fmt.Printf(&quot;%o \n&quot;, n)       // 输出变量的八进制数
+	fmt.Printf(&quot;%x \n&quot;, n)       // 输出变量的十六进制数
+	fmt.Printf(&quot;%s \n&quot;, s)       // 输出字符串变量
+}
+</code></pre>
+<p><strong>注意：</strong></p>
+<ol>
+<li>布尔类型变量的默认值是<code>false</code>；</li>
+<li>Go语言中不允许将整型强制转换成布尔类型数据；</li>
+<li>布尔类型数据无法参与数值运算，也无法与其它类型进行转换。</li>
+</ol>
+<h3 id="字符串">字符串</h3>
+<p>Go语言中的字符串以原生数据类型出现，使用字符串就像使用其他的原生数据类型（int、bool、float32、float64等）一样。Go语言中的字符串的内部实现使用<code>UTF-8</code>编码。字符串的值为双引号<code>&quot;&quot;</code>中的内容，可以在Go语言的源码中直接添加非ASCII码字符，例如：</p>
+<pre><code class="language-go">s1 := &quot;hello&quot;
+s2 := &quot;你好&quot;
+</code></pre>
+<p><strong>注意：</strong></p>
+<ul>
+<li>Go语言中字符串使用<strong>双引号</strong>包裹；</li>
+<li>Go语言中单引号包裹的是<strong>字符</strong></li>
+</ul>
+<h3 id="字符串转义符">字符串转义符</h3>
+<p>Go语言的字符串常见转义符包括回车、换行、单双引号、制表符等。如下表所示：</p>
+<table>
+<thead>
+<tr>
+<th>转义符</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>\r</td>
+<td>回车符（返回行首）</td>
+</tr>
+<tr>
+<td>\n</td>
+<td>换行符（直接跳到下一行的同列位置）</td>
+</tr>
+<tr>
+<td>\t</td>
+<td>制表符</td>
+</tr>
+<tr>
+<td>\'</td>
+<td>单引号</td>
+</tr>
+<tr>
+<td>\&quot;</td>
+<td>双引号</td>
+</tr>
+<tr>
+<td>\</td>
+<td>反斜杠</td>
+</tr>
+</tbody>
+</table>
+<p>反引号<code>``</code>中的内容会原样输出：</p>
+<pre><code class="language-go">package main
+
+import &quot;fmt&quot;
+
+func main() {
+	s1 := `人生苦短
+远离Python
+`
+	fmt.Println(s1)
+}
+</code></pre>
+<h3 id="字符串的常用操作">字符串的常用操作</h3>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>介绍</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>len()</code></td>
+<td>字符串长度</td>
+</tr>
+<tr>
+<td><code>+</code>或<code>fmt.Sprintf</code></td>
+<td>拼接字符串</td>
+</tr>
+<tr>
+<td><code>strings.Split</code></td>
+<td>分割字符串</td>
+</tr>
+<tr>
+<td><code>strings.contains</code></td>
+<td>判断是否包含</td>
+</tr>
+<tr>
+<td><code>strings.HasPrefix</code>，<code>strings.HasSuffix</code></td>
+<td>前缀/后缀判断</td>
+</tr>
+<tr>
+<td><code>strings.Index()</code>，<code>strings.LastIndex()</code></td>
+<td>子串出现的位置</td>
+</tr>
+<tr>
+<td><code>strings.Join(a[]string,sep string)</code></td>
+<td>join操作</td>
+</tr>
+</tbody>
+</table>
+<h4 id="字符串拼接">字符串拼接</h4>
+<pre><code class="language-go">package main
+
+import &quot;fmt&quot;
+
+func main() {
+
+	pre := &quot;Hello&quot;
+	suf := &quot;Go&quot;
+
+	fmt.Println(len(pre)) // 5
+	fmt.Println(len(suf)) // 2
+	// + 拼接字符串
+	s1 := pre +&quot; &quot;+ suf
+	// fmt.Sprintf 最终返回一个字符串
+	s2 := fmt.Sprintf(&quot;%s %s&quot;, pre, suf)
+
+	fmt.Println(s1) // Hello Go
+	fmt.Println(s2) // Hello Go
+}
+</code></pre>
+<h3 id="byte和rune">byte和rune</h3>
+<blockquote>
+<p>Go语言定义了两种字符类型：</p>
+<p><code>btye</code>类型，代表了一个ASCII码字符；</p>
+<p><code>rune</code>类型，代表了一个UTF-8字符。</p>
+</blockquote>
+<p><code>rune</code>类型，官方的定义是：<code>rune is an alias for int32 and is equivalent to int32 in all ways</code>。具体看如下示例：</p>
+<p>打印输出<code>str</code>的长度：</p>
+<pre><code class="language-go">str := &quot;你好 Go~&quot;
+fmt.Println(len(str)) // 10
+</code></pre>
+<p>字符串<code>str</code>的预期长度应该是6，为什么输出的是10？</p>
+<p>这是因为Go语言中<code>string</code>类型底层是通过byte数组实现的。中文字符在unicode下占2个字节，在utf-8编码下占3个字节，而Go默认编码正好是utf-8。</p>
+<p>Go语言中为了处理非<code>ASCII</code>码类型的字符（中文或其他语系字符）定义了<code>rune</code>类型。还有一个<code>byte</code>数据类型与<code>rune</code>相似，它是用来处理<code>ASCII</code>码类型字符的：于：</p>
+<ul>
+<li><code>byte</code> 等同于<code>int8</code>，常用来处理<code>ASCII</code>字符</li>
+<li><code>rune</code> 等同于<code>int32</code>,常用来处理<code>unicode</code>或<code>utf-8</code>字符</li>
+</ul>
+<pre><code class="language-go">str := &quot;你好 Go~&quot;
+
+fmt.Println(len([]rune(str))) // 6
+fmt.Println(utf8.RuneCountInString(str)) // 6
+</code></pre>
+<h3 id="字符串修改">字符串修改</h3>
+<pre><code class="language-go">package main
+
+import &quot;fmt&quot;
+
+func main() {
+
+	str := &quot;你好啊&quot;
+
+	// 字符串修改
+	s1 := []rune(str) // 把字符串强制转换成一个rune切片
+	fmt.Println(s1) // [20320 22909 21834]
+	fmt.Printf(&quot;%c\n&quot;, s1) // [你 好 啊]
+
+	s1[2] = '吗' // 把s1的第三个字符改成'吗'
+	fmt.Println(string(s1)) // 你 好 吗
+
+}
+</code></pre>
+<h3 id="类型转换">类型转换</h3>
+<p>Go语言中只有强制类型转换（显式转换），没有隐式类型转换。该语法只能在两个类型支持互相转换的时候使用。<code>bool</code>类型不能和其他任何类型进行转换。</p>
+<p>强制类型转换的基本语法如下：</p>
+<pre><code class="language-go">T(表达式)
+</code></pre>
+<p>其中，T表示要转换的类型。表达式包括变量、复杂算子和函数返回值等。</p>
+<h2 id="流程控制">流程控制</h2>
+<p>Go语言中最常用的流程控制有<code>if</code>和<code>for</code>，而<code>switch</code>和<code>goto</code>主要是为了简化代码、降低重复代码而生的结构，属于扩展类的流程控制。</p>
+<h3 id="if-else条件分支">if else（条件分支）</h3>
+<p>Go语言中<code>if</code>条件判断的格式如下：</p>
+<pre><code class="language-go">if 表达式1 {
+  分支1
+} else if 表达式2 {
+  分支2
+} else {
+  分支3
+}
+</code></pre>
+<p>::: details 代码示例</p>
+<pre><code class="language-go">package main
+
+func main() {
+	/**
+	老婆给当程序员的老公打电话：“下班顺路买一斤包子带回来，如果看到卖西瓜的，买一个。
+	”当晚，程序员老公手捧一个包子进了家门……老婆怒道：“你怎么就买了一个包子？”老公答曰：“因为看到了卖西瓜的。”
+	*/
+
+	hasWatermelon := true
+
+	if hasWatermelon {
+		println(&quot;买一个包子&quot;)
+	} else {
+		println(&quot;买一斤包子&quot;)
+	}
+}
+</code></pre>
+<p>:::</p>
+<p>if条件判断还要一个特殊的写法，可以在if表达式之前添加一个执行语句，再根据俄变量值进行判断：</p>
+<p>::: details 代码示例</p>
+<pre><code class="language-go">if hasWatermelon := true; hasWatermelon {
+		println(&quot;买一个包子&quot;)
+	} else {
+		println(&quot;买一斤包子&quot;)
+	}
+</code></pre>
+<p>:::</p>
+<h3 id="switch-case条件分支">switch case（条件分支）</h3>
+<p>使用<code>switch</code>语句可以方便地对大量的值进行条件判断。</p>
+<pre><code class="language-go">package main
+
+import &quot;fmt&quot;
+
+func main() {
+
+	score := 66
+
+	switch {
+	case score &gt;= 85:
+		fmt.Println(&quot;优秀&quot;)
+	case score &gt; 60:
+		fmt.Println(&quot;及格&quot;)
+	default:
+		fmt.Println(&quot;不及格&quot;)
+	}
+}
+</code></pre>
+<h3 id="for循环结构">for（循环结构）</h3>
+<p>Go语言中的所有循环类型均可使用<code>for</code>关键字来完成。</p>
+<p>for循环的基本格式如下：</p>
+<pre><code class="language-go">for 初始语句; 条件表达式; 结束语句 {
+  循环体
+}
+</code></pre>
+<p>初始语句用来声明变量，条件表达式用来判断是否进入循环执行循环体，循环体执行结束后执行结束语句。</p>
+<pre><code class="language-go">package main
+
+import &quot;fmt&quot;
+
+func main() {
+
+	// 基本格式
+	sum := 0
+	for i := 0; i &lt;= 100; i++ {
+		sum += i
+	}
+  
+	fmt.Printf(&quot;0到100的累加和：%v\n&quot;, sum) // 5050
+  
+}
+</code></pre>
+<p>for循环的初始语句和结束语句都可以省略，但是分号不能省略。</p>
+<h3 id="无限循环">无限循环</h3>
+<pre><code class="language-go">for {
+  循环体
+}
+</code></pre>
+<p>for循环可以通过<code>break</code>、<code>goto</code>、<code>retuen</code>、<code>panic</code>语句强制退出循环。</p>
+<h3 id="for-range键值循环">for range（键值循环）</h3>
+<p>Go语言中可以使用<code>for range</code>遍历数组、切片、字符串、map及通道(channel)。通过<code>for range</code>遍历的返回值有以下规律：</p>
+<ol>
+<li>数组、切片、字符串返回索引和值；</li>
+<li>map返回键和值；</li>
+<li>通道(channel)只返回通道内的值。</li>
+</ol>
+<pre><code class="language-go">package main
+
+import &quot;fmt&quot;
+
+func main() {
+
+	s := &quot;你好 Go~&quot;
+
+	for i, v := range s {
+		fmt.Printf(&quot;索引：%d，元素：%c\n&quot;, i, v)
+	}
+
+}
+</code></pre>
+<h3 id="练习九九乘法表">练习：九九乘法表</h3>
+<pre><code class="language-go">package main
+
+import &quot;fmt&quot;
+
+func main() {
+
+	for i := 1; i &lt;= 9; i++ {
+		for j := 1; j &lt;= i; j++ {
+			fmt.Printf(&quot;%d * %d = %d    &quot;, j, i, i * j)
+		}
+		fmt.Println()
+	}
+
+}
+</code></pre>
+<p>运行结果：</p>
+<pre><code>1 * 1 = 1    
+1 * 2 = 2    2 * 2 = 4    
+1 * 3 = 3    2 * 3 = 6    3 * 3 = 9    
+1 * 4 = 4    2 * 4 = 8    3 * 4 = 12    4 * 4 = 16    
+1 * 5 = 5    2 * 5 = 10    3 * 5 = 15    4 * 5 = 20    5 * 5 = 25    
+1 * 6 = 6    2 * 6 = 12    3 * 6 = 18    4 * 6 = 24    5 * 6 = 30    6 * 6 = 36    
+1 * 7 = 7    2 * 7 = 14    3 * 7 = 21    4 * 7 = 28    5 * 7 = 35    6 * 7 = 42    7 * 7 = 49    
+1 * 8 = 8    2 * 8 = 16    3 * 8 = 24    4 * 8 = 32    5 * 8 = 40    6 * 8 = 48    7 * 8 = 56    8 * 8 = 64    
+1 * 9 = 9    2 * 9 = 18    3 * 9 = 27    4 * 9 = 36    5 * 9 = 45    6 * 9 = 54    7 * 9 = 63    8 * 9 = 72    9 * 9 = 81
+</code></pre>
+<h3 id="goto跳转到指定标签">goto（跳转到指定标签）</h3>
+<p><code>goto</code>语句通过标签进行代码间的无条件跳转。<code>goto</code>语句可以在快速跳出循环、避免重复退出上有一定的帮助。Go语言中使用<code>goto</code>语句能简化一些代码的实现过程。</p>
+<pre><code class="language-go">package main
+
+import &quot;fmt&quot;
+
+func main() {
+
+	for i := 0; i &lt; 10; i++ {
+
+		if i == 3 {
+			goto breakTag // 跳转到标签
+		}
+
+		fmt.Println(i)
+	}
+
+breakTag: // 设置标签
+	fmt.Println(&quot;结束for循环&quot;)
+}
+</code></pre>
+<p><strong>注意</strong>：现在的代码中不推荐使用。</p>
+<h2 id="运算符">运算符</h2>
+<h3 id="算术运算符">算术运算符</h3>
+<table>
+<thead>
+<tr>
+<th>运算符</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>+</td>
+<td style="text-align:left">相加</td>
+</tr>
+<tr>
+<td>-</td>
+<td style="text-align:left">相减</td>
+</tr>
+<tr>
+<td>*</td>
+<td style="text-align:left">相乘</td>
+</tr>
+<tr>
+<td>/</td>
+<td style="text-align:left">相除</td>
+</tr>
+<tr>
+<td>%</td>
+<td style="text-align:left">取余</td>
+</tr>
+</tbody>
+</table>
+<p>**注意：**自加<code>++</code>和自减<code>--</code>在Go语言中是单独的语句，并不是运算符。</p>
+<h3 id="关系运算符">关系运算符</h3>
+<table>
+<thead>
+<tr>
+<th>运算符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>==</td>
+<td>相等</td>
+</tr>
+<tr>
+<td>!=</td>
+<td>不等</td>
+</tr>
+<tr>
+<td>&gt;</td>
+<td>大于</td>
+</tr>
+<tr>
+<td>&lt;</td>
+<td>小于</td>
+</tr>
+<tr>
+<td>&gt;=</td>
+<td>大于等于</td>
+</tr>
+<tr>
+<td>&lt;=</td>
+<td>小于等于</td>
+</tr>
+</tbody>
+</table>
+<p>**注意：**相同类型的数据才能比较</p>
+<h3 id="逻辑运算符">逻辑运算符</h3>
+<table>
+<thead>
+<tr>
+<th>运算符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&amp;&amp;</td>
+<td>与</td>
+</tr>
+<tr>
+<td>||</td>
+<td>或</td>
+</tr>
+<tr>
+<td>！</td>
+<td>非</td>
+</tr>
+</tbody>
+</table>
+<h3 id="位运算符">位运算符</h3>
+<p>位运算符对整数在内存中的二进制位进行操作。</p>
+<table>
+<thead>
+<tr>
+<th>运算符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&amp;</td>
+<td>参与运算的两数各对应的二进位相与（两位均为1才为1）</td>
+</tr>
+<tr>
+<td>|</td>
+<td>参与运算的两数各对应的二进位相或（两位有一个为1才为1）</td>
+</tr>
+<tr>
+<td>^</td>
+<td>参与运算的两数各对应的二进位相异或，当两对应的二进位相异时，结果为1</td>
+</tr>
+<tr>
+<td>&lt;&lt;</td>
+<td>左移n位就是乘以2的n次方（“a&lt;&lt;b”是把a的各二进位全部左移b位，高位丢弃，低位补0）</td>
+</tr>
+<tr>
+<td>&gt;&gt;</td>
+<td>右移n位就是除以2的n次方（“a&gt;&gt;b”是把a的各二进位全部右移b位）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="赋值运算符">赋值运算符</h3>
+<table>
+<thead>
+<tr>
+<th>运算符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+        </div>
+        <!-- Share to Twitter, Weibo, Telegram -->
+        <div class="flex items-center">
+          <div class="mr-4 flex items-center">
+            <i class="ri-share-forward-line text-gray-500"></i>
+          </div>
+          <div class="px-4 cursor-pointer text-blue-500 hover:bg-blue-100 dark:hover:bg-gray-600 inline-flex" @click="shareToTwitter">
+            <i class="ri-twitter-line"></i>
+          </div>
+          <div class="px-4 cursor-pointer text-red-500 hover:bg-red-100 dark:hover:bg-gray-600 inline-flex" @click="shareToWeibo">
+            <i class="ri-weibo-line"></i>
+          </div>
+          <div class="px-4 cursor-pointer text-indigo-500 hover:bg-indigo-100 dark:hover:bg-gray-600 inline-flex" @click="shareToTelegram">
+            <i class="ri-telegram-line"></i>
+          </div>
+        </div>
+      </div>
+
+      
+
+      
+        <div id="vlaine-comment"></div>
+      
+
+      <footer class="py-12 text-center px-4 md:px-0" v-pre>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">時光瓶</a>
+</footer>
+    </div>
+
+    <!-- TOC Container -->
+    <div class="fixed right-0 bottom-0 mb-16 mr-4 shadow w-8 h-8 rounded-full flex justify-center items-center z-10 cursor-pointer bg-white dark:bg-gray-500 dark:text-gray-200 hover:shadow-lg transition-all animated fadeInRight" @click="showToc = true">
+      <i class="ri-file-list-line"></i>
+    </div>
+
+    <div class="fixed right-0 top-0 bottom-0 overflow-y-auto w-64 bg-white dark:bg-gray-800 p-4 border-l border-gray-100 dark:border-gray-600 z-10 transition-fast" :class="{ '-mr-64': !showToc }">
+      <div class="flex mb-4 justify-end">
+        <div class="w-8 h-8 inline-flex justify-center items-center rounded-full cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-fast" @click="showToc = false">
+          <i class="ri-close-line text-lg"></i>
+        </div>
+      </div>
+      <div class="post-toc-container">
+        <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AFgo%E8%AF%AD%E8%A8%80">什么是Go语言？</a></li>
+<li><a href="#go%E8%AF%AD%E8%A8%80%E7%89%B9%E7%82%B9">Go语言特点</a></li>
+<li><a href="#go%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85">Go开发环境安装</a></li>
+<li><a href="#%E7%AC%AC%E4%B8%80%E4%B8%AAgo%E7%A8%8B%E5%BA%8F">第一个Go程序</a>
+<ul>
+<li><a href="#%E7%BC%96%E8%AF%91">编译</a></li>
+<li><a href="#%E8%B7%A8%E5%B9%B3%E5%8F%B0%E7%BC%96%E8%AF%91%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91">跨平台编译（交叉编译）</a></li>
+</ul>
+</li>
+<li><a href="#%E6%A0%87%E8%AF%86%E7%AC%A6%E5%92%8C%E5%85%B3%E9%94%AE%E5%AD%97">标识符和关键字</a>
+<ul>
+<li><a href="#%E6%A0%87%E8%AF%86%E7%AC%A6">标识符</a></li>
+<li><a href="#%E5%85%B3%E9%94%AE%E5%AD%97">关键字</a></li>
+</ul>
+</li>
+<li><a href="#%E5%8F%98%E9%87%8F">变量</a>
+<ul>
+<li><a href="#%E5%8F%98%E9%87%8F%E7%9A%84%E6%9D%A5%E5%8E%86">变量的来历</a></li>
+<li><a href="#%E5%8F%98%E9%87%8F%E7%B1%BB%E5%9E%8B">变量类型</a></li>
+<li><a href="#%E5%8F%98%E9%87%8F%E5%A3%B0%E6%98%8E">变量声明</a></li>
+<li><a href="#%E6%A0%87%E5%87%86%E5%A3%B0%E6%98%8E">标准声明</a></li>
+<li><a href="#%E5%8F%98%E9%87%8F%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96">变量的初始化</a></li>
+<li><a href="#%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC">类型推导</a></li>
+<li><a href="#%E7%9F%AD%E5%8F%98%E9%87%8F%E5%A3%B0%E6%98%8E">短变量声明</a></li>
+<li><a href="#%E5%8C%BF%E5%90%8D%E5%8F%98%E9%87%8F">匿名变量</a></li>
+</ul>
+</li>
+<li><a href="#%E5%B8%B8%E9%87%8F">常量</a>
+<ul>
+<li><a href="#%E5%A3%B0%E6%98%8E%E5%B8%B8%E9%87%8F">声明常量</a></li>
+<li><a href="#iota">iota</a></li>
+</ul>
+</li>
+<li><a href="#%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B">基本数据类型</a>
+<ul>
+<li><a href="#%E6%95%B4%E5%9E%8B">整型</a></li>
+<li><a href="#%E7%89%B9%E6%AE%8A%E6%95%B4%E5%9E%8B">特殊整型</a></li>
+<li><a href="#%E5%85%AB%E8%BF%9B%E5%88%B6%E5%8D%81%E5%85%AD%E8%BF%9B%E5%88%B6">八进制&amp;十六进制</a></li>
+<li><a href="#c%E8%AF%AD%E8%A8%80%E4%B8%AD%E7%9A%84%E5%8D%A0%E4%BD%8D%E7%AC%A6">C语言中的占位符</a></li>
+<li><a href="#%E6%B5%AE%E7%82%B9%E5%9E%8B">浮点型</a></li>
+<li><a href="#%E5%A4%8D%E6%95%B0">复数</a></li>
+<li><a href="#%E5%B8%83%E5%B0%94%E5%80%BC">布尔值</a></li>
+<li><a href="#%E5%AD%97%E7%AC%A6%E4%B8%B2">字符串</a></li>
+<li><a href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BD%AC%E4%B9%89%E7%AC%A6">字符串转义符</a></li>
+<li><a href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C">字符串的常用操作</a>
+<ul>
+<li><a href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%8B%BC%E6%8E%A5">字符串拼接</a></li>
+</ul>
+</li>
+<li><a href="#byte%E5%92%8Crune">byte和rune</a></li>
+<li><a href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%BF%AE%E6%94%B9">字符串修改</a></li>
+<li><a href="#%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2">类型转换</a></li>
+</ul>
+</li>
+<li><a href="#%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6">流程控制</a>
+<ul>
+<li><a href="#if-else%E6%9D%A1%E4%BB%B6%E5%88%86%E6%94%AF">if else（条件分支）</a></li>
+<li><a href="#switch-case%E6%9D%A1%E4%BB%B6%E5%88%86%E6%94%AF">switch case（条件分支）</a></li>
+<li><a href="#for%E5%BE%AA%E7%8E%AF%E7%BB%93%E6%9E%84">for（循环结构）</a></li>
+<li><a href="#%E6%97%A0%E9%99%90%E5%BE%AA%E7%8E%AF">无限循环</a></li>
+<li><a href="#for-range%E9%94%AE%E5%80%BC%E5%BE%AA%E7%8E%AF">for range（键值循环）</a></li>
+<li><a href="#%E7%BB%83%E4%B9%A0%E4%B9%9D%E4%B9%9D%E4%B9%98%E6%B3%95%E8%A1%A8">练习：九九乘法表</a></li>
+<li><a href="#goto%E8%B7%B3%E8%BD%AC%E5%88%B0%E6%8C%87%E5%AE%9A%E6%A0%87%E7%AD%BE">goto（跳转到指定标签）</a></li>
+</ul>
+</li>
+<li><a href="#%E8%BF%90%E7%AE%97%E7%AC%A6">运算符</a>
+<ul>
+<li><a href="#%E7%AE%97%E6%9C%AF%E8%BF%90%E7%AE%97%E7%AC%A6">算术运算符</a></li>
+<li><a href="#%E5%85%B3%E7%B3%BB%E8%BF%90%E7%AE%97%E7%AC%A6">关系运算符</a></li>
+<li><a href="#%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97%E7%AC%A6">逻辑运算符</a></li>
+<li><a href="#%E4%BD%8D%E8%BF%90%E7%AE%97%E7%AC%A6">位运算符</a></li>
+<li><a href="#%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6">赋值运算符</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+      </div>
+    </div>
+
+    <!-- Back to top -->
+    <div class="fixed right-0 bottom-0 mb-4 mr-4 shadow w-8 h-8 rounded-full flex justify-center items-center z-10 cursor-pointer bg-white hover:shadow-lg transition-all dark:bg-gray-500 dark:text-gray-200" @click="backToUp" v-show="scrolled">
+      <i class="ri-arrow-up-line"></i>
+    </div>
+  </div>
+
+  <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+  <!-- Background of PhotoSwipe. 
+        It's a separate element as animating opacity is faster than rgba(). -->
+  <div class="pswp__bg">
+  </div>
+  <!-- Slides wrapper with overflow:hidden. -->
+  <div class="pswp__scroll-wrap">
+    <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+    <div class="pswp__container">
+      <div class="pswp__item">
+      </div>
+      <div class="pswp__item">
+      </div>
+      <div class="pswp__item">
+      </div>
+    </div>
+    <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+    <div class="pswp__ui pswp__ui--hidden">
+      <div class="pswp__top-bar">
+        <!--  Controls are self-explanatory. Order can be changed. -->
+        <div class="pswp__counter">
+        </div>
+        <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+        <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+        <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+        <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+        <!-- element will get class pswp__preloader--active when preloader is running -->
+        <div class="pswp__preloader">
+          <div class="pswp__preloader__icn">
+            <div class="pswp__preloader__cut">
+              <div class="pswp__preloader__donut">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+        <div class="pswp__share-tooltip">
+        </div>
+      </div>
+      <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+      </button>
+      <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+      </button>
+      <div class="pswp__caption">
+        <div class="pswp__caption__center">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://www.shiguangping.com/media/scripts/main.js"></script>
+  
+  <!-- Code Highlight -->
+  
+    <script src="https://www.shiguangping.com/media/prism.js"></script>
+    <script>
+      Prism.highlightAll()
+    </script>
+  
+
+  <script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+  <script>
+    //拿到预览框架，也就是上面的html代码
+    var pswpElement = document.querySelectorAll('.pswp')[0];
+    //定义图片数组变量
+    var imgitems;
+    /**
+    * 用于显示预览界面
+    * @param index 图片数组下标
+    */
+    function viewImg(index) {
+      //其它选项这里不做过多阐述，详情见官网
+      var pswpoptions = {
+        index: parseInt(index, 10), // 开始幻灯片索引。0是第一张幻灯片。必须是整数，而不是字符串。
+        bgOpacity: 0.7, // 背景透明度，0-1
+        maxSpreadZoom: 3, // 缩放级别，不要太大
+      };
+      //初始化并打开PhotoSwipe，pswpElement对应上面预览框架，PhotoSwipeUI_Default为皮肤，imgitems为图片数组，pswpoptions为选项
+      var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, imgitems, pswpoptions);
+      gallery.init()
+    }
+    /**
+    * 用于添加图片点击事件
+    * @param img 图片元素
+    * @param index 所属下标（在imgitems中的位置）
+    */
+    function addImgClick(img, index) {
+      img.onclick = function() {
+        viewImg(index)
+      }
+    }
+    /**
+    * 轮询所有图片，获取src、width、height等数据，加入imgitems，并给图片元素添加事件
+    * 最好在onload中执行该方法，本站因放在最底部，所以直接初始化
+    * 异步加载图片可在图片元素创建完成后调用此方法
+    */
+    function initImg() {
+      //重置图片数组
+      imgitems = [];
+      //查找class:markdown 下的所有img元素并遍历
+      var imgs = document.querySelectorAll('.markdown img');
+      for (var i = 0; i < imgs.length; i++) {
+        var img = imgs[i];
+        //本站相册初始为loading图片，真实图片放在data-src
+        var ds = img.getAttribute("data-src");
+        //创建image对象，用于获取图片宽高
+        var imgtemp = new Image();
+        //判断是否存在data-src
+        if (ds != null && ds.length > 0) {
+          imgtemp.src = ds
+        } else {
+          imgtemp.src = img.src
+        }
+        //判断是否存在缓存
+        if (imgtemp.complete) {
+          var imgobj = {
+            "src": imgtemp.src,
+            "w": imgtemp.width,
+            "h": imgtemp.height,
+          };
+          imgitems[i] = imgobj;
+          addImgClick(img, i);
+        } else {
+          console.log('进来了2')
+          imgtemp.index = i;
+          imgtemp.img = img;
+          imgtemp.onload = function() {
+            var imgobj = {
+              "src": this.src,
+              "w": this.width,
+              "h": this.height,
+            };
+            //不要使用push，因为onload前后顺序会不同
+            imgitems[this.index] = imgobj
+            //添加点击事件
+            addImgClick(this.img, this.index);
+          }
+        }
+      }
+    }
+    //初始化
+    initImg();
+  </script>
+  
+    <script type="application/javascript" src="https://unpkg.com/valine"></script>
+<script type="application/javascript">
+  new Valine({
+    el: '#vlaine-comment',
+    appId: 'iScdY0hF5Y8TgKyMtfvp9CcM-gzGzoHsz',
+    appKey: 'XH2m9KIiA88R6N2lYiSObDH7',
+    pageSize: 10,
+    notify: false,
+    avatar: 'mp',
+    verify: false,
+    placeholder: '来都来了，不妨评论一下',
+    visitor: true,
+    highlight: false,
+    recordIP: false,
+  })
+</script>
+  
+  
+</body>
+
+</html>

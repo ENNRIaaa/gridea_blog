@@ -1,0 +1,339 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>時光瓶</title>
+<link rel="shortcut icon" href="https://www.shiguangping.com/favicon.ico">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.2.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css">
+<link rel="stylesheet" href="https://www.shiguangping.com/media/css/tailwind.css">
+<link rel="stylesheet" href="https://www.shiguangping.com/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="時光瓶 - Atom Feed" href="https://www.shiguangping.com/atom.xml">
+
+    
+
+  <meta name="description" content="李炎の生活學習日誌" />
+</head>
+<body>
+  <div class="antialiased flex flex-col min-h-screen" id="app">
+
+    <div class="nav py-3 md:py-8 fixed w-full z-10 bg-gray-50 dark:bg-gray-700 transition-all duration-300" :class="{ 'scroll': scrolled }">
+  <div class="flex justify-end px-4">
+    <div class="w-8 h-8 flex justify-center items-center rounded-full md:hidden" @click="showMenu = !showMenu">
+      <i class="ri-close-line" v-show="showMenu"></i>
+      <i class="ri-menu-3-line" v-show="!showMenu"></i>
+    </div>
+  </div>
+  <nav class="max-w-4xl w-full mx-auto text-center flex flex-col md:flex-row justify-center md:block" :class="`${ showMenu ? 'block' : 'hidden' }`">
+    
+      <a href="/" target="" class="py-2 md:py-1 px-4 mx-4 inline-flex transition font-semibold rounded dark:hover:bg-gray-600 hover:bg-gray-200">
+        首页
+      </a>
+    
+      <a href="/archives" target="" class="py-2 md:py-1 px-4 mx-4 inline-flex transition font-semibold rounded dark:hover:bg-gray-600 hover:bg-gray-200">
+        归档
+      </a>
+    
+      <a href="/tags" target="" class="py-2 md:py-1 px-4 mx-4 inline-flex transition font-semibold rounded dark:hover:bg-gray-600 hover:bg-gray-200">
+        标签
+      </a>
+    
+      <a href="/post/about" target="" class="py-2 md:py-1 px-4 mx-4 inline-flex transition font-semibold rounded dark:hover:bg-gray-600 hover:bg-gray-200">
+        关于
+      </a>
+    
+    <a href="https://www.shiguangping.com/atom.xml" target="_blank" class="py-2 md:py-1 px-4 mx-4 inline-flex transition font-semibold rounded dark:hover:bg-gray-600 hover:bg-gray-200">
+      RSS
+    </a>
+  </nav>
+</div>
+
+    <div class="max-w-4xl w-full mx-auto pt-32">
+      
+
+      <div class="shadow-box bg-white dark:bg-gray-600 border-gray-300 rounded-none md:rounded-lg -mx-1 md:mx-0 md:px-0">
+        
+  <div class="p-8 border-b border-gray-200 dark:border-gray-700 flex relative overflow-hidden flex-col md:flex-row animated fadeIn">
+    
+    <div class="flex-1 order-2 md:order-1">
+      <h2 class="text-2xl font-semibold mb-4">
+        <a href="https://www.shiguangping.com/post/redis-story-persistence/" class="text-gray-700 dark:text-gray-200 border-b-2 border-dotted border-gray-200 dark:border-gray-400 dark:hover:border-gray-200 hover:border-gray-600 transition-all duration-100">
+          突然挂了！Redis缓存都在内存中，这下完了！
+        </a>
+      </h2>
+      <div class="mb-4 text-xs text-gray-500">2020-09-26</div>
+      <div class="mb-4 text-gray-500 dark:text-gray-300">
+        <p>我是<strong>Redis</strong>，一个叫<strong>Antirez</strong>的男人把我带到了这个世界上。</p>
+
+      </div>
+      <a href="https://www.shiguangping.com/post/redis-story-persistence/" class="btn">
+        Read more
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="p-8 border-b border-gray-200 dark:border-gray-700 flex relative overflow-hidden flex-col md:flex-row animated fadeIn">
+    
+    <div class="flex-1 order-2 md:order-1">
+      <h2 class="text-2xl font-semibold mb-4">
+        <a href="https://www.shiguangping.com/post/redis-story/" class="text-gray-700 dark:text-gray-200 border-b-2 border-dotted border-gray-200 dark:border-gray-400 dark:hover:border-gray-200 hover:border-gray-600 transition-all duration-100">
+          还不懂Redis？看完这个故事就明白了！
+        </a>
+      </h2>
+      <div class="mb-4 text-xs text-gray-500">2020-09-26</div>
+      <div class="mb-4 text-gray-500 dark:text-gray-300">
+        我是Redis
+你好，我是Redis，一个叫Antirez的男人把我带到了这个世界上。
+
+说起我的诞生，跟关系数据库MySQL还挺有渊源的。
+在我还没来到这个世界上的时候，MySQL过的很辛苦，互联网发展的越来越快，它容纳的数据也越来越多，...
+      </div>
+      <a href="https://www.shiguangping.com/post/redis-story/" class="btn">
+        Read more
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="p-8 border-b border-gray-200 dark:border-gray-700 flex relative overflow-hidden flex-col md:flex-row animated fadeIn">
+    
+    <div class="flex-1 order-2 md:order-1">
+      <h2 class="text-2xl font-semibold mb-4">
+        <a href="https://www.shiguangping.com/post/vue-responsive/" class="text-gray-700 dark:text-gray-200 border-b-2 border-dotted border-gray-200 dark:border-gray-400 dark:hover:border-gray-200 hover:border-gray-600 transition-all duration-100">
+          Vue数据变化检测（无法检测对象/数组元素的变化问题）
+        </a>
+      </h2>
+      <div class="mb-4 text-xs text-gray-500">2020-09-24</div>
+      <div class="mb-4 text-gray-500 dark:text-gray-300">
+        <p>写代码时遇到这样一个问题，页面打开后进行axios请求数据，将响应回的数据赋值给data()中的一个对象，然后再v-for遍历对象将属性显示到页面中。</p>
+<p>但每次打开页面后要遍历显示的数据都没有显示出来，重新刷新或者点下其它的下拉框，要遍历的元素才显示。</p>
+<p>起初我以为是异步请求的问题，怀疑是先渲染DOM后请求的数据，后来查阅官方文档，原因是Vue无法检测对象和数组的变化。</p>
+
+      </div>
+      <a href="https://www.shiguangping.com/post/vue-responsive/" class="btn">
+        Read more
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="p-8 border-b border-gray-200 dark:border-gray-700 flex relative overflow-hidden flex-col md:flex-row animated fadeIn">
+    
+    <div class="flex-1 order-2 md:order-1">
+      <h2 class="text-2xl font-semibold mb-4">
+        <a href="https://www.shiguangping.com/post/vue-form-validator/" class="text-gray-700 dark:text-gray-200 border-b-2 border-dotted border-gray-200 dark:border-gray-400 dark:hover:border-gray-200 hover:border-gray-600 transition-all duration-100">
+          Vue验证表单字段常用规则
+        </a>
+      </h2>
+      <div class="mb-4 text-xs text-gray-500">2020-09-21</div>
+      <div class="mb-4 text-gray-500 dark:text-gray-300">
+        项目代码使用的element-ui
+1. 页面表单添加验证属性
+&lt;!--el-form中要绑定model;el-form-item绑定prop属性--&gt;
+&lt;el-form :model=org :rules=&quot;r...
+      </div>
+      <a href="https://www.shiguangping.com/post/vue-form-validator/" class="btn">
+        Read more
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="p-8 border-b border-gray-200 dark:border-gray-700 flex relative overflow-hidden flex-col md:flex-row animated fadeIn">
+    
+    <div class="flex-1 order-2 md:order-1">
+      <h2 class="text-2xl font-semibold mb-4">
+        <a href="https://www.shiguangping.com/post/docker-nacos-standalone/" class="text-gray-700 dark:text-gray-200 border-b-2 border-dotted border-gray-200 dark:border-gray-400 dark:hover:border-gray-200 hover:border-gray-600 transition-all duration-100">
+          Docker部署nacos单机版
+        </a>
+      </h2>
+      <div class="mb-4 text-xs text-gray-500">2020-09-20</div>
+      <div class="mb-4 text-gray-500 dark:text-gray-300">
+        创建nacos配置数据库
+
+
+创建数据库（默认使用mysql数据库）
+create database nacos_config;
+
+
+
+导入sql脚本，到官网复制
+
+
+创建nacos容器
+搜索镜像
+docker search nacos
+
+...
+      </div>
+      <a href="https://www.shiguangping.com/post/docker-nacos-standalone/" class="btn">
+        Read more
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="p-8 border-b border-gray-200 dark:border-gray-700 flex relative overflow-hidden flex-col md:flex-row animated fadeIn">
+    
+    <div class="flex-1 order-2 md:order-1">
+      <h2 class="text-2xl font-semibold mb-4">
+        <a href="https://www.shiguangping.com/post/vue-components-communication/" class="text-gray-700 dark:text-gray-200 border-b-2 border-dotted border-gray-200 dark:border-gray-400 dark:hover:border-gray-200 hover:border-gray-600 transition-all duration-100">
+          Vue组件间通信
+        </a>
+      </h2>
+      <div class="mb-4 text-xs text-gray-500">2020-09-19</div>
+      <div class="mb-4 text-gray-500 dark:text-gray-300">
+        <p>Vue组件间通信的两种常见情况：</p>
+<ul>
+<li>父子组件间通信
+<ul>
+<li>父传子</li>
+<li>子传父</li>
+</ul>
+</li>
+<li>非父子组件间通信</li>
+</ul>
+
+      </div>
+      <a href="https://www.shiguangping.com/post/vue-components-communication/" class="btn">
+        Read more
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="p-8 border-b border-gray-200 dark:border-gray-700 flex relative overflow-hidden flex-col md:flex-row animated fadeIn">
+    
+    <div class="flex-1 order-2 md:order-1">
+      <h2 class="text-2xl font-semibold mb-4">
+        <a href="https://www.shiguangping.com/post/feign-upload/" class="text-gray-700 dark:text-gray-200 border-b-2 border-dotted border-gray-200 dark:border-gray-400 dark:hover:border-gray-200 hover:border-gray-600 transition-all duration-100">
+          使用Spring Cloud Feign上传文件
+        </a>
+      </h2>
+      <div class="mb-4 text-xs text-gray-500">2020-09-06</div>
+      <div class="mb-4 text-gray-500 dark:text-gray-300">
+        <p>使用Spring Cloud Feign上传文件，早期的Spring Cloud中，Feign本身是没有上传文件的能力的，要想实现这一点，需要自己编写<code>Encoder</code>去实现上传。现在，Feign官方提供了子项目<a href="https://github.com/OpenFeign/feign-form">feign-form</a>，其中实现了上传所需的<code>Encoder</code>。</p>
+
+      </div>
+      <a href="https://www.shiguangping.com/post/feign-upload/" class="btn">
+        Read more
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="p-8 border-b border-gray-200 dark:border-gray-700 flex relative overflow-hidden flex-col md:flex-row animated fadeIn">
+    
+    <div class="flex-1 order-2 md:order-1">
+      <h2 class="text-2xl font-semibold mb-4">
+        <a href="https://www.shiguangping.com/post/ideaproj-to-eclipse/" class="text-gray-700 dark:text-gray-200 border-b-2 border-dotted border-gray-200 dark:border-gray-400 dark:hover:border-gray-200 hover:border-gray-600 transition-all duration-100">
+          IDEA中的Web项目移动到Eclipse
+        </a>
+      </h2>
+      <div class="mb-4 text-xs text-gray-500">2020-06-01</div>
+      <div class="mb-4 text-gray-500 dark:text-gray-300">
+        1. 在IDEA中，打开模块设置：
+
+在模块设置中，将依赖存储格式改为Eclipse：
+
+2. 在Eclipse中导入项目：（File--&gt;Import）
+
+下一步，然后选择项目路径，完成导入：
+
+3. 修改项目相关设置，勾选成动态W...
+      </div>
+      <a href="https://www.shiguangping.com/post/ideaproj-to-eclipse/" class="btn">
+        Read more
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="p-8 border-b border-gray-200 dark:border-gray-700 flex relative overflow-hidden flex-col md:flex-row animated fadeIn">
+    
+    <div class="flex-1 order-2 md:order-1">
+      <h2 class="text-2xl font-semibold mb-4">
+        <a href="https://www.shiguangping.com/post/macos-maven/" class="text-gray-700 dark:text-gray-200 border-b-2 border-dotted border-gray-200 dark:border-gray-400 dark:hover:border-gray-200 hover:border-gray-600 transition-all duration-100">
+          Mac OS下安装和配置Maven
+        </a>
+      </h2>
+      <div class="mb-4 text-xs text-gray-500">2020-05-11</div>
+      <div class="mb-4 text-gray-500 dark:text-gray-300">
+        1. 下载Maven
+
+
+打开Maven官方下载网页：http://maven.apache.org/download.cgi
+
+
+
+解压下载的压缩包放到自己喜欢的目录下，（放到一个固定的目录，不要随意改动）
+比如：/Users/liyan...
+      </div>
+      <a href="https://www.shiguangping.com/post/macos-maven/" class="btn">
+        Read more
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="p-8 border-b border-gray-200 dark:border-gray-700 flex relative overflow-hidden flex-col md:flex-row animated fadeIn">
+    
+    <div class="flex-1 order-2 md:order-1">
+      <h2 class="text-2xl font-semibold mb-4">
+        <a href="https://www.shiguangping.com/post/eclipse-format-code/" class="text-gray-700 dark:text-gray-200 border-b-2 border-dotted border-gray-200 dark:border-gray-400 dark:hover:border-gray-200 hover:border-gray-600 transition-all duration-100">
+          设置eclipse格式化时不对注释进行格式化
+        </a>
+      </h2>
+      <div class="mb-4 text-xs text-gray-500">2020-04-26</div>
+      <div class="mb-4 text-gray-500 dark:text-gray-300">
+        1. 设置保存时自动格式化
+
+2. 自建代码格式化风格
+我用的工具是STS，自带三种代码格式化风格文件；
+
+这三种风格是不能编辑的，所以我们需要new，自建风格。
+
+
+自建的风格名字自定义
+自建风格可以选择系统自带的默认的风格样式
+
+3. ...
+      </div>
+      <a href="https://www.shiguangping.com/post/eclipse-format-code/" class="btn">
+        Read more
+      </a>
+    </div>
+    
+  </div>
+  
+      </div>
+
+      
+  <div class="my-4 flex justify-between px-4 md:px-0">
+    
+      <a href="https://www.shiguangping.com/page/3/" class="btn btn-white">
+        <i class="ri-arrow-left-line mr-4"></i>
+        上一页
+      </a>
+    
+    
+      <a href="https://www.shiguangping.com/page/5/" class="btn btn-white">
+        下一页
+        <i class="ri-arrow-right-line ml-4"></i>
+      </a>
+    
+  </div>
+
+      <footer class="py-12 text-center px-4 md:px-0" v-pre>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">時光瓶</a>
+</footer>
+
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://www.shiguangping.com/media/scripts/main.js"></script>
+</body>
+
+</html>

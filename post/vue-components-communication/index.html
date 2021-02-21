@@ -1,0 +1,550 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Vue组件间通信 - 時光瓶</title>
+<link rel="shortcut icon" href="https://www.shiguangping.com/favicon.ico">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.2.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css">
+<link rel="stylesheet" href="https://www.shiguangping.com/media/css/tailwind.css">
+<link rel="stylesheet" href="https://www.shiguangping.com/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Vue组件间通信 - 時光瓶 - Atom Feed" href="https://www.shiguangping.com/atom.xml">
+
+    
+
+  <meta name="description" content="Vue组件间通信的两种常见情况：
+
+父子组件间通信
+
+父传子
+子传父
+
+
+非父子组件间通信
+
+
+父子组件间通信：
+父子组件通信很简单，父组件会通过 props 向下传数据给子组件，当子组件有事情要告诉父组件时会通过 $emit 事件告诉父组..." />
+  <meta property="og:title" content="Vue组件间通信 - 時光瓶">
+  <meta property="og:description" content="Vue组件间通信的两种常见情况：
+
+父子组件间通信
+
+父传子
+子传父
+
+
+非父子组件间通信
+
+
+父子组件间通信：
+父子组件通信很简单，父组件会通过 props 向下传数据给子组件，当子组件有事情要告诉父组件时会通过 $emit 事件告诉父组..." />
+  <meta property="og:type" content="articles">
+  <meta property="og:url" content="https://www.shiguangping.com/post/vue-components-communication/" />
+  <meta property="og:image" content="https://www.shiguangping.com/images/avatar.png">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:width" content="1200">
+  <meta name="twitter:title" content="Vue组件间通信 - 時光瓶">
+  <meta name="twitter:description" content="Vue组件间通信的两种常见情况：
+
+父子组件间通信
+
+父传子
+子传父
+
+
+非父子组件间通信
+
+
+父子组件间通信：
+父子组件通信很简单，父组件会通过 props 向下传数据给子组件，当子组件有事情要告诉父组件时会通过 $emit 事件告诉父组...">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://www.shiguangping.com/post/vue-components-communication/">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css">
+ 
+  
+    <link rel="stylesheet" href="https://www.shiguangping.com/media/css/prism-atom-dark.css">
+  
+
+  
+</head>
+
+<body>
+  <div class="antialiased flex flex-col min-h-screen" id="app">
+    <a href="https://www.shiguangping.com" class="fixed top-0 left-0 mt-4 bg-black text-white dark:text-gray-700 dark:bg-yellow-50 dark:hover:bg-black dark:hover:text-white inline-flex p-2 pl-8 hover:text-gray-700 hover:bg-yellow-50 font-bold z-10 transition-fast animated fadeInLeft">
+      時光瓶
+    </a>
+    <div class="max-w-4xl w-full mx-auto">
+      <div class="shadow-box bg-white dark:bg-gray-600 rounded-lg pt-32 md:pt-64 px-4 md:px-8 pb-8 animated fadeIn mb-8">
+        <h1 class="text-5xl font-semibold leading-normal pb-8 mb-8 border-b-8 border-gray-700">
+          Vue组件间通信
+        </h1>
+        
+        <div class="mb-8 flex flex-wrap">
+          <div class="text-gray-400 text-sm mr-4">2020-09-19 · 9 min read</div>
+          
+            <a href="https://www.shiguangping.com/tag/ty_mKu-Do/" class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
+              <i class="ri-hashtag"></i>
+              Vue
+            </a>
+          
+        </div>
+        <div class="markdown mb-8" v-pre>
+          <p>Vue组件间通信的两种常见情况：</p>
+<ul>
+<li>父子组件间通信
+<ul>
+<li>父传子</li>
+<li>子传父</li>
+</ul>
+</li>
+<li>非父子组件间通信</li>
+</ul>
+<!--more-->
+<h3 id="父子组件间通信">父子组件间通信：</h3>
+<p>父子组件通信很简单，父组件会通过 <code>props</code> 向下传数据给子组件，当子组件有事情要告诉父组件时会通过 <code>$emit</code> 事件告诉父组件。</p>
+<p>这里拿element-ui中的对话框dialog举例，定义两个组件，<code>Index.vue</code>和<code>Dialog.vue</code>。Index中有一个按钮，点击按钮，将<code>dialog.isVisible=true</code>带到子组件中，打开对话框；在子组件中点击关闭按钮，再关闭对话框。关闭时，需要在子组件调用父组件中的方法，将父组件中的属性<code>dialog.isVisible</code>置为<code>false</code>。</p>
+<p><code>Dialog.vue</code>：</p>
+<pre><code class="language-vue">&lt;template&gt;
+  &lt;div&gt;
+    &lt;el-dialog
+        :title=&quot;title&quot;
+        :visible.sync=&quot;isVisible&quot;
+        width=&quot;30%&quot;&gt;
+      &lt;span&gt;message:{{ msg }}&lt;/span&gt;
+      &lt;span slot=&quot;footer&quot; class=&quot;dialog-footer&quot;&gt;
+    &lt;el-button @click=&quot;close&quot; type=&quot;primary&quot;&gt;关 闭&lt;/el-button&gt;
+  &lt;/span&gt;
+    &lt;/el-dialog&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+export default {
+  name: &quot;dialog&quot;,
+  // props:定义组件的属性，父组件通过props中定义的属性将值传过来。也就是说父组件只能向子组件中props定义的属性传值
+  props: {
+    visible: {
+      type: Boolean,
+      default: false
+    },
+    title: {
+      type: String,
+      default: ''
+    }
+  },
+  // 当组件属性发生改变时返回最新的值
+  computed: {
+    isVisible() {
+      return this.visible
+    }
+  },
+  data() {
+    return {
+      msg: ''
+    }
+  },
+  methods: {
+    close() {
+      // 子组件调用父组件方法，定义close事件，当dialog关闭时，调用父组件定义的方法&lt;Dialog @close=&quot;xxx&quot;/&gt;，调用父组件中的xxx方法
+      this.$emit('close')
+    },
+    // 该方法在父组件中通过$refs.dialog.initMsg()的形式调用
+    initMsg(){
+      this.msg = '父组件调用子组件方法'
+    }
+  }
+}
+&lt;/script&gt;
+</code></pre>
+<p><code>Index.vue</code>：</p>
+<pre><code class="language-vue">&lt;template&gt;
+  &lt;div&gt;
+    &lt;button @click=&quot;dialogOpen&quot;&gt;打开对话框&lt;/button&gt;
+    &lt;!--
+			visible：是子组件props中定义的属性，父组件通过通过这种形式将值带到子组件中
+			title：也是同理
+			@close=&quot;dialogClose&quot;：@close是子组件Dialog自定义的事件。当Dialog关闭时，子组件中执行this.$emit('close')，调用父组件中的dialogClose()方法
+			ref：官方的解释是用来给元素或子组件注册一个引用，该引用会绑定到父组件的$refs对象上。如果在普通DOM元素上使用，引用指向的是DOM元素；如果用在子组件上，引用就是指向子组件的实例。
+		--&gt;
+    &lt;Dialog :visible=&quot;dialog.isVisible&quot; :title=&quot;dialog.title&quot; @close=&quot;dialogClose&quot; ref=&quot;dialog&quot;&gt;&lt;/Dialog&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+import Dialog from './components/Dialog'
+
+export default {
+  name: &quot;index&quot;,
+  components: {Dialog},
+  data() {
+    return {
+      dialog: {
+        isVisible: false,
+        title: ''
+      }
+    }
+  },
+  methods: {
+    dialogOpen() {
+      this.dialog.title = '父传子'
+      // 父组件调用子组件方法，通过ref属性指向子组件实例，调用子组件中的方法
+      this.$refs.dialog.initMsg()
+      this.dialog.isVisible = true
+    },
+    dialogClose() {
+      this.dialog.isVisible = false
+    }
+  }
+}
+&lt;/script&gt;
+</code></pre>
+<h3 id="非父子组件间通信">非父子组件间通信：</h3>
+<figure data-type="image" tabindex="1"><img src="https://images.shiguangping.com/imgs/20200920164317.jpg" alt="img" loading="lazy"></figure>
+<p>如果我们不需要类似Vuex这样的库来处理组件之间的数据通信，就可以考虑Vue中的 <code>事件总线</code> ，即 <code>EventBus</code>来通信。</p>
+<p><strong>EventBus的简介</strong></p>
+<p><code>EventBus</code> 又称为事件总线。在Vue中可以使用 <code>EventBus</code> 来作为沟通桥梁的概念，就像是所有组件共用相同的事件中心，可以向该中心注册发送事件或接收事件，所以组件都可以上下平行地通知其他组件，但也就是太方便所以若使用不慎，就会造成难以维护的“灾难”，因此才需要更完善的Vuex作为状态管理中心，将通知的概念上升到共享状态层次。</p>
+<p><strong>如何使用EventBus</strong></p>
+<p><strong>一、初始化</strong><br>
+首先需要创建事件总线并将其导出，以便其它模块可以使用或者监听它。我们可以通过两种方式来处理。先来看第一种，新创建一个 .js 文件，比如 <code>event-bus.js</code></p>
+<pre><code class="language-javascript">// event-bus.js
+import Vue from 'vue'
+export const EventBus = new Vue()
+</code></pre>
+<p>实质上<code>EventBus</code>是一个不具备 <code>DOM</code> 的组件，它具有的仅仅只是它实例方法而已，因此它非常的轻便。</p>
+<p>另外一种方式，可以直接在项目中的 <code>main.js</code> 初始化 <code>EventBus</code> :</p>
+<pre><code class="language-javascript">// main.js
+Vue.prototype.$EventBus = new Vue()
+</code></pre>
+<p>注意，这种方式初始化的<code>EventBus</code>是一个<code>全局的事件总线</code>。</p>
+<p>现在我们已经创建了 <code>EventBus</code> ，接下来你需要做到的就是在你的组件中加载它，并且调用同一个方法，就如你在父子组件中互相传递消息一样。</p>
+<p><strong>二、发送事件</strong></p>
+<figure data-type="image" tabindex="2"><img src="https://images.shiguangping.com/imgs/20200920164616.jpg" alt="img" loading="lazy"></figure>
+<p>假设你有两个Vue页面需要通信： A 和 B ，A页面 在按钮上面绑定了点击事件，发送一则消息，想通知 B页面。</p>
+<pre><code class="language-vue">&lt;!-- A.vue --&gt;
+&lt;template&gt;
+    &lt;button @click=&quot;sendMsg()&quot;&gt;-&lt;/button&gt;
+&lt;/template&gt;
+
+&lt;script&gt; 
+import { EventBus } from &quot;../event-bus.js&quot;;
+export default {
+  methods: {
+    sendMsg() {
+      EventBus.$emit(&quot;aMsg&quot;, '来自A页面的消息');
+    }
+  }
+}; 
+&lt;/script&gt;
+</code></pre>
+<p>接下来，我们需要在 B页面 中接收这则消息。</p>
+<p><strong>三、接收事件</strong></p>
+<figure data-type="image" tabindex="3"><img src="https://images.shiguangping.com/imgs/20200920164707.jpg" alt="img" loading="lazy"></figure>
+<pre><code class="language-vue">&lt;!-- IncrementCount.vue --&gt;
+&lt;template&gt;
+  &lt;p&gt;{{msg}}&lt;/p&gt;
+&lt;/template&gt;
+
+&lt;script&gt; 
+import { EventBus } from &quot;../event-bus.js&quot;;
+export default {
+  data(){
+    return {
+      msg: ''
+    }
+  },
+  mounted() {
+    EventBus.$on(&quot;aMsg&quot;, (msg) =&gt; {
+      // A发送来的消息
+      this.msg = msg;
+    });
+  }
+};
+&lt;/script&gt;
+</code></pre>
+<p>同理我们也可以在 B页面 向 A页面 发送消息。这里主要用到的两个方法：</p>
+<pre><code class="language-javascript">// 发送消息
+EventBus.$emit(channel: string, callback(payload1,…))
+
+// 监听接收消息
+EventBus.$on(channel: string, callback(payload1,…))
+</code></pre>
+<p>前面提到过，如果使用不善，<code>EventBus</code>会是一种灾难，到底是什么样的<code>“灾难”</code>了？大家都知道vue是单页应用，如果你在某一个页面刷新了之后，与之相关的<code>EventBus</code>会被移除，这样就导致业务走不下去。还要就是如果业务有反复操作的页面，<code>EventBus</code>在监听的时候就会触发很多次，也是一个非常大的隐患。这时候我们就需要好好处理<code>EventBus</code>在项目中的关系。通常会用到，在vue页面销毁时，同时移除<code>EventBus</code>事件监听。</p>
+<p><strong>移除事件监听者</strong></p>
+<figure data-type="image" tabindex="4"><img src="https://images.shiguangping.com/imgs/20200920164847.jpg" alt="img" loading="lazy"></figure>
+<pre><code class="language-javascript">import { eventBus } from './event-bus.js'
+
+EventBus.$off('aMsg', {})
+</code></pre>
+<p>你也可以使用 <code>EventBus.$off('aMsg')</code> 来移除应用内所有对此某个事件的监听。或者直接调用 <code>EventBus.$off()</code> 来移除所有事件频道，不需要添加任何参数 。</p>
+<p>上面就是 <code>EventBus</code> 的使用方法，是不是很简单。上面的示例中我们也看到了，每次使用 <code>EventBus</code> 时都需要在各组件中引入 <code>event-bus.js</code> 。事实上，我们还可以通过别的方式，让事情变得简单一些。那就是创建一个全局的 <code>EventBus</code> 。接下来的示例向大家演示如何在Vue项目中创建一个全局的 <code>EventBus</code> 。</p>
+<p><strong>全局EventBus</strong></p>
+<p>它的工作原理是发布/订阅方法，通常称为 <code>Pub/Sub</code> 。</p>
+<p><strong>创建全局EventBus</strong></p>
+<pre><code class="language-javascript">var EventBus = new Vue();
+
+Object.defineProperties(Vue.prototype, {
+  $bus: {
+    get: function () {
+      return EventBus
+    }
+  }
+})
+</code></pre>
+<p>在这个特定的总线中使用两个方法<code>$on</code>和<code>$emit</code>。一个用于创建发出的事件，它就是<code>$emit</code>；另一个用于订阅<code>$on</code>：</p>
+<pre><code class="language-javascript">var EventBus = new Vue();
+
+this.$bus.$emit('nameOfEvent', { ... pass some event data ...});
+
+this.$bus.$on('nameOfEvent',($event) =&gt; {
+  // ...
+})
+</code></pre>
+<p>然后我们可以在某个Vue页面使用<code>this.$bus.$emit(&quot;sendMsg&quot;, '我是web秀');</code>，另一个Vue页面使用</p>
+<pre><code class="language-javascript">this.$bus.$on('updateMessage', function(value) {
+  console.log(value); // 我是web秀
+})
+</code></pre>
+<p>同时也可以使用<code>this.$bus.$off('sendMsg')</code>来移除事件监听。</p>
+<p><strong>总结</strong></p>
+<p>本文主要通过简单的实例学习了Vue中有关于 <code>EventBus</code> 相关的知识点。主要涉及了 <code>EventBus</code> 如何实例化，又是如何通过 <code>$emit</code> 发送频道信号，又是如何通过 <code>$on</code> 来接收频道信号。最后简单介绍了如何创建全局的 <code>EventBus</code> 。从实例中我们可以了解到， <code>EventBus</code> 可以较好的实现兄弟组件之间的数据通讯。</p>
+
+        </div>
+        <!-- Share to Twitter, Weibo, Telegram -->
+        <div class="flex items-center">
+          <div class="mr-4 flex items-center">
+            <i class="ri-share-forward-line text-gray-500"></i>
+          </div>
+          <div class="px-4 cursor-pointer text-blue-500 hover:bg-blue-100 dark:hover:bg-gray-600 inline-flex" @click="shareToTwitter">
+            <i class="ri-twitter-line"></i>
+          </div>
+          <div class="px-4 cursor-pointer text-red-500 hover:bg-red-100 dark:hover:bg-gray-600 inline-flex" @click="shareToWeibo">
+            <i class="ri-weibo-line"></i>
+          </div>
+          <div class="px-4 cursor-pointer text-indigo-500 hover:bg-indigo-100 dark:hover:bg-gray-600 inline-flex" @click="shareToTelegram">
+            <i class="ri-telegram-line"></i>
+          </div>
+        </div>
+      </div>
+
+      
+
+      
+        <div id="vlaine-comment"></div>
+      
+
+      <footer class="py-12 text-center px-4 md:px-0" v-pre>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">時光瓶</a>
+</footer>
+    </div>
+
+    <!-- TOC Container -->
+    <div class="fixed right-0 bottom-0 mb-16 mr-4 shadow w-8 h-8 rounded-full flex justify-center items-center z-10 cursor-pointer bg-white dark:bg-gray-500 dark:text-gray-200 hover:shadow-lg transition-all animated fadeInRight" @click="showToc = true">
+      <i class="ri-file-list-line"></i>
+    </div>
+
+    <div class="fixed right-0 top-0 bottom-0 overflow-y-auto w-64 bg-white dark:bg-gray-800 p-4 border-l border-gray-100 dark:border-gray-600 z-10 transition-fast" :class="{ '-mr-64': !showToc }">
+      <div class="flex mb-4 justify-end">
+        <div class="w-8 h-8 inline-flex justify-center items-center rounded-full cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-fast" @click="showToc = false">
+          <i class="ri-close-line text-lg"></i>
+        </div>
+      </div>
+      <div class="post-toc-container">
+        <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E7%88%B6%E5%AD%90%E7%BB%84%E4%BB%B6%E9%97%B4%E9%80%9A%E4%BF%A1">父子组件间通信：</a></li>
+<li><a href="#%E9%9D%9E%E7%88%B6%E5%AD%90%E7%BB%84%E4%BB%B6%E9%97%B4%E9%80%9A%E4%BF%A1">非父子组件间通信：</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+      </div>
+    </div>
+
+    <!-- Back to top -->
+    <div class="fixed right-0 bottom-0 mb-4 mr-4 shadow w-8 h-8 rounded-full flex justify-center items-center z-10 cursor-pointer bg-white hover:shadow-lg transition-all dark:bg-gray-500 dark:text-gray-200" @click="backToUp" v-show="scrolled">
+      <i class="ri-arrow-up-line"></i>
+    </div>
+  </div>
+
+  <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+  <!-- Background of PhotoSwipe. 
+        It's a separate element as animating opacity is faster than rgba(). -->
+  <div class="pswp__bg">
+  </div>
+  <!-- Slides wrapper with overflow:hidden. -->
+  <div class="pswp__scroll-wrap">
+    <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+    <div class="pswp__container">
+      <div class="pswp__item">
+      </div>
+      <div class="pswp__item">
+      </div>
+      <div class="pswp__item">
+      </div>
+    </div>
+    <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+    <div class="pswp__ui pswp__ui--hidden">
+      <div class="pswp__top-bar">
+        <!--  Controls are self-explanatory. Order can be changed. -->
+        <div class="pswp__counter">
+        </div>
+        <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+        <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+        <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+        <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+        <!-- element will get class pswp__preloader--active when preloader is running -->
+        <div class="pswp__preloader">
+          <div class="pswp__preloader__icn">
+            <div class="pswp__preloader__cut">
+              <div class="pswp__preloader__donut">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+        <div class="pswp__share-tooltip">
+        </div>
+      </div>
+      <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+      </button>
+      <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+      </button>
+      <div class="pswp__caption">
+        <div class="pswp__caption__center">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://www.shiguangping.com/media/scripts/main.js"></script>
+  
+  <!-- Code Highlight -->
+  
+    <script src="https://www.shiguangping.com/media/prism.js"></script>
+    <script>
+      Prism.highlightAll()
+    </script>
+  
+
+  <script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+  <script>
+    //拿到预览框架，也就是上面的html代码
+    var pswpElement = document.querySelectorAll('.pswp')[0];
+    //定义图片数组变量
+    var imgitems;
+    /**
+    * 用于显示预览界面
+    * @param index 图片数组下标
+    */
+    function viewImg(index) {
+      //其它选项这里不做过多阐述，详情见官网
+      var pswpoptions = {
+        index: parseInt(index, 10), // 开始幻灯片索引。0是第一张幻灯片。必须是整数，而不是字符串。
+        bgOpacity: 0.7, // 背景透明度，0-1
+        maxSpreadZoom: 3, // 缩放级别，不要太大
+      };
+      //初始化并打开PhotoSwipe，pswpElement对应上面预览框架，PhotoSwipeUI_Default为皮肤，imgitems为图片数组，pswpoptions为选项
+      var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, imgitems, pswpoptions);
+      gallery.init()
+    }
+    /**
+    * 用于添加图片点击事件
+    * @param img 图片元素
+    * @param index 所属下标（在imgitems中的位置）
+    */
+    function addImgClick(img, index) {
+      img.onclick = function() {
+        viewImg(index)
+      }
+    }
+    /**
+    * 轮询所有图片，获取src、width、height等数据，加入imgitems，并给图片元素添加事件
+    * 最好在onload中执行该方法，本站因放在最底部，所以直接初始化
+    * 异步加载图片可在图片元素创建完成后调用此方法
+    */
+    function initImg() {
+      //重置图片数组
+      imgitems = [];
+      //查找class:markdown 下的所有img元素并遍历
+      var imgs = document.querySelectorAll('.markdown img');
+      for (var i = 0; i < imgs.length; i++) {
+        var img = imgs[i];
+        //本站相册初始为loading图片，真实图片放在data-src
+        var ds = img.getAttribute("data-src");
+        //创建image对象，用于获取图片宽高
+        var imgtemp = new Image();
+        //判断是否存在data-src
+        if (ds != null && ds.length > 0) {
+          imgtemp.src = ds
+        } else {
+          imgtemp.src = img.src
+        }
+        //判断是否存在缓存
+        if (imgtemp.complete) {
+          var imgobj = {
+            "src": imgtemp.src,
+            "w": imgtemp.width,
+            "h": imgtemp.height,
+          };
+          imgitems[i] = imgobj;
+          addImgClick(img, i);
+        } else {
+          console.log('进来了2')
+          imgtemp.index = i;
+          imgtemp.img = img;
+          imgtemp.onload = function() {
+            var imgobj = {
+              "src": this.src,
+              "w": this.width,
+              "h": this.height,
+            };
+            //不要使用push，因为onload前后顺序会不同
+            imgitems[this.index] = imgobj
+            //添加点击事件
+            addImgClick(this.img, this.index);
+          }
+        }
+      }
+    }
+    //初始化
+    initImg();
+  </script>
+  
+    <script type="application/javascript" src="https://unpkg.com/valine"></script>
+<script type="application/javascript">
+  new Valine({
+    el: '#vlaine-comment',
+    appId: 'iScdY0hF5Y8TgKyMtfvp9CcM-gzGzoHsz',
+    appKey: 'XH2m9KIiA88R6N2lYiSObDH7',
+    pageSize: 10,
+    notify: false,
+    avatar: 'mp',
+    verify: false,
+    placeholder: '来都来了，不妨评论一下',
+    visitor: true,
+    highlight: false,
+    recordIP: false,
+  })
+</script>
+  
+  
+</body>
+
+</html>

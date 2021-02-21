@@ -1,0 +1,432 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>小白部署HEXO到GitHub - 時光瓶</title>
+<link rel="shortcut icon" href="https://www.shiguangping.com/favicon.ico">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.2.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css">
+<link rel="stylesheet" href="https://www.shiguangping.com/media/css/tailwind.css">
+<link rel="stylesheet" href="https://www.shiguangping.com/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="小白部署HEXO到GitHub - 時光瓶 - Atom Feed" href="https://www.shiguangping.com/atom.xml">
+
+    
+
+  <meta name="description" content="前言
+呃，终于忙乎完了!
+从昨天傍晚的7点半一直到现在的2点50分，并且到目前都还在折腾，这也是第一篇文章，即将要上传到GitHub上的。
+之前我是没有接触过GitHub和HEXO的，我现在在用的博客程序是z-blog，它部署在腾讯云，地址..." />
+  <meta property="og:title" content="小白部署HEXO到GitHub - 時光瓶">
+  <meta property="og:description" content="前言
+呃，终于忙乎完了!
+从昨天傍晚的7点半一直到现在的2点50分，并且到目前都还在折腾，这也是第一篇文章，即将要上传到GitHub上的。
+之前我是没有接触过GitHub和HEXO的，我现在在用的博客程序是z-blog，它部署在腾讯云，地址..." />
+  <meta property="og:type" content="articles">
+  <meta property="og:url" content="https://www.shiguangping.com/post/build-hexo/" />
+  <meta property="og:image" content="https://www.shiguangping.com/images/avatar.png">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:width" content="1200">
+  <meta name="twitter:title" content="小白部署HEXO到GitHub - 時光瓶">
+  <meta name="twitter:description" content="前言
+呃，终于忙乎完了!
+从昨天傍晚的7点半一直到现在的2点50分，并且到目前都还在折腾，这也是第一篇文章，即将要上传到GitHub上的。
+之前我是没有接触过GitHub和HEXO的，我现在在用的博客程序是z-blog，它部署在腾讯云，地址...">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://www.shiguangping.com/post/build-hexo/">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css">
+ 
+  
+    <link rel="stylesheet" href="https://www.shiguangping.com/media/css/prism-atom-dark.css">
+  
+
+  
+</head>
+
+<body>
+  <div class="antialiased flex flex-col min-h-screen" id="app">
+    <a href="https://www.shiguangping.com" class="fixed top-0 left-0 mt-4 bg-black text-white dark:text-gray-700 dark:bg-yellow-50 dark:hover:bg-black dark:hover:text-white inline-flex p-2 pl-8 hover:text-gray-700 hover:bg-yellow-50 font-bold z-10 transition-fast animated fadeInLeft">
+      時光瓶
+    </a>
+    <div class="max-w-4xl w-full mx-auto">
+      <div class="shadow-box bg-white dark:bg-gray-600 rounded-lg pt-32 md:pt-64 px-4 md:px-8 pb-8 animated fadeIn mb-8">
+        <h1 class="text-5xl font-semibold leading-normal pb-8 mb-8 border-b-8 border-gray-700">
+          小白部署HEXO到GitHub
+        </h1>
+        
+        <div class="mb-8 flex flex-wrap">
+          <div class="text-gray-400 text-sm mr-4">2018-06-10 · 6 min read</div>
+          
+            <a href="https://www.shiguangping.com/tag/OpzEpOX_M/" class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
+              <i class="ri-hashtag"></i>
+              Hexo
+            </a>
+          
+        </div>
+        <div class="markdown mb-8" v-pre>
+          <h2 id="前言">前言</h2>
+<p>呃，终于忙乎完了!</p>
+<p>从昨天傍晚的7点半一直到现在的2点50分，并且到目前都还在折腾，这也是第一篇文章，即将要上传到GitHub上的。</p>
+<p>之前我是没有接触过GitHub和HEXO的，我现在在用的博客程序是z-blog，它部署在腾讯云，地址是：<a href="https:www.shiguangping.com">时光瓶</a>,现在之所以搞hexo，是因为看到了一位前端大咖的博客，<a href="https://diygod.me/">diygod.me</a>，看到之后很惊艳，由此认识到了hexo和GitHub。<br>
+通过维护这个博客开始我的学习之旅，慢慢了解GitHub，了解开源世界。</p>
+<p>然后说一下现在正在用的这个HEXO主题，这个主题是像素风格的，很有魔性，所以就采用了。在此感谢主题的作者，作者的博客有关于这个主题的说明，虽然我看作者已经很久没有更新他的博客了，<a href="http://blackshow.me/">主题作者</a>.</p>
+<h2 id="安装hexo">安装Hexo</h2>
+<p>安装步骤可以参考官方文档，<a href="https://hexo.io/zh-cn/docs/">中文地址</a>。</p>
+<p>基础环境：</p>
+<ul>
+<li><a href="http://nodejs.org/">Node.js</a>（Node.js 版本需不低于 8.10，建议使用 Node.js 10.0 及以上版本）</li>
+<li><a href="http://git-scm.com/">Git</a></li>
+</ul>
+<p>通过命令安装hexo：</p>
+<pre><code class="language-shell">npm install -g hexo-cli
+</code></pre>
+<p>初始化hexo目录：</p>
+<pre><code class="language-shell">hexo init &lt;folder&gt;
+cd &lt;folder&gt;
+npm install
+</code></pre>
+<p>hexo文件结构：</p>
+<pre><code>.
+├── _config.yml
+├── package.json
+├── scaffolds
+├── source
+|   ├── _drafts
+|   └── _posts
+└── themes
+</code></pre>
+<p>本地运行博客：</p>
+<pre><code class="language-shell">hexo server
+</code></pre>
+<p>或者指定端口运行：</p>
+<pre><code class="language-shell">hexo server -p 5000
+</code></pre>
+<p>运行成功后终端会显示访问地址。</p>
+<h2 id="配置主题">配置主题</h2>
+<p>我使用的主题是<a href="http://blackshow.me" title="blackshow">blackshow</a>编写的开源主题，该主题基于Freemind修改，样式替换为BOOTSTR.386.作者的博客里有提到。</p>
+<p>安装主题：</p>
+<pre><code class="language-shell">git clone git@github.com:blackshow/hexo-theme-freemind.386.git themes/freemind
+</code></pre>
+<p>安装 hexo-tag-bootstrap （可选）:</p>
+<pre><code class="language-shell">npm install hexo-tag-bootstrap --save
+</code></pre>
+<p>安装 hexo-generatr-search （可选）：</p>
+<pre><code class="language-shell">npm install hexo-generator-search --save
+</code></pre>
+<p>创建页面：<br>
+Freemind 预先定义了 Categories（分类）、Tags（标签） 和 About（关于）页面，要使用它们，你需要先在你的博客的 <code>source</code> 目录中添加相应页面。<br>
+例如，要创建 <code>Categories</code> 页面，在终端上:</p>
+<pre><code class="language-shell">cd /path/to/hexo/
+hexo n page categories
+</code></pre>
+<p>然后编辑 <code>source/categories/</code> 下的 index.md，内容如下：</p>
+<pre><code>title: Categories
+layout: categories
+</code></pre>
+<p>关于主题的配置和一些相关问题，具体请参考主题作者的<a href="http://blackshow.me/2015/11/25/hexo-theme-freemind-386-readme-cn/" title="说明">说明文档</a>和原作者关于Freemind的<a href="http://www.hahack.com/codes/hexo-theme-freemind/" title="说明文档">说明文档</a>。</p>
+<p>每一步如果想预览，使用一下命令，通过浏览器预览访问本地预览：</p>
+<pre><code class="language-shell">hexo server
+</code></pre>
+<h2 id="把本地hexo部署到github">把本地Hexo部署到GitHub</h2>
+<ol>
+<li>注册GitHub帐号，然后登陆。</li>
+<li>在GitHub新建一个repository，页面的右上角有个加号，里面的New repository<br>
+这里的Repository Name要和前面的Owner名字相同，格式就是这样的ENNRIaaa.github.io，ENNRIaaa就是我的Owner名字，然后选择public，创建就可以了。</li>
+<li>编辑HEXO目录下的站点配置文件<code>_config.yml，</code>在最下面加上几行</li>
+</ol>
+<pre><code>deploy:
+      type: git
+      repository: https://github.com/ENNRIaaa/ENNRIaaa.github.io.git
+      branch: master
+</code></pre>
+<p><em>把地址替换为自己GitHub库的地址</em></p>
+<p>然后在终端一次敲如命令：</p>
+<pre><code class="language-shell">hexo clean //清除public文件
+hexo g //生成静态文件
+hexo d -g //把html静态文件推送到GitHub
+</code></pre>
+<p>此时可能会提示输入GitHub的用户名和密码。我看网上有教程说此步骤需要配置SSH，这个由于我没有配置，也不太懂，所以不多说明。<em>（后续会写如何配置SSH）</em></p>
+<p>本地文件上传到GitHub之后，访问刚才的<strong>ENNRIaaa.github.io</strong>，看看是否能正常访问到你的博客。</p>
+<h2 id="绑定个人域名">绑定个人域名</h2>
+<p>如果你不需要绑定个人域名，可以忽略这一步，博客可直接通过ENNRIaaa.github.io访问。</p>
+<ol>
+<li>在你域名的解析页面添加解析，我是添加的CNAME，直接解析ENNRIaaa.github.io，有的人添加的A记录解析的博客的IP地址。</li>
+<li>在刚刚创建的GitHub的repository，选择Setting标签页，在下面的GitHub Pages里面有Custom domain，填上你的域名，Save就可以了。如果没有Custom domain，那就把GitHub Pages下的Source改为master branch。</li>
+<li>在访问绑定的域名，看看是否能正常访问到博客。</li>
+</ol>
+<h2 id="关于新建文章">关于新建文章</h2>
+<p>新建文章需要使用markdown文档编辑工具，我使用的是Typora，支持win/mac平台，编辑时所见即所得。</p>
+<p>文章的头部通过这几个标签来定义标题，日期，描述，分类，标签等...（具体只能靠自己摸索）</p>
+<pre><code>title: 小白部署HEXO到GitHub
+date: 2018-06-10 02:38:31
+description: 从傍晚到凌晨，HEXO和GitHub摸索中
+categories: 生活随笔
+tags: [hexo,GitHub]
+toc: true
+feature:
+</code></pre>
+<h2 id="总结">总结</h2>
+<p>我从昨晚一直折腾到今天早晨，很累。</p>
+<p>本文搭建流程都靠记忆，因为之前没有接触过这些，我也不是编程工作者，所以很多都是通过google一点一点地查，遇到问题的时候，网上给出的答案也是很零散的。</p>
+<p>我写的这个流程可能也有一些错误或者失误的地方，遇到问题只能自己摸索了。</p>
+<ol>
+<li>关于命令以及配置文件.yml对格式的要求很严谨，例如:</li>
+</ol>
+<pre><code>type: git
+</code></pre>
+<p><em>冒号：和后面的git之间都要有空格。</em></p>
+<ol start="2">
+<li>每次写完文章，上传到GitHub之前都要：</li>
+</ol>
+<pre><code class="language-shell">hexo c --删除public文件夹
+hexo g --生成静态文件
+hexo d -g --上传到GitHub仓库
+</code></pre>
+<ol start="3">
+<li>关于上面三个命令可参照主题作者的<a href="http://blackshow.me/2015/11/30/hexo-cheats/">HEXO使用心得</a>这篇文章。</li>
+</ol>
+<p>关于搭建和使用hexo，可以看看主题<a href="http://blackshow.me">作者的博客</a>，他有几遍文章专门是介绍说明HEXO的使用的，很有帮助。</p>
+<ol start="4">
+<li>每次上传到GitHub之后，访问绑定的域名可能会遇到404页面，解决办法是到repository的Setting--&gt;GitHub Pages重新设置域名，再到本地hexo目录下的source，添加一个名为CNAME的文件，文件内容是自己绑定的域名，问题解决。不会新建文件的可通过新建文本文档命名为CNAME，然后编辑内容，之后保存，再删除掉该文档的后缀即可，即删除.txt。</li>
+</ol>
+<p>本文到此结束。</p>
+
+        </div>
+        <!-- Share to Twitter, Weibo, Telegram -->
+        <div class="flex items-center">
+          <div class="mr-4 flex items-center">
+            <i class="ri-share-forward-line text-gray-500"></i>
+          </div>
+          <div class="px-4 cursor-pointer text-blue-500 hover:bg-blue-100 dark:hover:bg-gray-600 inline-flex" @click="shareToTwitter">
+            <i class="ri-twitter-line"></i>
+          </div>
+          <div class="px-4 cursor-pointer text-red-500 hover:bg-red-100 dark:hover:bg-gray-600 inline-flex" @click="shareToWeibo">
+            <i class="ri-weibo-line"></i>
+          </div>
+          <div class="px-4 cursor-pointer text-indigo-500 hover:bg-indigo-100 dark:hover:bg-gray-600 inline-flex" @click="shareToTelegram">
+            <i class="ri-telegram-line"></i>
+          </div>
+        </div>
+      </div>
+
+      
+
+      
+        <div id="vlaine-comment"></div>
+      
+
+      <footer class="py-12 text-center px-4 md:px-0" v-pre>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">時光瓶</a>
+</footer>
+    </div>
+
+    <!-- TOC Container -->
+    <div class="fixed right-0 bottom-0 mb-16 mr-4 shadow w-8 h-8 rounded-full flex justify-center items-center z-10 cursor-pointer bg-white dark:bg-gray-500 dark:text-gray-200 hover:shadow-lg transition-all animated fadeInRight" @click="showToc = true">
+      <i class="ri-file-list-line"></i>
+    </div>
+
+    <div class="fixed right-0 top-0 bottom-0 overflow-y-auto w-64 bg-white dark:bg-gray-800 p-4 border-l border-gray-100 dark:border-gray-600 z-10 transition-fast" :class="{ '-mr-64': !showToc }">
+      <div class="flex mb-4 justify-end">
+        <div class="w-8 h-8 inline-flex justify-center items-center rounded-full cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-fast" @click="showToc = false">
+          <i class="ri-close-line text-lg"></i>
+        </div>
+      </div>
+      <div class="post-toc-container">
+        <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E5%89%8D%E8%A8%80">前言</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85hexo">安装Hexo</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AE%E4%B8%BB%E9%A2%98">配置主题</a></li>
+<li><a href="#%E6%8A%8A%E6%9C%AC%E5%9C%B0hexo%E9%83%A8%E7%BD%B2%E5%88%B0github">把本地Hexo部署到GitHub</a></li>
+<li><a href="#%E7%BB%91%E5%AE%9A%E4%B8%AA%E4%BA%BA%E5%9F%9F%E5%90%8D">绑定个人域名</a></li>
+<li><a href="#%E5%85%B3%E4%BA%8E%E6%96%B0%E5%BB%BA%E6%96%87%E7%AB%A0">关于新建文章</a></li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+</ul>
+</li>
+</ul>
+
+      </div>
+    </div>
+
+    <!-- Back to top -->
+    <div class="fixed right-0 bottom-0 mb-4 mr-4 shadow w-8 h-8 rounded-full flex justify-center items-center z-10 cursor-pointer bg-white hover:shadow-lg transition-all dark:bg-gray-500 dark:text-gray-200" @click="backToUp" v-show="scrolled">
+      <i class="ri-arrow-up-line"></i>
+    </div>
+  </div>
+
+  <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+  <!-- Background of PhotoSwipe. 
+        It's a separate element as animating opacity is faster than rgba(). -->
+  <div class="pswp__bg">
+  </div>
+  <!-- Slides wrapper with overflow:hidden. -->
+  <div class="pswp__scroll-wrap">
+    <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+    <div class="pswp__container">
+      <div class="pswp__item">
+      </div>
+      <div class="pswp__item">
+      </div>
+      <div class="pswp__item">
+      </div>
+    </div>
+    <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+    <div class="pswp__ui pswp__ui--hidden">
+      <div class="pswp__top-bar">
+        <!--  Controls are self-explanatory. Order can be changed. -->
+        <div class="pswp__counter">
+        </div>
+        <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+        <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+        <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+        <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+        <!-- element will get class pswp__preloader--active when preloader is running -->
+        <div class="pswp__preloader">
+          <div class="pswp__preloader__icn">
+            <div class="pswp__preloader__cut">
+              <div class="pswp__preloader__donut">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+        <div class="pswp__share-tooltip">
+        </div>
+      </div>
+      <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+      </button>
+      <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+      </button>
+      <div class="pswp__caption">
+        <div class="pswp__caption__center">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://www.shiguangping.com/media/scripts/main.js"></script>
+  
+  <!-- Code Highlight -->
+  
+    <script src="https://www.shiguangping.com/media/prism.js"></script>
+    <script>
+      Prism.highlightAll()
+    </script>
+  
+
+  <script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+  <script>
+    //拿到预览框架，也就是上面的html代码
+    var pswpElement = document.querySelectorAll('.pswp')[0];
+    //定义图片数组变量
+    var imgitems;
+    /**
+    * 用于显示预览界面
+    * @param index 图片数组下标
+    */
+    function viewImg(index) {
+      //其它选项这里不做过多阐述，详情见官网
+      var pswpoptions = {
+        index: parseInt(index, 10), // 开始幻灯片索引。0是第一张幻灯片。必须是整数，而不是字符串。
+        bgOpacity: 0.7, // 背景透明度，0-1
+        maxSpreadZoom: 3, // 缩放级别，不要太大
+      };
+      //初始化并打开PhotoSwipe，pswpElement对应上面预览框架，PhotoSwipeUI_Default为皮肤，imgitems为图片数组，pswpoptions为选项
+      var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, imgitems, pswpoptions);
+      gallery.init()
+    }
+    /**
+    * 用于添加图片点击事件
+    * @param img 图片元素
+    * @param index 所属下标（在imgitems中的位置）
+    */
+    function addImgClick(img, index) {
+      img.onclick = function() {
+        viewImg(index)
+      }
+    }
+    /**
+    * 轮询所有图片，获取src、width、height等数据，加入imgitems，并给图片元素添加事件
+    * 最好在onload中执行该方法，本站因放在最底部，所以直接初始化
+    * 异步加载图片可在图片元素创建完成后调用此方法
+    */
+    function initImg() {
+      //重置图片数组
+      imgitems = [];
+      //查找class:markdown 下的所有img元素并遍历
+      var imgs = document.querySelectorAll('.markdown img');
+      for (var i = 0; i < imgs.length; i++) {
+        var img = imgs[i];
+        //本站相册初始为loading图片，真实图片放在data-src
+        var ds = img.getAttribute("data-src");
+        //创建image对象，用于获取图片宽高
+        var imgtemp = new Image();
+        //判断是否存在data-src
+        if (ds != null && ds.length > 0) {
+          imgtemp.src = ds
+        } else {
+          imgtemp.src = img.src
+        }
+        //判断是否存在缓存
+        if (imgtemp.complete) {
+          var imgobj = {
+            "src": imgtemp.src,
+            "w": imgtemp.width,
+            "h": imgtemp.height,
+          };
+          imgitems[i] = imgobj;
+          addImgClick(img, i);
+        } else {
+          console.log('进来了2')
+          imgtemp.index = i;
+          imgtemp.img = img;
+          imgtemp.onload = function() {
+            var imgobj = {
+              "src": this.src,
+              "w": this.width,
+              "h": this.height,
+            };
+            //不要使用push，因为onload前后顺序会不同
+            imgitems[this.index] = imgobj
+            //添加点击事件
+            addImgClick(this.img, this.index);
+          }
+        }
+      }
+    }
+    //初始化
+    initImg();
+  </script>
+  
+    <script type="application/javascript" src="https://unpkg.com/valine"></script>
+<script type="application/javascript">
+  new Valine({
+    el: '#vlaine-comment',
+    appId: 'iScdY0hF5Y8TgKyMtfvp9CcM-gzGzoHsz',
+    appKey: 'XH2m9KIiA88R6N2lYiSObDH7',
+    pageSize: 10,
+    notify: false,
+    avatar: 'mp',
+    verify: false,
+    placeholder: '来都来了，不妨评论一下',
+    visitor: true,
+    highlight: false,
+    recordIP: false,
+  })
+</script>
+  
+  
+</body>
+
+</html>

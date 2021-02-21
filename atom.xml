@@ -1,0 +1,1671 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://www.shiguangping.com</id>
+    <title>時光瓶</title>
+    <updated>2021-02-21T03:07:38.281Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://www.shiguangping.com"/>
+    <link rel="self" href="https://www.shiguangping.com/atom.xml"/>
+    <subtitle>李炎の生活學習日誌</subtitle>
+    <logo>https://www.shiguangping.com/images/avatar.png</logo>
+    <icon>https://www.shiguangping.com/favicon.ico</icon>
+    <rights>All rights reserved 2021, 時光瓶</rights>
+    <entry>
+        <title type="html"><![CDATA[SpringBoot 统一异常处理]]></title>
+        <id>https://www.shiguangping.com/post/spring-boot-exception-handle/</id>
+        <link href="https://www.shiguangping.com/post/spring-boot-exception-handle/">
+        </link>
+        <updated>2021-02-18T16:00:00.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="统一返回数据接口">统一返回数据接口</h2>
+<h3 id="定义接口返回数据结构">定义接口返回数据结构</h3>
+<pre><code class="language-json">{
+  &quot;code&quot;: 0,
+  &quot;message&quot;: &quot;SUCCESS&quot;,
+  &quot;data&quot;: {}
+}
+</code></pre>
+<h3 id="数据接口字段模型定义">数据接口字段模型定义</h3>
+<pre><code class="language-java">package net.pjsk.demo.domain;
+
+import lombok.Data;
+
+/**
+ * 接口返回数据模型
+ *
+ * @author liyan
+ * @date 2021.2.19
+ */
+@Data
+public class Result&lt;T&gt; {
+
+    private Integer code;
+
+    private String message;
+
+    private T data;
+}
+</code></pre>
+<h3 id="封装接口返回方法成功-失败">封装接口返回方法（成功、失败）</h3>
+<pre><code class="language-java">package net.pjsk.demo.util;
+
+import cn.hutool.core.util.ObjectUtil;
+import net.pjsk.demo.domain.Result;
+
+/**
+ * 封装接口返回方法
+ *
+ * @author liyan
+ * @date 2021.2.19
+ */
+public class ResultUtil {
+
+    /**
+     * 成功
+     *
+     * @param data
+     * @return
+     */
+    public static Result success(Object data) {
+        Result result = new Result();
+        result.setCode(0);
+        result.setMessage(&quot;SUCCESS&quot;);
+        if (data != null) {
+            result.setData(data);
+        }
+        return result;
+    }
+
+    /**
+     * 成功(无需返回数据)
+     *
+     * @return
+     */
+    public static Result success() {
+        return success(null);
+    }
+
+    /**
+     * 失败
+     *
+     * @param code
+     * @param message
+     * @return
+     */
+    public static Result error(Integer code, String message) {
+        Result result = new Result();
+        result.setCode(code);
+        result.setMessage(message);
+        return result;
+    }
+}
+</code></pre>
+<h2 id="统一异常处理">统一异常处理</h2>
+<h3 id="状态消息枚举">状态消息枚举</h3>
+<pre><code class="language-java">package net.pjsk.demo.enums;
+
+/**
+ * 状态消息枚举
+ *
+ * @author liyan
+ * @date 2021.2.19
+ */
+
+public enum MessageEnum {
+
+    SYSTEM_ERROR(1001,&quot;系统错误&quot;),
+    NAME_EXCEEDED_CHARRACTER_LIMIT(2000, &quot;姓名超过了限制，最大4个字符!&quot;);
+
+    private Integer code;
+    private String message;
+
+    MessageEnum(Integer code, String message) {
+        this.code = code;
+        this.message = message;
+    }
+
+    public Integer getCode() {
+        return code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+}
+</code></pre>
+<h3 id="自定义异常类">自定义异常类</h3>
+<pre><code class="language-java">package net.pjsk.demo.exception;
+
+import net.pjsk.demo.enums.MessageEnum;
+
+/**
+ * 自定义异常类
+ *
+ * @author liyan
+ * @date 2021.2.19
+ */
+public class UserException extends RuntimeException{
+
+    private Integer code;
+
+    public UserException(MessageEnum messageEnum){
+        super(messageEnum.getMessage());
+        this.code = messageEnum.getCode();
+    }
+
+    public Integer getCode(){
+        return code;
+    }
+
+    public void setCode(Integer code){
+        this.code = code;
+    }
+}
+</code></pre>
+<h3 id="controlleradvice-统一处理异常">@ControllerAdvice 统一处理异常</h3>
+<pre><code class="language-java">package net.pjsk.demo.handler;
+
+import net.pjsk.demo.domain.Result;
+import net.pjsk.demo.exception.UserException;
+import net.pjsk.demo.util.ResultUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+/**
+ * 统一处理异常
+ *
+ * @author liyan
+ * @date 2021.2.19
+ */
+@ControllerAdvice
+public class ExceptionHandle {
+
+    private final static Logger logger = LoggerFactory.getLogger(ExceptionHandle.class);
+
+    @ExceptionHandler(value = Exception.class)
+    @ResponseBody
+    public Result handle(Exception e) {
+        logger.info(&quot;进入error&quot;);
+
+        if (e instanceof UserException) {
+            UserException userException = (UserException) e;
+            return ResultUtil.error(userException.getCode(), userException.getMessage());
+        } else {
+            logger.error(&quot;系统异常 {}&quot;, e);
+            return ResultUtil.error(1000, &quot;系统异常&quot;);
+        }
+    }
+
+
+}
+</code></pre>
+<h2 id="测试">测试</h2>
+<pre><code class="language-java">package net.pjsk.demo.controller;
+
+import net.pjsk.demo.dao.UserDao;
+import net.pjsk.demo.domain.Result;
+import net.pjsk.demo.domain.User;
+import net.pjsk.demo.enums.MessageEnum;
+import net.pjsk.demo.exception.UserException;
+import net.pjsk.demo.util.ResultUtil;
+import org.springframework.web.bind.annotation.*;
+
+/**
+ * @author liyan
+ * @date 2021.2.19
+ */
+@RequestMapping(&quot;/user&quot;)
+@RestController
+public class UserController {
+
+    /**
+     * 获取用户列表
+     *
+     * @param exception
+     * @return
+     */
+    @GetMapping(&quot;/{exception}&quot;)
+    public Result&lt;?&gt; getUserList(@PathVariable(&quot;exception&quot;) Boolean exception) {
+        if (exception) {
+            // 手动设置一个除零异常
+            int a = 1 / 0;
+        }
+        return ResultUtil.success(UserDao.getUserList());
+    }
+
+    /**
+     * 新增用户
+     *
+     * @param user
+     * @return
+     */
+    @PostMapping
+    public Result&lt;?&gt; addUser(@RequestBody User user) {
+        if (user.getName().length() &gt; 4) {
+            throw new UserException(MessageEnum.NAME_EXCEEDED_CHARRACTER_LIMIT);
+        }
+        UserDao.add(user);
+        return ResultUtil.success();
+    }
+
+}
+</code></pre>
+<h3 id="测试正常返回及发生异常">测试正常返回及发生异常</h3>
+<p>正常返回：</p>
+<figure data-type="image" tabindex="1"><img src="https://images.shiguangping.com/imgs/20210220000658.png" alt="image-20210220000657896" loading="lazy"></figure>
+<p>发生异常：</p>
+<figure data-type="image" tabindex="2"><img src="https://images.shiguangping.com/imgs/20210220000756.png" alt="image-20210220000756723" loading="lazy"></figure>
+<h3 id="测试自定义异常">测试自定义异常</h3>
+<figure data-type="image" tabindex="3"><img src="https://images.shiguangping.com/imgs/20210220000839.png" alt="image-20210220000839465" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Java Lambda表达式]]></title>
+        <id>https://www.shiguangping.com/post/lambda/</id>
+        <link href="https://www.shiguangping.com/post/lambda/">
+        </link>
+        <updated>2021-02-17T16:00:00.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="了解函数式编程">了解函数式编程</h2>
+<p>函数：在数学中，函数就是就输入量、输出量的一套计算方案，也就是“拿数据做操作”。</p>
+<p>在面向对象编程中，强调通过面向对象的思想解决问题；</p>
+<p>而函数式编程忽略了面向对象编程的复杂语法，屏蔽过程，强调“做什么”，忽略“怎么做”。</p>
+<h2 id="小栗子">小栗子</h2>
+<blockquote>
+<p>需求：启动一个线程，在控制台打印一句话：“线程启动了”。</p>
+</blockquote>
+<p><strong>方式一</strong></p>
+<p>传统方式：创建一个类<code>MyRunable</code>实现<code>Runable</code>接口，通过这种实现类的方式实现需求。</p>
+<pre><code class="language-java">package net.pjsk.demo;
+
+/**
+ * @author liyan
+ * @date 2021.2.18
+ */
+public class MyRunable implements Runnable{
+    @Override
+    public void run() {
+        System.out.println(&quot;线程启动了&quot;);
+    }
+}
+</code></pre>
+<pre><code class="language-java">package net.pjsk.demo;
+
+/**
+ * @author liyan
+ * @date 2021.2.18
+ */
+public class LambdaDemo {
+    public static void main(String[] args) {
+        // 通过实现类的方式实现
+        MyRunable myRunable = new MyRunable();
+        new Thread(myRunable).start();
+    }
+}
+</code></pre>
+<p><strong>方式二</strong></p>
+<p>匿名内部类</p>
+<pre><code class="language-java">package net.pjsk.demo;
+
+/**
+ * @author liyan
+ * @date 2021.2.18
+ */
+public class LambdaDemo {
+    public static void main(String[] args) {
+        // 通过匿名内部类的方式实现
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println(&quot;线程启动了&quot;);
+            }
+        }).start();
+    }
+}
+</code></pre>
+<p><strong>方式三</strong></p>
+<p>Lambda表达式</p>
+<pre><code class="language-java">package net.pjsk.demo;
+
+/**
+ * @author liyan
+ * @date 2021.2.18
+ */
+public class LambdaDemo {
+    public static void main(String[] args) {
+        // 通过Lambda表达式实现
+        new Thread(() -&gt; {
+            System.out.println(&quot;线程启动了&quot;);
+        }).start();
+    }
+} 
+</code></pre>
+<h2 id="lambda-表达式的格式">Lambda 表达式的格式</h2>
+<p>Lambda表达式由<code>参数列表</code>、<code>箭头</code>、<code>代码块</code>三部分构成。</p>
+<pre><code class="language-java">new Thread(() -&gt; {
+            System.out.println(&quot;线程启动了&quot;);
+        }).start();
+</code></pre>
+<h2 id="lambda-表达式使用前提">Lambda 表达式使用前提</h2>
+<ul>
+<li>有一个接口</li>
+<li>该接口有且只有一个抽象方法</li>
+</ul>
+<p>这种接口也成为“函数式接口”。</p>
+<h2 id="练习一">练习一</h2>
+<blockquote>
+<ol>
+<li>
+<p>定义一个接口(Eatable)，里面定义一个抽象方法， void eat()</p>
+</li>
+<li>
+<p>定义一个测试类(EatableDemo)，里面提供两个方法：</p>
+<ol>
+<li>void useEatable(Eatable e)</li>
+<li>main()方法，用来调用useEatable()方法</li>
+</ol>
+</li>
+</ol>
+</blockquote>
+<pre><code class="language-java">package net.pjsk.test1;
+
+// 方式一需要创建接口的实现类，并重写方法
+public class EatableImpl implements Eatable{
+    @Override
+    public void eat() {
+        System.out.println(&quot;多吃蔬菜和水果&quot;);
+    }
+}
+</code></pre>
+<pre><code class="language-java">package net.pjsk.test1;
+
+/**
+ * @author liyan
+ * @date 2021.2.18
+ */
+public class EatableDemo {
+
+    public static void main(String[] args) {
+        // 方式一、先创建实现类重写eat()方法，再使用
+        Eatable eatable = new EatableImpl();
+        useEatable(eatable);
+
+        // 方式二、直接传入匿名内部类
+        useEatable(new Eatable() {
+            @Override
+            public void eat() {
+                System.out.println(&quot;多吃蔬菜和水果&quot;);
+            }
+        });
+
+        // 方式三、 使用Lambda 表达式
+        useEatable(() -&gt; {
+            System.out.println(&quot;多吃蔬菜和水果&quot;);
+        });
+    }
+
+    public static void useEatable(Eatable e) {
+        e.eat();
+    }
+}
+</code></pre>
+<h2 id="练习二">练习二</h2>
+<blockquote>
+<ol>
+<li>
+<p>定义一个接口(Flyable)，里面定义一个抽象方法， void fly(String s)</p>
+</li>
+<li>
+<p>定义一个测试类(FlyableDemo)，里面提供两个方法：</p>
+</li>
+<li>
+<p>void useEatable(Flyable f)</p>
+</li>
+<li>
+<p>main()方法，用来调用useFlyable()方法</p>
+</li>
+</ol>
+</blockquote>
+<pre><code class="language-java">package net.pjsk.test2;
+
+// 方式一，接口实现类
+public class FlyableImpl implements Flyable {
+    @Override
+    public void fly(String s) {
+        System.out.println(s + &quot;会飞&quot;);
+    }
+}
+
+</code></pre>
+<pre><code class="language-java">package net.pjsk.test2;
+
+/**
+ * @author liyan
+ * @date 2021.2.18
+ */
+public class FlyableDemo {
+
+    public static void main(String[] args) {
+
+        // 方式一、创建接口实现类
+        Flyable flyable = new FlyableImpl();
+        useFlyable(flyable);
+
+        // 方式二、匿名内部类
+        useFlyable(new Flyable() {
+            @Override
+            public void fly(String s) {
+                System.out.println(s + &quot;会飞&quot;);
+            }
+        });
+
+        // Lambda 表达式
+        useFlyable((s -&gt; {
+            System.out.println(s + &quot;会飞&quot;);
+        }));
+    }
+
+    public static void useFlyable(Flyable f) {
+        f.fly(&quot;花花&quot;);
+    }
+}
+</code></pre>
+<h2 id="练习三">练习三</h2>
+<blockquote>
+<ol>
+<li>
+<p>定义一个接口(Addable)，里面定义一个抽象方法， int add(int x,int y)</p>
+</li>
+<li>
+<p>定义一个测试类(FlyableDemo)，里面提供两个方法：</p>
+</li>
+<li>
+<p>void useAddable(Addable a)</p>
+</li>
+<li>
+<p>main()方法，用来调用useAddable()方法</p>
+</li>
+</ol>
+</blockquote>
+<pre><code class="language-java">package net.pjsk.test3;
+
+/**
+ * @author liyan
+ * @date 2021.1.18
+ */
+public class AddableDemo {
+    public static void main(String[] args) {
+
+        // 匿名内部类
+        useAddable(new Addable() {
+            @Override
+            public int add(int x, int y) {
+                return x + y;
+            }
+        });
+
+        // Lambda 表达式
+        useAddable((x, y) -&gt; {
+            return x + y;
+        });
+    }
+
+    public static void useAddable(Addable a) {
+        int result = a.add(1, 2);
+        System.out.println(result);
+    }
+}
+</code></pre>
+<h2 id="lambda-表达式简写">Lambda 表达式简写</h2>
+<p>简写规则如下：</p>
+<ul>
+<li>参数列表中参数的数据类型可以省略，多个参数时，参数的数据类型要么都省略，要么都不省略；</li>
+<li>参数列表中只有一个参数时，小括号也可以省略；</li>
+<li>代码块只有一行时，大括号和分号可以省略；当有return时，则return也要省略；省略大括号分号时，Lambda 表达式要写成一行。</li>
+</ul>
+<h2 id="lambda表达式和匿名内部类的区别">Lambda表达式和匿名内部类的区别</h2>
+<p>所需类型不同：</p>
+<ul>
+<li>匿名内部类：可以是接口、抽象类、具体类</li>
+<li>Lambda表达式：只能是接口</li>
+</ul>
+<p>使用限制不同：</p>
+<ul>
+<li>如果接口中有且只有一个抽象方法，可以使用Lambda表达式，也可以使用匿名内部类；</li>
+<li>如果接口中有多个抽象方法，只能使用匿名内部类</li>
+</ul>
+<p>实现原理不同：</p>
+<ul>
+<li>使用匿名内部类的形式，在程序编译后，会产生一个单独的.class字节码文件</li>
+<li>使用Lambda表达式，编译后不会产生单独的字节码文件，对应的字节码文件在程序运行时动态生成。</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Mybatis Plus多租户数据隔离]]></title>
+        <id>https://www.shiguangping.com/post/mybatis-plus-tenant/</id>
+        <link href="https://www.shiguangping.com/post/mybatis-plus-tenant/">
+        </link>
+        <updated>2021-01-26T16:00:00.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="什么是多租户">什么是多租户</h2>
+<p>多租户技术或称多重租赁技术，简称多租户。是一种软件架构技术，是实现如何在多用户环境下（此处的多用户一般是面向企业用户）共用相同的系统或程序组件，并且可确保各用户间数据的隔离性。</p>
+<p>简单讲：在一台服务器上运行单个应用实例，它为多个租户（客户）提供服务。从定义中我们可以理解：多租户是一种架构，目的是为了让多用户环境下使用同一套程序，且保证用户间数据隔离。那么重点就很浅显易懂了，多租户的重点就是同一套程序下实现多用户数据的隔离。</p>
+<h2 id="数据隔离的三种方案">数据隔离的三种方案</h2>
+<ol>
+<li>独立数据库：简单来说就是一个租户使用一个数据库，这种数据隔离级别最高，安全性最好，但是提高成本。</li>
+<li>共享数据库、隔离数据架构：多租户使用同一个数据库，但是每个租户对应一个Schema(数据库user)。</li>
+<li>共享数据库、共享数据架构：使用同一个数据库，同一个Schema，但是在表中增加了<code>租户ID</code>的字段，这种共享数据程度最高，隔离级别最低。</li>
+</ol>
+<p>这里采用方案三，即共享数据库，共享数据架构，因为这种方案服务器成本最低，但是提高了开发成本。</p>
+<h2 id="使用mybatis-plus实现多租户">使用Mybatis Plus实现多租户</h2>
+<blockquote>
+<p>为什么选择MyBatisPlus？<br>
+除了一些系统共用的表以外，其他租户相关的表，我们都需要在sql不厌其烦的加上<code>AND t.tenant_id = ?</code>查询条件，稍不注意就会导致数据越界，数据安全问题让人担忧。好在有了MybatisPlus这个神器，可以极为方便的实现多租户SQL解析器。</p>
+</blockquote>
+<p>Mybatis-plus就提供了一种多租户的解决方案，实现方式是基于分页插件(拦截器)进行实现的。</p>
+<h3 id="第一步">第一步</h3>
+<ul>
+<li>在数据库中添加维护一张sys_tenant（租户管理表），</li>
+<li>在需要进行租户数据隔离的数据表上新增租户id；</li>
+</ul>
+<h3 id="第二步">第二步</h3>
+<p>创建表：</p>
+<pre><code class="language-sql">CREATE TABLE `orders_1`.`tenant`  (
+  `id` int(0) NOT NULL AUTO_INCREMENT COMMENT '自增主键',
+  `expire_date` datetime(0) COMMENT '协议到期时间',
+  `amount` decimal(8, 2) COMMENT '金额',
+  `tenant_id` int(0) COMMENT '租户ID',
+  PRIMARY KEY (`id`)
+);
+</code></pre>
+<p>自定义系统的上下文，存储从cookie等方式获取的租户ID，在后续的getTenantId()使用。</p>
+<pre><code class="language-java">/**
+ * 系统的上下文帮助类。ConcurrentHashMap设置租户ID，供后续的MP的getTenantId()取出
+ *
+ * @author liyan
+ * @since 2021.1.27
+ */
+@Component
+public class ApiContext {
+  private static final String KEY_CURRENT_TENANT_ID = &quot;KEY_CURRENT_TENANT_ID&quot;;
+  private static final Map&lt;String, Object&gt; mContext = new ConcurrentHashMap&lt;&gt;();
+
+  public void setCurrentTenantId(Long providerId) {
+    mContext.put(KEY_CURRENT_TENANT_ID, providerId);
+  }
+
+  public Long getCurrentTenantId() {
+    return (Long) mContext.get(KEY_CURRENT_TENANT_ID);
+  }
+}
+</code></pre>
+<p>创建Mybatis Plus配置类<code>MyBatisPlusConfig</code>通过分页插件配置MP多租户。</p>
+<pre><code class="language-java">package com.zkyc.school.config.mybatisplus;
+
+import com.baomidou.mybatisplus.core.injector.ISqlInjector;
+import com.baomidou.mybatisplus.core.parser.ISqlParser;
+import com.baomidou.mybatisplus.extension.injector.LogicSqlInjector;
+import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.tenant.TenantHandler;
+import com.baomidou.mybatisplus.extension.plugins.tenant.TenantSqlParser;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import net.sf.jsqlparser.expression.Expression;
+import net.sf.jsqlparser.expression.LongValue;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * @author liyan
+ * @since 2021.1.25
+ */
+@Configuration
+public class MyBatisPlusConfiguration {
+
+  @Autowired
+  private ApiContext apiContext;
+
+  /**
+     * 分页拦截器
+     * @return
+     */
+  @Bean
+  public PaginationInterceptor paginationInterceptor() {
+    PaginationInterceptor paginationInterceptor = new PaginationInterceptor();
+
+    // 创建SQL解析器集合
+    List&lt;ISqlParser&gt; sqlParserList = new ArrayList&lt;&gt;();
+
+    // 创建租户SQL解析器
+    TenantSqlParser tenantSqlParser = new TenantSqlParser();
+
+    // 设置租户处理器
+    tenantSqlParser.setTenantHandler(new TenantHandler() {
+
+      // 设置当前租户ID
+      @Override
+      public Expression getTenantId() {
+        // 从当前系统上下文中取出当前请求的服务商ID，通过解析器注入到SQL中。
+        Long currentProviderId = apiContext.getCurrentTenantId();
+        if (null == currentProviderId) {
+          throw new RuntimeException(&quot;Get CurrentProviderId error.&quot;);
+        }
+        return new LongValue(currentProviderId);
+      }
+
+      @Override
+      public String getTenantIdColumn() {
+        // 对应数据库中租户ID的列名
+        return &quot;tenant_id&quot;;
+      }
+
+      @Override
+      public boolean doTableFilter(String tableName) {
+        // 添加要过滤的表
+        List&lt;String&gt; tableNameList = Arrays.asList(&quot;user_info&quot;,&quot;user_token&quot;);
+        if (tableNameList.contains(tableName)) {
+          return true;
+        }
+        return false;
+      }
+    });
+
+    sqlParserList.add(tenantSqlParser);
+    paginationInterceptor.setSqlParserList(sqlParserList);
+
+    return paginationInterceptor;
+  }
+
+}
+</code></pre>
+<h2 id="测试">测试</h2>
+<p>配置好之后，不管是查询、新增、修改删除方法，MP都会自动在SQL上拼接租户ID的标识<code>WHERE tenant_id = 1</code>。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Flutter笔记]]></title>
+        <id>https://www.shiguangping.com/post/flutter/</id>
+        <link href="https://www.shiguangping.com/post/flutter/">
+        </link>
+        <updated>2021-01-23T16:00:00.000Z</updated>
+        <content type="html"><![CDATA[<p>::: tip</p>
+<p>今天是我的生日，祝我生日快乐🎉。</p>
+<p>:::</p>
+<img src="https://images.shiguangping.com/imgs/20210124214824.png" alt="image-20210124214824401" style="width: 500px"/>
+<blockquote>
+<p>在Flutter中一切皆是组件<code>widget</code>。</p>
+</blockquote>
+<h2 id="第一个demo">第一个Demo</h2>
+<pre><code class="language-dart">import 'package:flutter/cupertino.dart';
+
+void main()=&gt;runApp(
+  new Center(
+    child: new Text(
+      '你好 Flutter',
+      textDirection: TextDirection.ltr,
+    ),
+  )
+);
+</code></pre>
+<p>模拟器效果：</p>
+<img src="https://images.shiguangping.com/imgs/20210124205345.png" style="width: 150px"/>
+<p>在Dart中实例化对象可以省略<code>new</code>关键字</p>
+<pre><code class="language-dart">import 'package:flutter/cupertino.dart';
+
+void main()=&gt;runApp(
+   Center(
+    child:  Text(
+      '你好 Flutter',
+      textDirection: TextDirection.ltr,
+    ),
+  )
+);
+</code></pre>
+<h2 id="自定义组件">自定义组件</h2>
+<p>在Flutter中，组件<code>widget</code>实际上是一个类，自定义组件就是自定义一个类。</p>
+<p>定义一个类，继承<code>StatelessWidget</code>或者<code>StatefulWidget</code>抽象类。前者表示无状态组件，后者表示有状态组件。</p>
+<p>实现抽象类中的<code>build()</code>方法，返回一个<code>Widget</code>。</p>
+<pre><code class="language-dart">import 'package:flutter/cupertino.dart';
+
+void main()=&gt;runApp(MyApp());
+
+// 自定义组件
+class MyApp extends StatelessWidget{
+@override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Center(
+      child:  Text(
+        '你好 Flutter',
+        textDirection: TextDirection.ltr,
+      ),
+    );
+  }
+}
+</code></pre>
+<h2 id="组件">组件</h2>
+<h3 id="material">Material</h3>
+<p><code>MaterialApp</code>是一个方便的Widget，它封装了应用程序实现Material Design所需的一些Widget。一般作为一个App中最基础的widget使用，其余组件都构建在这个组件上。</p>
+<p><code>MatetialApp</code>中常用属性：</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>home</td>
+<td>主页</td>
+</tr>
+<tr>
+<td>title</td>
+<td>标题</td>
+</tr>
+<tr>
+<td>color</td>
+<td>颜色</td>
+</tr>
+<tr>
+<td>theme</td>
+<td>主题</td>
+</tr>
+<tr>
+<td>routes</td>
+<td>路由</td>
+</tr>
+</tbody>
+</table>
+<h3 id="scaffold">Scaffold</h3>
+<p><code>Scaffold</code>是 Material Design布局结构的基本实现。此类提供了用于显示<code>drawer</code>、<code>snackbar</code>和底部<code>sheet</code>的API。</p>
+<p><code>Scaffold</code>主要的属性：</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>appBar</td>
+<td>显示在界面顶部的AppBar</td>
+</tr>
+<tr>
+<td>body</td>
+<td>当前界面所显示的主要内容 Widget</td>
+</tr>
+<tr>
+<td>drawer</td>
+<td>抽屉菜单控件</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-dart">import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+void main() =&gt; runApp(MyApp());
+
+// 自定义组件
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return HomeContent();
+  }
+}
+
+class HomeContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return MaterialApp(
+        title: 'First App Demo',
+        home: Scaffold(
+            appBar: AppBar(
+              title: Text('flutter'),
+            ),
+            body: Center(
+              child: Text(
+                'Happy Birthday ~',
+                style: TextStyle(
+                    fontSize: 30.0,
+                    color: Colors.blue,
+                    fontWeight: FontWeight.w500),
+                textDirection: TextDirection.ltr,
+              ),
+            )),
+        theme: ThemeData(
+          primaryColor: Colors.white
+        )
+    );
+  }
+}
+</code></pre>
+<p>模拟器效果：</p>
+<img src="https://images.shiguangping.com/imgs/20210124215829.png" alt="image-20210124215829363" style="width: 150px;" />
+<h3 id="container">Container</h3>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>height</td>
+<td>容器高度 double类型</td>
+</tr>
+<tr>
+<td>width</td>
+<td>容器宽度 double类型</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[SpringBoot-定时任务]]></title>
+        <id>https://www.shiguangping.com/post/spring-boot-schedule/</id>
+        <link href="https://www.shiguangping.com/post/spring-boot-schedule/">
+        </link>
+        <updated>2021-01-13T16:00:00.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[SpringBoot-集成Thymeleaf构建Web应用]]></title>
+        <id>https://www.shiguangping.com/post/spring-boot-thymeleaf/</id>
+        <link href="https://www.shiguangping.com/post/spring-boot-thymeleaf/">
+        </link>
+        <updated>2021-01-13T16:00:00.000Z</updated>
+        <content type="html"><![CDATA[<p>Thymeleaf是模板引擎，可以替代JSP构建Web页面。</p>
+<p>官方地址：<a href="https://www.thymeleaf.org/">https://www.thymeleaf.org/</a></p>
+<h2 id="集成thymeleaf">集成Thymeleaf</h2>
+<h3 id="创建项目">创建项目</h3>
+<p>使用<code>Spring Initializr</code>创建SpringBoot项目，添加Maven依赖。</p>
+<p>::: details pom.xml</p>
+<pre><code class="language-xml">&lt;dependencies&gt;
+  &lt;!-- Thymeleaf --&gt;
+  &lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-thymeleaf&lt;/artifactId&gt;
+  &lt;/dependency&gt;
+
+  &lt;!-- spring mvc、Tomcat相关依赖 --&gt;
+  &lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+  &lt;/dependency&gt;
+
+  &lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-configuration-processor&lt;/artifactId&gt;
+    &lt;optional&gt;true&lt;/optional&gt;
+  &lt;/dependency&gt;
+  &lt;dependency&gt;
+    &lt;groupId&gt;org.projectlombok&lt;/groupId&gt;
+    &lt;artifactId&gt;lombok&lt;/artifactId&gt;
+    &lt;optional&gt;true&lt;/optional&gt;
+  &lt;/dependency&gt;
+  &lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
+    &lt;scope&gt;test&lt;/scope&gt;
+  &lt;/dependency&gt;
+&lt;/dependencies&gt;
+</code></pre>
+<p>:::</p>
+<h3 id="资源目录">资源目录</h3>
+<p>SpringBoot默认的静态资源目录，SpringBoot默认的静态资源目录需置于classpath下</p>
+<ul>
+<li>/static</li>
+<li>/public</li>
+<li>/resources</li>
+<li>/META-INF/resources</li>
+</ul>
+<p>以上四个目录下的静态资源都会被加载。例如，我们在<code>/src/main/resources</code>下新建<code>static</code>目录，并放入一张图片<code>pic.jpg</code>。启动SpringBoot，访问<code>localhost:8080/pic.jpg</code>，不出意外的话，可以正常访问<code>static</code>下的图片。</p>
+<p>SpringBoot默认的模板路径为：<code>src/main/resources/templates</code></p>
+<p><a href="https://javabook.shiguangping.com/frame4/%E5%AF%BC%E5%85%A5%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90.html">《Java阶段性笔记》记录</a></p>
+<h3 id="添加模板页面">添加模板页面</h3>
+<p><code>src/main/resources/templates</code>下新建<code>index.html</code>文件。</p>
+<p>::: details index.html</p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;
+      xmlns:th=&quot;http://www.thymeleaf.org&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;meta name=&quot;renderer&quot; content=&quot;webkit&quot;&gt;
+    &lt;title&gt;首页&lt;/title&gt;
+    &lt;link rel=&quot;shortcut icon&quot; th:href=&quot;@{/favicon.ico}&quot;/&gt;
+    &lt;link th:href=&quot;@{/static/css/bootstrap.min.css}&quot; rel=&quot;stylesheet&quot;/&gt;
+    &lt;link th:href=&quot;@{/static/css/font-awesome.min.css}&quot; rel=&quot;stylesheet&quot;/&gt;
+&lt;/head&gt;
+&lt;body class=&quot;fixed-sidebar full-height-layout gray-bg&quot; style=&quot;overflow:hidden&quot;&gt;
+&lt;div id=&quot;wrapper&quot;&gt;
+    &lt;h1 th:text=&quot;${msg}&quot;&gt;&lt;/h1&gt;
+&lt;/div&gt;
+&lt;script th:src=&quot;@{/static/js/jquery.min.js}&quot;&gt;&lt;/script&gt;
+&lt;script th:src=&quot;@{/static/js/bootstrap.min.js}&quot;&gt;&lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>:::</p>
+<p>html标签添加命名空间，这样在页面内可以使用<code>th:</code>绑定标签内的属性。</p>
+<pre><code class="language-html">&lt;!-- 添加Thymeleaf命名空间 --&gt;
+&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;
+      xmlns:th=&quot;http://www.thymeleaf.org&quot;&gt;
+</code></pre>
+<p><code>@{}</code>用来引用本地静态资源</p>
+<p><code>${}</code>接收变量</p>
+<p><a href="https://thymeleaf.shiguangping.com">《Thymeleaf教程》</a></p>
+<h3 id="编写controller">编写Controller</h3>
+<p>::: details IndexController.java</p>
+<pre><code class="language-java">package com.shiguangping.thymeleaf.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+/**
+ * 首页控制器
+ *
+ * @author liyan
+ * @since 2021.1.14
+ */
+@Controller
+public class IndexController {
+
+    @RequestMapping({&quot;/&quot;, &quot;index&quot;})
+    public String index(Model model) {
+        model.addAttribute(&quot;msg&quot;, &quot;Hello Thymeleaf~&quot;);
+        return &quot;index&quot;;
+    }
+}
+</code></pre>
+<p>:::</p>
+<p>Model对象中添加属性（键值对）<code>msg</code>，之后返回到<code>index</code>页面。</p>
+<h2 id="测试">测试</h2>
+<p>启动SpringBoot，访问<code>localhost:8080/index</code>,页面显示&quot;Hello Thymeleaf~&quot;，访问成功。</p>
+<h2 id="github源码">Github源码</h2>
+<p><a href="https://github.com/ENNRIaaa/SpringBootShip/tree/main/springboot-thymeleaf">springboot-thymeleaf</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Spring跨域请求问题]]></title>
+        <id>https://www.shiguangping.com/post/spring-cross/</id>
+        <link href="https://www.shiguangping.com/post/spring-cross/">
+        </link>
+        <updated>2021-01-13T16:00:00.000Z</updated>
+        <content type="html"><![CDATA[<figure data-type="image" tabindex="1"><img src="https://images.shiguangping.com//imgs/20210114155033.png" alt="image-20210114155026514" loading="lazy"></figure>
+<p>跨域请求问题。</p>
+<p>可以在Controller类或者方法上使用<code>@CrossOrigin</code>注解。</p>
+<p>或者通过JavaConfig全局配置：</p>
+<pre><code class="language-java">package com.zkyc.education.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @author liyan
+ */
+@Configuration
+public class WebConfig extends WebMvcConfigurerAdapter {
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping(&quot;/**&quot;)
+                .allowedOrigins(&quot;*&quot;)
+                .allowCredentials(true)
+                .allowedMethods(&quot;GET&quot;, &quot;POST&quot;, &quot;DELETE&quot;, &quot;PUT&quot;)
+                .maxAge(3600);
+    }
+    private CorsConfiguration addcorsConfig() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        List&lt;String&gt; list = new ArrayList&lt;&gt;();
+        list.add(&quot;*&quot;);
+        corsConfiguration.setAllowedOrigins(list);
+
+        // 请求常用的三种配置，*代表允许所有，当时你也可以自定义属性（比如header只能带什么，只能是post方式等等）
+        corsConfiguration.addAllowedOrigin(&quot;*&quot;);
+        corsConfiguration.addAllowedHeader(&quot;*&quot;);
+        corsConfiguration.addAllowedMethod(&quot;*&quot;);
+        return corsConfiguration;
+    }
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration(&quot;/**&quot;, addcorsConfig());
+        return new CorsFilter(source);
+    }
+}
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[SpringBoot-手写一个Starter]]></title>
+        <id>https://www.shiguangping.com/post/spring-boot-starter/</id>
+        <link href="https://www.shiguangping.com/post/spring-boot-starter/">
+        </link>
+        <updated>2021-01-12T16:00:00.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="手写starter">手写Starter</h2>
+<h3 id="创建项目">创建项目</h3>
+<p>创建一个Maven项目，或者通过Spring Initializr创建一个Spring Boot项目，添加Maven依赖：</p>
+<p>::: details pom.xml</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;parent&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+        &lt;version&gt;2.4.1&lt;/version&gt;
+        &lt;relativePath/&gt; &lt;!-- lookup parent from repository --&gt;
+    &lt;/parent&gt;
+
+    &lt;groupId&gt;com.shiguangping&lt;/groupId&gt;
+    &lt;artifactId&gt;simple-spring-boot-starter&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0&lt;/version&gt;
+
+    &lt;name&gt;simple-spring-boot-starter&lt;/name&gt;
+    &lt;description&gt;手写一个starter演示&lt;/description&gt;
+
+    &lt;properties&gt;
+        &lt;java.version&gt;1.8&lt;/java.version&gt;
+    &lt;/properties&gt;
+
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-configuration-processor&lt;/artifactId&gt;
+            &lt;optional&gt;true&lt;/optional&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-autoconfigure&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.projectlombok&lt;/groupId&gt;
+            &lt;artifactId&gt;lombok&lt;/artifactId&gt;
+            &lt;optional&gt;true&lt;/optional&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+
+    &lt;build&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+                &lt;configuration&gt;
+                    &lt;skip&gt;true&lt;/skip&gt;
+                    &lt;excludes&gt;
+                        &lt;exclude&gt;
+                            &lt;groupId&gt;org.projectlombok&lt;/groupId&gt;
+                            &lt;artifactId&gt;lombok&lt;/artifactId&gt;
+                        &lt;/exclude&gt;
+                    &lt;/excludes&gt;
+                &lt;/configuration&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+
+&lt;/project&gt;
+</code></pre>
+<p>:::</p>
+<h4 id="starter命名规范">Starter命名规范</h4>
+<p>Spring官方Starter命名通常为：<code>spring-boot-starter-{name}</code></p>
+<p>Spring官方建议非官方的Starter命名遵循：<code>{name}-spring-boot-starter</code>格式</p>
+<h3 id="编写service">编写Service</h3>
+<p>service中写了一个拼接字符串的方法，定义了前缀和后缀两个成员变量，方法返回拼接后的字符串。</p>
+<p>::: details ExampleService.java</p>
+<pre><code class="language-java">package com.shiguangping.service;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+/**
+ * 示例Service
+ *
+ * @author liyan
+ * @since 2021.1.13
+ */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class ExampleService {
+
+    private String prefix;
+
+    private String suffix;
+
+    /**
+     * 拼装字符串
+     *
+     * @param word
+     * @return
+     */
+    public String wrap(String word) {
+        return prefix + word + suffix;
+    }
+}
+</code></pre>
+<p>:::</p>
+<h3 id="编写属性类">编写属性类</h3>
+<p>::: details ExampleServiceProperties.java</p>
+<pre><code class="language-java">package com.shiguangping.configure;
+
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
+/**
+ * 属性
+ *
+ * @author liyan
+ * @since 2021.1.13
+ */
+@Data
+@ConfigurationProperties(prefix = &quot;example.service&quot;)
+public class ExampleServiceProperties {
+
+    private String prefix;
+
+    private String suffix;
+}
+</code></pre>
+<p>:::</p>
+<h3 id="编写自动配置类">编写自动配置类</h3>
+<p>::: details ExampleAutoConfigure.java</p>
+<pre><code class="language-java">package com.shiguangping.configure;
+
+import com.shiguangping.service.ExampleService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+/**
+ * 自动配置类
+ *
+ * @author liyan
+ * @since 2021.1.13
+ */
+@Configuration
+@ConditionalOnClass(ExampleService.class)
+@EnableConfigurationProperties(ExampleServiceProperties.class)
+public class ExampleAutoConfigure {
+
+    @Autowired
+    private ExampleServiceProperties properties;
+
+    @Bean
+    @ConditionalOnMissingBean
+    @ConditionalOnProperty(prefix = &quot;example.service&quot;, value = &quot;enabled&quot;, havingValue = &quot;true&quot;)
+    ExampleService exampleService() {
+        return new ExampleService(properties.getPrefix(), properties.getSuffix());
+    }
+}
+</code></pre>
+<p>:::</p>
+<h3 id="添加springfactories">添加spring.factories</h3>
+<p>在<code>resources/META-INF/</code>下创建<code>spring.factories</code>文件：</p>
+<pre><code class="language-factories">org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.shiguangping.configure.ExampleAutoConfigure
+</code></pre>
+<p>如果有多个自动配置类，用逗号分隔换行。Spring Boot会最先到META-INF下寻找自动配置类。</p>
+<h3 id="打包">打包</h3>
+<p>终端运行<code>mvn install</code>命令，将项目打包并发布到本地的Maven仓库。</p>
+<p>如果是Spring Boot项目，需要在插件配置中添加<code>skip</code>标签：</p>
+<p>::: details pom.xml</p>
+<pre><code class="language-xml">&lt;plugin&gt;
+  &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+  &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+  &lt;configuration&gt;
+    &lt;skip&gt;true&lt;/skip&gt;
+    &lt;excludes&gt;
+      &lt;exclude&gt;
+        &lt;groupId&gt;org.projectlombok&lt;/groupId&gt;
+        &lt;artifactId&gt;lombok&lt;/artifactId&gt;
+      &lt;/exclude&gt;
+    &lt;/excludes&gt;
+  &lt;/configuration&gt;
+&lt;/plugin&gt;
+</code></pre>
+<p>:::</p>
+<h2 id="测试">测试</h2>
+<p>新建一个Spring Boot项目，引入Maven依赖：</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+  &lt;groupId&gt;com.shiguangping&lt;/groupId&gt;
+  &lt;artifactId&gt;simple-spring-boot-starter&lt;/artifactId&gt;
+  &lt;version&gt;1.0.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>修改配置文件<code>application.yml</code>，添加如下内容：</p>
+<pre><code class="language-yaml">example:
+  service:
+    enabled: true
+    suffix: Nice
+    prefix: Hello
+</code></pre>
+<p>编写测试类：</p>
+<pre><code class="language-java">package com.example.demo.simple;
+
+import com.shiguangping.service.ExampleService;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+@SpringBootTest
+@RunWith(SpringRunner.class)
+public class SimpleTest {
+
+    @Autowired
+    private ExampleService exampleService;
+
+    @Test
+    public void test(){
+        String s = exampleService.wrap(&quot;Java&quot;);
+        System.out.println(s);
+    }
+
+}
+</code></pre>
+<p>运行结果：</p>
+<pre><code>HelloJavaNice
+</code></pre>
+<p>手写Starter引用成功~</p>
+<h2 id="总结">总结</h2>
+<ol>
+<li>Spring Boot启动时会先扫描引入的所有依赖，寻找带有<code>spring.factories</code>文件的Jar包；</li>
+<li>根据<code>spring.factories</code>文件加载<code>AutoConfigure</code>类；</li>
+<li>根据自动配置类中<code>@Conditional</code>注解的条件，进行自动配置，并将Bean注册到Spring容器当中。</li>
+</ol>
+<h2 id="github源码">Github源码</h2>
+<p><a href="https://github.com/ENNRIaaa/SpringBootShip/tree/main/springboot-starter">springboot-starter</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[回顾Spring Boot]]></title>
+        <id>https://www.shiguangping.com/post/spring-boot-1/</id>
+        <link href="https://www.shiguangping.com/post/spring-boot-1/">
+        </link>
+        <updated>2021-01-08T16:00:00.000Z</updated>
+        <content type="html"><![CDATA[<p>2020年4月12日开始学习Java，8月17日进入公司工作，从此步入了程序员这一行，同时也做好了在这一行持续耕耘的准备。</p>
+<p>学习Java Web开发，必然要学习Spring框架，这是Java Web开发的春天。现在有了分布式、微服务的概念，必然也要学习Spring Boot，Spring项目快速开发脚手架。Spring开发需要手动配置Bean，配置各种依赖，在Spring Boot中不需要，一切都由Spring Boot做好了。引入一个Starter，极少量的配置，就可以愉快滴使用容器中的Bean。</p>
+<p>Spring Boot的概念一句话就能概括，<strong>自动配置，开箱即用</strong>，但是了解自动配置原理远比学习Spring的使用要复杂的多。</p>
+<h2 id="spring">Spring</h2>
+<p>Spring两个核心的概念：<strong>IoC</strong>控制反转（通过依赖注入实现），和<strong>AOP</strong>面向切面编程。Spring也被理解成是一个<strong>IoC容器</strong>，将一个个对象抽象成<strong>Bean</strong>存放到容器中，被Spring管理。</p>
+<h2 id="spring-boot特征">Spring Boot特征</h2>
+<ul>
+<li>可以创建单体应用，也是开发微服务项目的基础；</li>
+<li>内嵌 Tomcat, Jetty or Undertow容器，无需依赖 WAR 包，使得部署项目更便捷；</li>
+<li>提供了独特的<code>starter</code>依赖，简化配置；</li>
+<li>尽可能地自动配置Spring和第三方依赖；</li>
+<li>提供指标、运行状况检查和外部化配置等生产就绪功能；</li>
+<li>绝对不需要代码生成，也不需要配置XML。</li>
+</ul>
+<p>以上是Spring Boot的特点，它还有一个特征，就是使用简单，但学习成本高。因为它实现了自动配置，屏蔽了大多数细节，想真正理解、精通自动配置需要花费精力去学习。</p>
+<p>Spring官方地址：<a href="https://spring.io/">https://spring.io/</a></p>
+<h2 id="第一个spring-boot应用">第一个Spring Boot应用</h2>
+<p>官方文档：<a href="https://docs.spring.io/spring-boot/docs/current/reference/html/getting-started.html#getting-started-first-application-pom">https://docs.spring.io/spring-boot/docs/current/reference/html/getting-started.html#getting-started-first-application-pom</a></p>
+<h3 id="创建项目">创建项目</h3>
+<p>创建名为<code>tx_sboot</code>的Maven项目：</p>
+<figure data-type="image" tabindex="1"><img src="https://images.shiguangping.com/imgs/20210109121227.png" alt="image-20210109121227386" loading="lazy"></figure>
+<h3 id="pom添加依赖">POM添加依赖</h3>
+<p>在POM文件中引入Spring Boot：</p>
+<p>::: details POM</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+    &lt;groupId&gt;cn.tx.springboot&lt;/groupId&gt;
+    &lt;artifactId&gt;tx_sboot&lt;/artifactId&gt;
+    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+  	&lt;!-- 打包方式 --&gt;
+    &lt;packaging&gt;pom&lt;/packaging&gt;
+		
+  	&lt;!-- 引入Spring Boot --&gt;
+    &lt;parent&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+        &lt;version&gt;2.4.1&lt;/version&gt;
+    &lt;/parent&gt;
+
+    &lt;properties&gt;
+        &lt;maven.compiler.source&gt;8&lt;/maven.compiler.source&gt;
+        &lt;maven.compiler.target&gt;8&lt;/maven.compiler.target&gt;
+    &lt;/properties&gt;
+
+&lt;/project&gt;
+</code></pre>
+<p>:::</p>
+<p>添加<code>starter</code>依赖：</p>
+<p>:::details POM</p>
+<pre><code class="language-xml">&lt;dependencies&gt;
+  &lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+  &lt;/dependency&gt;
+&lt;/dependencies&gt;
+</code></pre>
+<p>:::</p>
+<p><code>spring-boot-starter-web</code>依赖中包含了Spring MVC、Tomcat等一组依赖。</p>
+<figure data-type="image" tabindex="2"><img src="https://images.shiguangping.com/imgs/20210109121854.png" alt="image-20210109121854649" loading="lazy"></figure>
+<h3 id="写代码">写代码</h3>
+<p>创建Controller类：</p>
+<p>::: details 测试类</p>
+<pre><code class="language-java">package cn.tx.sboot;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * @author liyan
+ */
+@RestController
+public class TestController {
+
+    @RequestMapping(&quot;hello&quot;)
+    public String hello(){
+        return &quot;Hello Spring Boot&quot;;
+    }
+}
+</code></pre>
+<p>:::</p>
+<p>创建启动类，Main方法：</p>
+<p>::: details 启动类</p>
+<pre><code class="language-java">package cn.tx.sboot;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+/**
+ * @author liyan
+ */
+@SpringBootApplication
+public class FirstSpringApplication {
+
+    public static void main(String[] args) {
+      	// 通过主方法引导启动Spring Boot应用
+        SpringApplication.run(FirstSpringApplication.class, args);
+    }
+}
+</code></pre>
+<p>:::</p>
+<h3 id="创建可执行jar包">创建可执行Jar包</h3>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[初学算法]]></title>
+        <id>https://www.shiguangping.com/post/algorithms/</id>
+        <link href="https://www.shiguangping.com/post/algorithms/">
+        </link>
+        <updated>2021-01-02T16:00:00.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="前言">前言</h2>
+<p>在计算机科学中，算法是让计算机程序完成一个任务的一系列步骤。算法使科学融入计算机科学（Computer Science）。</p>
+<p>怎么才能算是一个好的算法？两个关键的标准：</p>
+<ul>
+<li>Correctness 正确</li>
+<li>Efficiency 有效</li>
+</ul>
+<h2 id="算法的意义">算法的意义</h2>
+<p><strong>算法让代码可行、高效，降低程序运行时所占用的资源。</strong></p>
+<p>举个小栗子：</p>
+<blockquote>
+<p>已知a+b+c=1000，且a<sup>2+b</sup>2=c^2，求a，b，c的所有自然数解</p>
+</blockquote>
+<p>解决一：</p>
+<pre><code class="language-python">import time
+
+start_time = time.time()
+
+for a in range(1, 1001):  # 第一层
+    for b in range(1, 1001):  # 第二层
+        for c in range(1, 1001):  # 第三层
+            if a ** 2 + b ** 2 == c ** 2 and a + b + c == 1000:
+                print('a:%3d, b:%3d, c:%3d' % (a, b, c))
+                
+end_time = time.time()
+
+print(&quot;程序已完成，总计用时：%f&quot; % (end_time - start_time))
+</code></pre>
+<p>运行结果：(用时957秒)</p>
+<pre><code>a:200, b:375, c:425
+a:375, b:200, c:425
+程序已完成，总计用时：957.906259
+</code></pre>
+<p>解决二</p>
+<pre><code class="language-python">import time
+
+start_time = time.time()
+
+for a in range(1, 1001):  # 第一层
+    for b in range(1, 1001):  # 第二层
+        if a ** 2 + b ** 2 == (1000 - a - b) ** 2:
+            print('a:%3d, b:%3d, c:%3d' % (a, b, 1000 - a - b))
+
+end_time = time.time()
+
+print(&quot;程序已完成，总计用时：%f&quot; % (end_time - start_time))
+</code></pre>
+<p>运行结果：（用时约1秒）</p>
+<pre><code>a:200, b:375, c:425
+a:375, b:200, c:425
+程序已完成，总计用时：1.077217
+</code></pre>
+<p>::: details Java实现</p>
+<pre><code class="language-java">package net.zkyc.demo;
+
+import cn.hutool.core.date.DateUtil;
+
+/**
+ * @author liyan
+ */
+public class Demo01 {
+
+    public static void main(String[] args) {
+
+        long startTime = DateUtil.currentSeconds();
+
+        for (int a = 1; a &lt; 1001; a++) {
+            for (int b = 1; b &lt; 1001; b++) {
+                for (int c = 1; c &lt; 1001; c++) {
+                    if (a * a + b * b == c * c &amp;&amp; a + b + c == 1000) {
+                        System.out.println(&quot;a:&quot; + a + &quot;, b:&quot; + b + &quot;, c:&quot; + c);
+                    }
+                }
+            }
+        }
+
+        long endTime = DateUtil.currentSeconds();
+
+        System.out.println(&quot;程序已完成，总计用时：&quot; + (endTime - startTime));
+    }
+}
+</code></pre>
+<p>运行结果：</p>
+<pre><code>a:200, b:375, c:425
+a:375, b:200, c:425
+程序已完成，总计用时：1
+</code></pre>
+<p>:::</p>
+<p>::: details Go实现</p>
+<pre><code class="language-go">package main
+
+import (
+	&quot;fmt&quot;
+	&quot;time&quot;
+)
+
+func main() {
+	startTime := time.Now().Second()
+
+	for a := 1; a &lt; 1001; a++ {
+		for b := 1; b &lt; 1001; b++ {
+			for c := 1; c &lt; 1001; c++ {
+				if a*a+b*b == c*c &amp;&amp; a+b+c == 1000 {
+					fmt.Printf(&quot;a:%3d, b:%3d, c:%3d\n&quot;, a, b, c)
+				}
+			}
+		}
+	}
+
+	endTime := time.Now().Second()
+
+	fmt.Printf(&quot;程序已完成，总耗时：%v\n&quot;, endTime-startTime)
+}
+</code></pre>
+<p>运行结果：</p>
+<pre><code>a:200, b:375, c:425
+a:375, b:200, c:425
+程序已完成，总耗时：1
+</code></pre>
+<p>:::</p>
+<p><strong>学会算法，可以明白代码底层逻辑，方便和阅读源代码。</strong></p>
+<h2 id="时间复杂度与大o表示法">时间复杂度与大O表示法</h2>
+<ul>
+<li>算法的速度不能简单的以执行时间作为衡量标准。</li>
+<li>随着输入数据的量级不断增大，操作数的增速是不同的。</li>
+<li>这个才是衡量算法的更好方式。</li>
+</ul>
+<p>时间复杂度：</p>
+<p>我们将算法执行运算的操作数丢弃掉低阶项，再去掉所有的系数。</p>
+<p>在它前面加上一个O，就是大O表示法</p>
+<p>小栗子：</p>
+<pre><code class="language-python">n = 1000 # 执行1次
+k = 0 # 执行1次
+
+print(k) # 执行1次
+
+# 算法总共执行了3次
+</code></pre>
+<p>去掉低阶项3，以上代码的时间复杂度是 <strong>O(1)</strong></p>
+<pre><code class="language-python">n = 1000 # 执行1次
+k = 0 # 执行1次
+for a in range (n): # 执行n次
+  k += 1 # 执行n次
+
+print(k) # 执行1次
+
+# 算法总共执行 2n+3 次
+</code></pre>
+<p>去掉低阶项3，去掉系数2，以上代码的时间复杂度是 <strong>O(n)</strong></p>
+<pre><code class="language-python">a = 5
+b = 6
+c = 10
+n = 1000
+for i in range(n):
+  for j in range(n):
+    x = i * i
+    y = j * j
+    z = i * j
+for k in range(n):
+  w = a * k + 45
+  v = b * b
+d = 33
+
+# 3n^2 + 2n + 5
+</code></pre>
+<p>去掉低阶项5，去掉系数3、2，以上代码的时间复杂度是: <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><msup><mn>2</mn><mi>n</mi></msup><mo>)</mo></mrow><annotation encoding="application/x-tex">O(2^n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">n</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></p>
+<h2 id="常见的时间复杂度">常见的时间复杂度</h2>
+<table>
+<thead>
+<tr>
+<th>操作数</th>
+<th>时间复杂度</th>
+<th>名称</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>105long + 2</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>2n + 4</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>7n + 9nlogn + 39</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+]]></content>
+    </entry>
+</feed>

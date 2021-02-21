@@ -1,0 +1,210 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>時光瓶</title>
+<link rel="shortcut icon" href="https://www.shiguangping.com/favicon.ico">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.2.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css">
+<link rel="stylesheet" href="https://www.shiguangping.com/media/css/tailwind.css">
+<link rel="stylesheet" href="https://www.shiguangping.com/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="時光瓶 - Atom Feed" href="https://www.shiguangping.com/atom.xml">
+
+    
+
+  <meta name="description" content="李炎の生活學習日誌" />
+</head>
+<body>
+  <div class="antialiased flex flex-col min-h-screen" id="app">
+
+    <div class="nav py-3 md:py-8 fixed w-full z-10 bg-gray-50 dark:bg-gray-700 transition-all duration-300" :class="{ 'scroll': scrolled }">
+  <div class="flex justify-end px-4">
+    <div class="w-8 h-8 flex justify-center items-center rounded-full md:hidden" @click="showMenu = !showMenu">
+      <i class="ri-close-line" v-show="showMenu"></i>
+      <i class="ri-menu-3-line" v-show="!showMenu"></i>
+    </div>
+  </div>
+  <nav class="max-w-4xl w-full mx-auto text-center flex flex-col md:flex-row justify-center md:block" :class="`${ showMenu ? 'block' : 'hidden' }`">
+    
+      <a href="/" target="" class="py-2 md:py-1 px-4 mx-4 inline-flex transition font-semibold rounded dark:hover:bg-gray-600 hover:bg-gray-200">
+        首页
+      </a>
+    
+      <a href="/archives" target="" class="py-2 md:py-1 px-4 mx-4 inline-flex transition font-semibold rounded dark:hover:bg-gray-600 hover:bg-gray-200">
+        归档
+      </a>
+    
+      <a href="/tags" target="" class="py-2 md:py-1 px-4 mx-4 inline-flex transition font-semibold rounded dark:hover:bg-gray-600 hover:bg-gray-200">
+        标签
+      </a>
+    
+      <a href="/post/about" target="" class="py-2 md:py-1 px-4 mx-4 inline-flex transition font-semibold rounded dark:hover:bg-gray-600 hover:bg-gray-200">
+        关于
+      </a>
+    
+    <a href="https://www.shiguangping.com/atom.xml" target="_blank" class="py-2 md:py-1 px-4 mx-4 inline-flex transition font-semibold rounded dark:hover:bg-gray-600 hover:bg-gray-200">
+      RSS
+    </a>
+  </nav>
+</div>
+
+    <div class="max-w-4xl w-full mx-auto pt-32">
+      <h1 class="text-2xl font-bold pb-8 flex justify-center items-center">
+        <i class="ri-hashtag"></i>
+        Vue
+      </h1>
+      <div class="shadow-box bg-white dark:bg-gray-600 border-gray-300 rounded-none md:rounded-lg -mx-1 md:mx-0 md:px-0">
+        
+  <div class="p-8 border-b border-gray-200 dark:border-gray-700 flex relative overflow-hidden flex-col md:flex-row animated fadeIn">
+    
+    <div class="flex-1 order-2 md:order-1">
+      <h2 class="text-2xl font-semibold mb-4">
+        <a href="https://www.shiguangping.com/post/vue-data-format-question/" class="text-gray-700 dark:text-gray-200 border-b-2 border-dotted border-gray-200 dark:border-gray-400 dark:hover:border-gray-200 hover:border-gray-600 transition-all duration-100">
+          Vue中el-select只显示value，不显示对应label的问题
+        </a>
+      </h2>
+      <div class="mb-4 text-xs text-gray-500">2020-11-17</div>
+      <div class="mb-4 text-gray-500 dark:text-gray-300">
+        遇到的情况：
+
+el-select中显示了v-model的值，却没有选择对应的下拉选项。
+&lt;el-form-item label=&quot;学校名称&quot; prop=&quot;schoolId&quot;&gt;
+  &lt...
+      </div>
+      <a href="https://www.shiguangping.com/post/vue-data-format-question/" class="btn">
+        Read more
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="p-8 border-b border-gray-200 dark:border-gray-700 flex relative overflow-hidden flex-col md:flex-row animated fadeIn">
+    
+    <div class="flex-1 order-2 md:order-1">
+      <h2 class="text-2xl font-semibold mb-4">
+        <a href="https://www.shiguangping.com/post/vue-get-data-before-rendering/" class="text-gray-700 dark:text-gray-200 border-b-2 border-dotted border-gray-200 dark:border-gray-400 dark:hover:border-gray-200 hover:border-gray-600 transition-all duration-100">
+          Vue在渲染前获取数据
+        </a>
+      </h2>
+      <div class="mb-4 text-xs text-gray-500">2020-10-12</div>
+      <div class="mb-4 text-gray-500 dark:text-gray-300">
+        写Vue时总会碰到这种情况，希望先从后端获取到数据之后再渲染页面上的某个组件。
+由于ajax(axios)是异步请求，我们没有办法控制页面上组件的渲染时机是在异步请求之后，所以这时可以通过v-if来控制渲染，当异步请求到数据之后，再显示组件...
+      </div>
+      <a href="https://www.shiguangping.com/post/vue-get-data-before-rendering/" class="btn">
+        Read more
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="p-8 border-b border-gray-200 dark:border-gray-700 flex relative overflow-hidden flex-col md:flex-row animated fadeIn">
+    
+    <div class="flex-1 order-2 md:order-1">
+      <h2 class="text-2xl font-semibold mb-4">
+        <a href="https://www.shiguangping.com/post/vue-global-filters/" class="text-gray-700 dark:text-gray-200 border-b-2 border-dotted border-gray-200 dark:border-gray-400 dark:hover:border-gray-200 hover:border-gray-600 transition-all duration-100">
+          Vue添加全局过滤器
+        </a>
+      </h2>
+      <div class="mb-4 text-xs text-gray-500">2020-10-09</div>
+      <div class="mb-4 text-gray-500 dark:text-gray-300">
+        在src目录下新建filters目录，目录下新建index.js:
+// 身份证号脱敏
+const idCardHide = num =&gt; {
+  if (num) {
+    const data = num.replace(/^(...
+      </div>
+      <a href="https://www.shiguangping.com/post/vue-global-filters/" class="btn">
+        Read more
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="p-8 border-b border-gray-200 dark:border-gray-700 flex relative overflow-hidden flex-col md:flex-row animated fadeIn">
+    
+    <div class="flex-1 order-2 md:order-1">
+      <h2 class="text-2xl font-semibold mb-4">
+        <a href="https://www.shiguangping.com/post/vue-responsive/" class="text-gray-700 dark:text-gray-200 border-b-2 border-dotted border-gray-200 dark:border-gray-400 dark:hover:border-gray-200 hover:border-gray-600 transition-all duration-100">
+          Vue数据变化检测（无法检测对象/数组元素的变化问题）
+        </a>
+      </h2>
+      <div class="mb-4 text-xs text-gray-500">2020-09-24</div>
+      <div class="mb-4 text-gray-500 dark:text-gray-300">
+        <p>写代码时遇到这样一个问题，页面打开后进行axios请求数据，将响应回的数据赋值给data()中的一个对象，然后再v-for遍历对象将属性显示到页面中。</p>
+<p>但每次打开页面后要遍历显示的数据都没有显示出来，重新刷新或者点下其它的下拉框，要遍历的元素才显示。</p>
+<p>起初我以为是异步请求的问题，怀疑是先渲染DOM后请求的数据，后来查阅官方文档，原因是Vue无法检测对象和数组的变化。</p>
+
+      </div>
+      <a href="https://www.shiguangping.com/post/vue-responsive/" class="btn">
+        Read more
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="p-8 border-b border-gray-200 dark:border-gray-700 flex relative overflow-hidden flex-col md:flex-row animated fadeIn">
+    
+    <div class="flex-1 order-2 md:order-1">
+      <h2 class="text-2xl font-semibold mb-4">
+        <a href="https://www.shiguangping.com/post/vue-form-validator/" class="text-gray-700 dark:text-gray-200 border-b-2 border-dotted border-gray-200 dark:border-gray-400 dark:hover:border-gray-200 hover:border-gray-600 transition-all duration-100">
+          Vue验证表单字段常用规则
+        </a>
+      </h2>
+      <div class="mb-4 text-xs text-gray-500">2020-09-21</div>
+      <div class="mb-4 text-gray-500 dark:text-gray-300">
+        项目代码使用的element-ui
+1. 页面表单添加验证属性
+&lt;!--el-form中要绑定model;el-form-item绑定prop属性--&gt;
+&lt;el-form :model=org :rules=&quot;r...
+      </div>
+      <a href="https://www.shiguangping.com/post/vue-form-validator/" class="btn">
+        Read more
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="p-8 border-b border-gray-200 dark:border-gray-700 flex relative overflow-hidden flex-col md:flex-row animated fadeIn">
+    
+    <div class="flex-1 order-2 md:order-1">
+      <h2 class="text-2xl font-semibold mb-4">
+        <a href="https://www.shiguangping.com/post/vue-components-communication/" class="text-gray-700 dark:text-gray-200 border-b-2 border-dotted border-gray-200 dark:border-gray-400 dark:hover:border-gray-200 hover:border-gray-600 transition-all duration-100">
+          Vue组件间通信
+        </a>
+      </h2>
+      <div class="mb-4 text-xs text-gray-500">2020-09-19</div>
+      <div class="mb-4 text-gray-500 dark:text-gray-300">
+        <p>Vue组件间通信的两种常见情况：</p>
+<ul>
+<li>父子组件间通信
+<ul>
+<li>父传子</li>
+<li>子传父</li>
+</ul>
+</li>
+<li>非父子组件间通信</li>
+</ul>
+
+      </div>
+      <a href="https://www.shiguangping.com/post/vue-components-communication/" class="btn">
+        Read more
+      </a>
+    </div>
+    
+  </div>
+  
+      </div>
+
+      
+      <footer class="py-12 text-center px-4 md:px-0" v-pre>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">時光瓶</a>
+</footer>
+
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://www.shiguangping.com/media/scripts/main.js"></script>
+</body>
+</html>

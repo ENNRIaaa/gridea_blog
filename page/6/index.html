@@ -1,0 +1,318 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>時光瓶</title>
+<link rel="shortcut icon" href="https://www.shiguangping.com/favicon.ico">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.2.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css">
+<link rel="stylesheet" href="https://www.shiguangping.com/media/css/tailwind.css">
+<link rel="stylesheet" href="https://www.shiguangping.com/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="時光瓶 - Atom Feed" href="https://www.shiguangping.com/atom.xml">
+
+    
+
+  <meta name="description" content="李炎の生活學習日誌" />
+</head>
+<body>
+  <div class="antialiased flex flex-col min-h-screen" id="app">
+
+    <div class="nav py-3 md:py-8 fixed w-full z-10 bg-gray-50 dark:bg-gray-700 transition-all duration-300" :class="{ 'scroll': scrolled }">
+  <div class="flex justify-end px-4">
+    <div class="w-8 h-8 flex justify-center items-center rounded-full md:hidden" @click="showMenu = !showMenu">
+      <i class="ri-close-line" v-show="showMenu"></i>
+      <i class="ri-menu-3-line" v-show="!showMenu"></i>
+    </div>
+  </div>
+  <nav class="max-w-4xl w-full mx-auto text-center flex flex-col md:flex-row justify-center md:block" :class="`${ showMenu ? 'block' : 'hidden' }`">
+    
+      <a href="/" target="" class="py-2 md:py-1 px-4 mx-4 inline-flex transition font-semibold rounded dark:hover:bg-gray-600 hover:bg-gray-200">
+        首页
+      </a>
+    
+      <a href="/archives" target="" class="py-2 md:py-1 px-4 mx-4 inline-flex transition font-semibold rounded dark:hover:bg-gray-600 hover:bg-gray-200">
+        归档
+      </a>
+    
+      <a href="/tags" target="" class="py-2 md:py-1 px-4 mx-4 inline-flex transition font-semibold rounded dark:hover:bg-gray-600 hover:bg-gray-200">
+        标签
+      </a>
+    
+      <a href="/post/about" target="" class="py-2 md:py-1 px-4 mx-4 inline-flex transition font-semibold rounded dark:hover:bg-gray-600 hover:bg-gray-200">
+        关于
+      </a>
+    
+    <a href="https://www.shiguangping.com/atom.xml" target="_blank" class="py-2 md:py-1 px-4 mx-4 inline-flex transition font-semibold rounded dark:hover:bg-gray-600 hover:bg-gray-200">
+      RSS
+    </a>
+  </nav>
+</div>
+
+    <div class="max-w-4xl w-full mx-auto pt-32">
+      
+
+      <div class="shadow-box bg-white dark:bg-gray-600 border-gray-300 rounded-none md:rounded-lg -mx-1 md:mx-0 md:px-0">
+        
+  <div class="p-8 border-b border-gray-200 dark:border-gray-700 flex relative overflow-hidden flex-col md:flex-row animated fadeIn">
+    
+    <div class="flex-1 order-2 md:order-1">
+      <h2 class="text-2xl font-semibold mb-4">
+        <a href="https://www.shiguangping.com/post/hello-gridea/" class="text-gray-700 dark:text-gray-200 border-b-2 border-dotted border-gray-200 dark:border-gray-400 dark:hover:border-gray-200 hover:border-gray-600 transition-all duration-100">
+          Hello Gridea
+        </a>
+      </h2>
+      <div class="mb-4 text-xs text-gray-500">2018-12-12</div>
+      <div class="mb-4 text-gray-500 dark:text-gray-300">
+        <p>👏  欢迎使用 <strong>Gridea</strong> ！<br>
+✍️  <strong>Gridea</strong> 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...</p>
+
+      </div>
+      <a href="https://www.shiguangping.com/post/hello-gridea/" class="btn">
+        Read more
+      </a>
+    </div>
+    
+      <img class="flex-shrink-0 self-start md:ml-4 mb-4 md:mb-0 rounded-sm object-cover featured-img order-1 md:order-2 w-full h-40 md:w-56 md:h-32" loading="lazy" src="https://www.shiguangping.com/post-images/hello-gridea.png" alt="Hello Gridea">
+    
+  </div>
+
+  <div class="p-8 border-b border-gray-200 dark:border-gray-700 flex relative overflow-hidden flex-col md:flex-row animated fadeIn">
+    
+    <div class="flex-1 order-2 md:order-1">
+      <h2 class="text-2xl font-semibold mb-4">
+        <a href="https://www.shiguangping.com/post/java-learning-method/" class="text-gray-700 dark:text-gray-200 border-b-2 border-dotted border-gray-200 dark:border-gray-400 dark:hover:border-gray-200 hover:border-gray-600 transition-all duration-100">
+          根据转载的一篇文章总结的Java学习方法
+        </a>
+      </h2>
+      <div class="mb-4 text-xs text-gray-500">2018-06-17</div>
+      <div class="mb-4 text-gray-500 dark:text-gray-300">
+        step 1 学习路线
+路线：JavaSE--&gt;web--&gt;Java后端
+1. JavaSE
+找一个Java基础教程，尽量多动手，对Java有一个基本的了解。
+2. web开发
+学习web，学习顺序：
+
+
+HTML/CSS/JS...
+      </div>
+      <a href="https://www.shiguangping.com/post/java-learning-method/" class="btn">
+        Read more
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="p-8 border-b border-gray-200 dark:border-gray-700 flex relative overflow-hidden flex-col md:flex-row animated fadeIn">
+    
+    <div class="flex-1 order-2 md:order-1">
+      <h2 class="text-2xl font-semibold mb-4">
+        <a href="https://www.shiguangping.com/post/linux-funny-commond/" class="text-gray-700 dark:text-gray-200 border-b-2 border-dotted border-gray-200 dark:border-gray-400 dark:hover:border-gray-200 hover:border-gray-600 transition-all duration-100">
+          Linux的几个有趣命令
+        </a>
+      </h2>
+      <div class="mb-4 text-xs text-gray-500">2018-06-14</div>
+      <div class="mb-4 text-gray-500 dark:text-gray-300">
+        sl命令
+你会看到一辆小货车从屏幕右边开到了左边～
+安装：sudo apt-get install sl
+运行：sl
+
+fortune命令
+输出一句话，有笑话、名言、唐诗宋词等等：
+安装：sudo apt-get install fortu...
+      </div>
+      <a href="https://www.shiguangping.com/post/linux-funny-commond/" class="btn">
+        Read more
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="p-8 border-b border-gray-200 dark:border-gray-700 flex relative overflow-hidden flex-col md:flex-row animated fadeIn">
+    
+    <div class="flex-1 order-2 md:order-1">
+      <h2 class="text-2xl font-semibold mb-4">
+        <a href="https://www.shiguangping.com/post/alise-linux/" class="text-gray-700 dark:text-gray-200 border-b-2 border-dotted border-gray-200 dark:border-gray-400 dark:hover:border-gray-200 hover:border-gray-600 transition-all duration-100">
+          在Linux中使配置alias永久生效
+        </a>
+      </h2>
+      <div class="mb-4 text-xs text-gray-500">2018-06-13</div>
+      <div class="mb-4 text-gray-500 dark:text-gray-300">
+        编辑.bashrc
+在终端，通过命令回家：
+cd ~
+
+之后通过文本编辑器编辑文本.bashrc：
+sudo gedit .bashrc
+
+或者，使用vim编辑：
+sudo vim .bashrc
+
+如果没有.bashrc文件，需要手动创建...
+      </div>
+      <a href="https://www.shiguangping.com/post/alise-linux/" class="btn">
+        Read more
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="p-8 border-b border-gray-200 dark:border-gray-700 flex relative overflow-hidden flex-col md:flex-row animated fadeIn">
+    
+    <div class="flex-1 order-2 md:order-1">
+      <h2 class="text-2xl font-semibold mb-4">
+        <a href="https://www.shiguangping.com/post/hexo-local-source/" class="text-gray-700 dark:text-gray-200 border-b-2 border-dotted border-gray-200 dark:border-gray-400 dark:hover:border-gray-200 hover:border-gray-600 transition-all duration-100">
+          Hexo上传本地源文件到GitHub
+        </a>
+      </h2>
+      <div class="mb-4 text-xs text-gray-500">2018-06-13</div>
+      <div class="mb-4 text-gray-500 dark:text-gray-300">
+        前言(可忽略不看)
+这个问题是在我部署完HEXO博客之后就想到的，我要是换了一台电脑或者重新装系统之后，还怎么更新HEXO博客呢？
+我今天在网上开始寻找解决办法，上网一看才知道这是很多人很早以前就面临的问题，当然有很多大神做了解答，但是绝大...
+      </div>
+      <a href="https://www.shiguangping.com/post/hexo-local-source/" class="btn">
+        Read more
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="p-8 border-b border-gray-200 dark:border-gray-700 flex relative overflow-hidden flex-col md:flex-row animated fadeIn">
+    
+    <div class="flex-1 order-2 md:order-1">
+      <h2 class="text-2xl font-semibold mb-4">
+        <a href="https://www.shiguangping.com/post/github-ssh/" class="text-gray-700 dark:text-gray-200 border-b-2 border-dotted border-gray-200 dark:border-gray-400 dark:hover:border-gray-200 hover:border-gray-600 transition-all duration-100">
+          GitHub配置SSH
+        </a>
+      </h2>
+      <div class="mb-4 text-xs text-gray-500">2018-06-12</div>
+      <div class="mb-4 text-gray-500 dark:text-gray-300">
+        生成SSH Key
+终端输入命令：
+ssh-keygen -t rsa -C &quot;china_liyan123@yahoo.co.jp&quot;
+
+此时终端提示：
+
+Generating public/private rsa ke...
+      </div>
+      <a href="https://www.shiguangping.com/post/github-ssh/" class="btn">
+        Read more
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="p-8 border-b border-gray-200 dark:border-gray-700 flex relative overflow-hidden flex-col md:flex-row animated fadeIn">
+    
+    <div class="flex-1 order-2 md:order-1">
+      <h2 class="text-2xl font-semibold mb-4">
+        <a href="https://www.shiguangping.com/post/build-hexo/" class="text-gray-700 dark:text-gray-200 border-b-2 border-dotted border-gray-200 dark:border-gray-400 dark:hover:border-gray-200 hover:border-gray-600 transition-all duration-100">
+          小白部署HEXO到GitHub
+        </a>
+      </h2>
+      <div class="mb-4 text-xs text-gray-500">2018-06-10</div>
+      <div class="mb-4 text-gray-500 dark:text-gray-300">
+        前言
+呃，终于忙乎完了!
+从昨天傍晚的7点半一直到现在的2点50分，并且到目前都还在折腾，这也是第一篇文章，即将要上传到GitHub上的。
+之前我是没有接触过GitHub和HEXO的，我现在在用的博客程序是z-blog，它部署在腾讯云，地址...
+      </div>
+      <a href="https://www.shiguangping.com/post/build-hexo/" class="btn">
+        Read more
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="p-8 border-b border-gray-200 dark:border-gray-700 flex relative overflow-hidden flex-col md:flex-row animated fadeIn">
+    
+    <div class="flex-1 order-2 md:order-1">
+      <h2 class="text-2xl font-semibold mb-4">
+        <a href="https://www.shiguangping.com/post/eclipse-text-encoding/" class="text-gray-700 dark:text-gray-200 border-b-2 border-dotted border-gray-200 dark:border-gray-400 dark:hover:border-gray-200 hover:border-gray-600 transition-all duration-100">
+          解决Linux中eclipse导入Windows项目后出现中文乱码问题
+        </a>
+      </h2>
+      <div class="mb-4 text-xs text-gray-500">2018-05-16</div>
+      <div class="mb-4 text-gray-500 dark:text-gray-300">
+        我今天遇到这个问题，在百度问了一遍，大多数的方法都不行
+最后一个人给出的方法解决了这个问题
+
+我在linux下的eclipse导入windows的工程文件后，会出现这样的乱码问题。
+网上说，windows的中文编码方式是GBK，而linux...
+      </div>
+      <a href="https://www.shiguangping.com/post/eclipse-text-encoding/" class="btn">
+        Read more
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="p-8 border-b border-gray-200 dark:border-gray-700 flex relative overflow-hidden flex-col md:flex-row animated fadeIn">
+    
+    <div class="flex-1 order-2 md:order-1">
+      <h2 class="text-2xl font-semibold mb-4">
+        <a href="https://www.shiguangping.com/post/ubuntu-java-path/" class="text-gray-700 dark:text-gray-200 border-b-2 border-dotted border-gray-200 dark:border-gray-400 dark:hover:border-gray-200 hover:border-gray-600 transition-all duration-100">
+          Linux学习之~ubuntu安装jdk及配置环境变量
+        </a>
+      </h2>
+      <div class="mb-4 text-xs text-gray-500">2018-05-15</div>
+      <div class="mb-4 text-gray-500 dark:text-gray-300">
+        1. 下载jdk
+前往jdk官网下载jdk，地址：http://www.oracle.com/technetwork/java/javase/downloads/index.html
+
+现在已经更新到jdk10了，但是我下载解压之后发现里面...
+      </div>
+      <a href="https://www.shiguangping.com/post/ubuntu-java-path/" class="btn">
+        Read more
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="p-8 border-b border-gray-200 dark:border-gray-700 flex relative overflow-hidden flex-col md:flex-row animated fadeIn">
+    
+    <div class="flex-1 order-2 md:order-1">
+      <h2 class="text-2xl font-semibold mb-4">
+        <a href="https://www.shiguangping.com/post/java-build-path/" class="text-gray-700 dark:text-gray-200 border-b-2 border-dotted border-gray-200 dark:border-gray-400 dark:hover:border-gray-200 hover:border-gray-600 transition-all duration-100">
+          JDK安装及配置环境变量
+        </a>
+      </h2>
+      <div class="mb-4 text-xs text-gray-500">2018-04-13</div>
+      <div class="mb-4 text-gray-500 dark:text-gray-300">
+        Java开发需要安装JDK（Java开发工具），JDK里面包括Java编译器，和JRE（Java运行时环境），其中JRE里面又包含JVM（Java虚拟机）、Java核心类库以及相关支持文件。
+所以，在开发Java程序之前，必须先安装JDK。...
+      </div>
+      <a href="https://www.shiguangping.com/post/java-build-path/" class="btn">
+        Read more
+      </a>
+    </div>
+    
+  </div>
+  
+      </div>
+
+      
+  <div class="my-4 flex justify-between px-4 md:px-0">
+    
+      <a href="https://www.shiguangping.com/page/5/" class="btn btn-white">
+        <i class="ri-arrow-left-line mr-4"></i>
+        上一页
+      </a>
+    
+    
+  </div>
+
+      <footer class="py-12 text-center px-4 md:px-0" v-pre>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">時光瓶</a>
+</footer>
+
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://www.shiguangping.com/media/scripts/main.js"></script>
+</body>
+
+</html>

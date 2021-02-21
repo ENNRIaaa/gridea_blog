@@ -1,0 +1,353 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Docker安装Jenkins - 時光瓶</title>
+<link rel="shortcut icon" href="https://www.shiguangping.com/favicon.ico">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.2.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css">
+<link rel="stylesheet" href="https://www.shiguangping.com/media/css/tailwind.css">
+<link rel="stylesheet" href="https://www.shiguangping.com/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Docker安装Jenkins - 時光瓶 - Atom Feed" href="https://www.shiguangping.com/atom.xml">
+
+    
+
+  <meta name="description" content="建议使用的Docker映像是jenkinsci/blueocean image(来自 the Docker Hub repository)。 该镜像包含当前的长期支持 (LTS) 的Jenkins版本 （可以投入使用） ，捆绑了所有Blue..." />
+  <meta property="og:title" content="Docker安装Jenkins - 時光瓶">
+  <meta property="og:description" content="建议使用的Docker映像是jenkinsci/blueocean image(来自 the Docker Hub repository)。 该镜像包含当前的长期支持 (LTS) 的Jenkins版本 （可以投入使用） ，捆绑了所有Blue..." />
+  <meta property="og:type" content="articles">
+  <meta property="og:url" content="https://www.shiguangping.com/post/docker-install-jenkins/" />
+  <meta property="og:image" content="https://www.shiguangping.com/images/avatar.png">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:width" content="1200">
+  <meta name="twitter:title" content="Docker安装Jenkins - 時光瓶">
+  <meta name="twitter:description" content="建议使用的Docker映像是jenkinsci/blueocean image(来自 the Docker Hub repository)。 该镜像包含当前的长期支持 (LTS) 的Jenkins版本 （可以投入使用） ，捆绑了所有Blue...">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://www.shiguangping.com/post/docker-install-jenkins/">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css">
+ 
+  
+    <link rel="stylesheet" href="https://www.shiguangping.com/media/css/prism-atom-dark.css">
+  
+
+  
+</head>
+
+<body>
+  <div class="antialiased flex flex-col min-h-screen" id="app">
+    <a href="https://www.shiguangping.com" class="fixed top-0 left-0 mt-4 bg-black text-white dark:text-gray-700 dark:bg-yellow-50 dark:hover:bg-black dark:hover:text-white inline-flex p-2 pl-8 hover:text-gray-700 hover:bg-yellow-50 font-bold z-10 transition-fast animated fadeInLeft">
+      時光瓶
+    </a>
+    <div class="max-w-4xl w-full mx-auto">
+      <div class="shadow-box bg-white dark:bg-gray-600 rounded-lg pt-32 md:pt-64 px-4 md:px-8 pb-8 animated fadeIn mb-8">
+        <h1 class="text-5xl font-semibold leading-normal pb-8 mb-8 border-b-8 border-gray-700">
+          Docker安装Jenkins
+        </h1>
+        
+        <div class="mb-8 flex flex-wrap">
+          <div class="text-gray-400 text-sm mr-4">2020-09-28 · 3 min read</div>
+          
+            <a href="https://www.shiguangping.com/tag/Ar7lxpyYM/" class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
+              <i class="ri-hashtag"></i>
+              Docker
+            </a>
+          
+            <a href="https://www.shiguangping.com/tag/ha7GxEvg5/" class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
+              <i class="ri-hashtag"></i>
+              Jenkins
+            </a>
+          
+        </div>
+        <div class="markdown mb-8" v-pre>
+          <p>建议使用的Docker映像是<a href="https://hub.docker.com/r/jenkinsci/blueocean/"><code>jenkinsci/blueocean</code> image</a>(来自 the <a href="https://hub.docker.com/">Docker Hub repository</a>)。 该镜像包含当前的<a href="https://www.jenkins.io/download">长期支持 (LTS) 的Jenkins版本</a> （可以投入使用） ，捆绑了所有Blue Ocean插件和功能。这意味着你不需要单独安装Blue Ocean插件。</p>
+<h3 id="在macos和linux上">在macOS和Linux上</h3>
+<ol>
+<li>打开一个终端窗口。</li>
+<li>下载 <code>jenkinsci/blueocean</code> 镜像并使用以下docker run 命令将其作为Docker中的容器运行 ：</li>
+</ol>
+<pre><code>$ docker run \
+  -u root \
+  -d \
+  -p 7999:8080 \
+  -v jenkins-data:/var/jenkins_home \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  jenkinsci/blueocean
+</code></pre>
+<p>直接docker run，第一次会自动拉取远程仓库中最新的镜像</p>
+<p>通过7999端口访问主机上的Jenkins</p>
+<h3 id="安装后设置向导">安装后设置向导</h3>
+<p>Jenkins容器运行起来后，访问<code>http://localhost:7999/</code>会进入安装向导。</p>
+<p>此安装向导会引导您完成几个快速“一次性”步骤来解锁Jenkins， 使用插件对其进行自定义，并创建第一个可以继续访问Jenkins的管理员用户。</p>
+<h5 id="解锁-jenkins">解锁 Jenkins</h5>
+<p>当您第一次访问新的Jenkins实例时，系统会要求您使用自动生成的密码对其进行解锁。</p>
+<p>浏览到 <code>http://localhost:7999</code>（或安装时为Jenkins配置的任何端口），并等待 <strong>解锁 Jenkins</strong> 页面出现。</p>
+<img src="https://images.shiguangping.com/imgs/20200928162439.jpg" alt="Unlock Jenkins page"  />
+<p>从Jenkins控制台日志输出中，复制自动生成的字母数字密码（在两组星号之间）。</p>
+<p>使用Docker可视化工具，容器跑起来之后，控制台会打印日志消息：</p>
+<img src="https://images.shiguangping.com/imgs/20200928161859.png" alt="image-20200928161859517"  />
+<p>在 <strong>解锁Jenkins</strong> 页面上，将此 <strong>密码</strong> 粘贴到管理员密码字段中，然后单击 <strong>继续</strong> 。</p>
+<p>如果没有使用可视化工具，则可以从Docker日志（<a href="https://www.jenkins.io/zh/doc/book/installing/#accessing-the-jenkins-console-log-through-docker-logs">above</a>） 访问Jenkins控制台日志。</p>
+<p>或者在<code>/var/jenkins_home/secrets/initialAdminPassword</code>找到密码。</p>
+<h5 id="自定义jenkins插件">自定义jenkins插件</h5>
+<p>解锁 Jenkins之后，在 <strong>Customize Jenkins</strong> 页面内， 可以安装任何数量的有用插件作为初始步骤的一部分。</p>
+<p>两个选项可以设置:</p>
+<ul>
+<li><strong>安装建议的插件</strong> - 安装推荐的一组插件，这些插件基于最常见的用例.</li>
+<li><strong>选择要安装的插件</strong> - 选择安装的插件集。当你第一次访问插件选择页面时，默认选择建议的插件。</li>
+</ul>
+<blockquote>
+<p>如果不确定需要哪些插件，请选择 <strong>安装建议的插件</strong> 。 之后可以通过Jenkins中的<a href="https://www.jenkins.io/zh/doc/book/managing"><strong>Manage Jenkins</strong></a> &gt; <a href="https://www.jenkins.io/zh/doc/book/managing/plugins/"><strong>Manage Plugins</strong></a> 页面在稍后的时间点安装（或删除）其他Jenkins插件 。</p>
+</blockquote>
+<h5 id="创建第一个管理员用户">创建第一个管理员用户</h5>
+<p>最后，在<code>customizing Jenkins with plugins</code>之后，Jenkins要求创建第一个管理员用户。 . 出现“ <strong>创建第一个管理员用户</strong> ”页面时， 请在各个字段中指定管理员用户的详细信息，然后单击 <strong>保存完成</strong> 。 . 当 <strong>Jenkins准备好了</strong> 出现时，单击<em>开始使用 Jenkins</em>。</p>
+<p><strong>Notes:</strong> * 这个页面可能显示 <strong>Jenkins几乎准备好了!</strong> 相反，如果是这样，请单击 <strong>重启</strong> 。 * 如果该页面在一分钟后不会自动刷新，请使用Web浏览器手动刷新页面。如果需要，请使用您刚刚创建的用户的凭据登录到Jenkins，并准备好开始使用Jenkins！</p>
+<blockquote>
+<p>从这时起，Jenkins用户界面只能通过提供有效的用户名和密码凭证来访问。</p>
+</blockquote>
+
+        </div>
+        <!-- Share to Twitter, Weibo, Telegram -->
+        <div class="flex items-center">
+          <div class="mr-4 flex items-center">
+            <i class="ri-share-forward-line text-gray-500"></i>
+          </div>
+          <div class="px-4 cursor-pointer text-blue-500 hover:bg-blue-100 dark:hover:bg-gray-600 inline-flex" @click="shareToTwitter">
+            <i class="ri-twitter-line"></i>
+          </div>
+          <div class="px-4 cursor-pointer text-red-500 hover:bg-red-100 dark:hover:bg-gray-600 inline-flex" @click="shareToWeibo">
+            <i class="ri-weibo-line"></i>
+          </div>
+          <div class="px-4 cursor-pointer text-indigo-500 hover:bg-indigo-100 dark:hover:bg-gray-600 inline-flex" @click="shareToTelegram">
+            <i class="ri-telegram-line"></i>
+          </div>
+        </div>
+      </div>
+
+      
+
+      
+        <div id="vlaine-comment"></div>
+      
+
+      <footer class="py-12 text-center px-4 md:px-0" v-pre>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">時光瓶</a>
+</footer>
+    </div>
+
+    <!-- TOC Container -->
+    <div class="fixed right-0 bottom-0 mb-16 mr-4 shadow w-8 h-8 rounded-full flex justify-center items-center z-10 cursor-pointer bg-white dark:bg-gray-500 dark:text-gray-200 hover:shadow-lg transition-all animated fadeInRight" @click="showToc = true">
+      <i class="ri-file-list-line"></i>
+    </div>
+
+    <div class="fixed right-0 top-0 bottom-0 overflow-y-auto w-64 bg-white dark:bg-gray-800 p-4 border-l border-gray-100 dark:border-gray-600 z-10 transition-fast" :class="{ '-mr-64': !showToc }">
+      <div class="flex mb-4 justify-end">
+        <div class="w-8 h-8 inline-flex justify-center items-center rounded-full cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-fast" @click="showToc = false">
+          <i class="ri-close-line text-lg"></i>
+        </div>
+      </div>
+      <div class="post-toc-container">
+        <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E5%9C%A8macos%E5%92%8Clinux%E4%B8%8A">在macOS和Linux上</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85%E5%90%8E%E8%AE%BE%E7%BD%AE%E5%90%91%E5%AF%BC">安装后设置向导</a><br>
+*
+<ul>
+<li><a href="#%E8%A7%A3%E9%94%81-jenkins">解锁 Jenkins</a></li>
+<li><a href="#%E8%87%AA%E5%AE%9A%E4%B9%89jenkins%E6%8F%92%E4%BB%B6">自定义jenkins插件</a></li>
+<li><a href="#%E5%88%9B%E5%BB%BA%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%AE%A1%E7%90%86%E5%91%98%E7%94%A8%E6%88%B7">创建第一个管理员用户</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+      </div>
+    </div>
+
+    <!-- Back to top -->
+    <div class="fixed right-0 bottom-0 mb-4 mr-4 shadow w-8 h-8 rounded-full flex justify-center items-center z-10 cursor-pointer bg-white hover:shadow-lg transition-all dark:bg-gray-500 dark:text-gray-200" @click="backToUp" v-show="scrolled">
+      <i class="ri-arrow-up-line"></i>
+    </div>
+  </div>
+
+  <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+  <!-- Background of PhotoSwipe. 
+        It's a separate element as animating opacity is faster than rgba(). -->
+  <div class="pswp__bg">
+  </div>
+  <!-- Slides wrapper with overflow:hidden. -->
+  <div class="pswp__scroll-wrap">
+    <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+    <div class="pswp__container">
+      <div class="pswp__item">
+      </div>
+      <div class="pswp__item">
+      </div>
+      <div class="pswp__item">
+      </div>
+    </div>
+    <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+    <div class="pswp__ui pswp__ui--hidden">
+      <div class="pswp__top-bar">
+        <!--  Controls are self-explanatory. Order can be changed. -->
+        <div class="pswp__counter">
+        </div>
+        <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+        <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+        <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+        <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+        <!-- element will get class pswp__preloader--active when preloader is running -->
+        <div class="pswp__preloader">
+          <div class="pswp__preloader__icn">
+            <div class="pswp__preloader__cut">
+              <div class="pswp__preloader__donut">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+        <div class="pswp__share-tooltip">
+        </div>
+      </div>
+      <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+      </button>
+      <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+      </button>
+      <div class="pswp__caption">
+        <div class="pswp__caption__center">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://www.shiguangping.com/media/scripts/main.js"></script>
+  
+  <!-- Code Highlight -->
+  
+    <script src="https://www.shiguangping.com/media/prism.js"></script>
+    <script>
+      Prism.highlightAll()
+    </script>
+  
+
+  <script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+  <script>
+    //拿到预览框架，也就是上面的html代码
+    var pswpElement = document.querySelectorAll('.pswp')[0];
+    //定义图片数组变量
+    var imgitems;
+    /**
+    * 用于显示预览界面
+    * @param index 图片数组下标
+    */
+    function viewImg(index) {
+      //其它选项这里不做过多阐述，详情见官网
+      var pswpoptions = {
+        index: parseInt(index, 10), // 开始幻灯片索引。0是第一张幻灯片。必须是整数，而不是字符串。
+        bgOpacity: 0.7, // 背景透明度，0-1
+        maxSpreadZoom: 3, // 缩放级别，不要太大
+      };
+      //初始化并打开PhotoSwipe，pswpElement对应上面预览框架，PhotoSwipeUI_Default为皮肤，imgitems为图片数组，pswpoptions为选项
+      var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, imgitems, pswpoptions);
+      gallery.init()
+    }
+    /**
+    * 用于添加图片点击事件
+    * @param img 图片元素
+    * @param index 所属下标（在imgitems中的位置）
+    */
+    function addImgClick(img, index) {
+      img.onclick = function() {
+        viewImg(index)
+      }
+    }
+    /**
+    * 轮询所有图片，获取src、width、height等数据，加入imgitems，并给图片元素添加事件
+    * 最好在onload中执行该方法，本站因放在最底部，所以直接初始化
+    * 异步加载图片可在图片元素创建完成后调用此方法
+    */
+    function initImg() {
+      //重置图片数组
+      imgitems = [];
+      //查找class:markdown 下的所有img元素并遍历
+      var imgs = document.querySelectorAll('.markdown img');
+      for (var i = 0; i < imgs.length; i++) {
+        var img = imgs[i];
+        //本站相册初始为loading图片，真实图片放在data-src
+        var ds = img.getAttribute("data-src");
+        //创建image对象，用于获取图片宽高
+        var imgtemp = new Image();
+        //判断是否存在data-src
+        if (ds != null && ds.length > 0) {
+          imgtemp.src = ds
+        } else {
+          imgtemp.src = img.src
+        }
+        //判断是否存在缓存
+        if (imgtemp.complete) {
+          var imgobj = {
+            "src": imgtemp.src,
+            "w": imgtemp.width,
+            "h": imgtemp.height,
+          };
+          imgitems[i] = imgobj;
+          addImgClick(img, i);
+        } else {
+          console.log('进来了2')
+          imgtemp.index = i;
+          imgtemp.img = img;
+          imgtemp.onload = function() {
+            var imgobj = {
+              "src": this.src,
+              "w": this.width,
+              "h": this.height,
+            };
+            //不要使用push，因为onload前后顺序会不同
+            imgitems[this.index] = imgobj
+            //添加点击事件
+            addImgClick(this.img, this.index);
+          }
+        }
+      }
+    }
+    //初始化
+    initImg();
+  </script>
+  
+    <script type="application/javascript" src="https://unpkg.com/valine"></script>
+<script type="application/javascript">
+  new Valine({
+    el: '#vlaine-comment',
+    appId: 'iScdY0hF5Y8TgKyMtfvp9CcM-gzGzoHsz',
+    appKey: 'XH2m9KIiA88R6N2lYiSObDH7',
+    pageSize: 10,
+    notify: false,
+    avatar: 'mp',
+    verify: false,
+    placeholder: '来都来了，不妨评论一下',
+    visitor: true,
+    highlight: false,
+    recordIP: false,
+  })
+</script>
+  
+  
+</body>
+
+</html>

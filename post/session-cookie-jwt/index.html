@@ -1,0 +1,375 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>深夜，我偷听到程序员要对session下手…… - 時光瓶</title>
+<link rel="shortcut icon" href="https://www.shiguangping.com/favicon.ico">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.2.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css">
+<link rel="stylesheet" href="https://www.shiguangping.com/media/css/tailwind.css">
+<link rel="stylesheet" href="https://www.shiguangping.com/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="深夜，我偷听到程序员要对session下手…… - 時光瓶 - Atom Feed" href="https://www.shiguangping.com/atom.xml">
+
+    
+
+  <meta name="description" content="我是一个web服务器
+我是一个web服务器，我的工作是给人类提供上网服务，我每天要为数以万计的人提供网页浏览服务。
+
+已经是深夜了，我还在和手下几个兄弟为了一件事紧张讨论着。
+“老大，现在咱们每天处理的请求越来越多了，session同步的问..." />
+  <meta property="og:title" content="深夜，我偷听到程序员要对session下手…… - 時光瓶">
+  <meta property="og:description" content="我是一个web服务器
+我是一个web服务器，我的工作是给人类提供上网服务，我每天要为数以万计的人提供网页浏览服务。
+
+已经是深夜了，我还在和手下几个兄弟为了一件事紧张讨论着。
+“老大，现在咱们每天处理的请求越来越多了，session同步的问..." />
+  <meta property="og:type" content="articles">
+  <meta property="og:url" content="https://www.shiguangping.com/post/session-cookie-jwt/" />
+  <meta property="og:image" content="https://www.shiguangping.com/images/avatar.png">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:width" content="1200">
+  <meta name="twitter:title" content="深夜，我偷听到程序员要对session下手…… - 時光瓶">
+  <meta name="twitter:description" content="我是一个web服务器
+我是一个web服务器，我的工作是给人类提供上网服务，我每天要为数以万计的人提供网页浏览服务。
+
+已经是深夜了，我还在和手下几个兄弟为了一件事紧张讨论着。
+“老大，现在咱们每天处理的请求越来越多了，session同步的问...">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://www.shiguangping.com/post/session-cookie-jwt/">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css">
+ 
+  
+    <link rel="stylesheet" href="https://www.shiguangping.com/media/css/prism-atom-dark.css">
+  
+
+  
+</head>
+
+<body>
+  <div class="antialiased flex flex-col min-h-screen" id="app">
+    <a href="https://www.shiguangping.com" class="fixed top-0 left-0 mt-4 bg-black text-white dark:text-gray-700 dark:bg-yellow-50 dark:hover:bg-black dark:hover:text-white inline-flex p-2 pl-8 hover:text-gray-700 hover:bg-yellow-50 font-bold z-10 transition-fast animated fadeInLeft">
+      時光瓶
+    </a>
+    <div class="max-w-4xl w-full mx-auto">
+      <div class="shadow-box bg-white dark:bg-gray-600 rounded-lg pt-32 md:pt-64 px-4 md:px-8 pb-8 animated fadeIn mb-8">
+        <h1 class="text-5xl font-semibold leading-normal pb-8 mb-8 border-b-8 border-gray-700">
+          深夜，我偷听到程序员要对session下手……
+        </h1>
+        
+        <div class="mb-8 flex flex-wrap">
+          <div class="text-gray-400 text-sm mr-4">2020-09-26 · 8 min read</div>
+          
+            <a href="https://www.shiguangping.com/tag/-tYp9XLCv/" class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
+              <i class="ri-hashtag"></i>
+              Jwt
+            </a>
+          
+        </div>
+        <div class="markdown mb-8" v-pre>
+          <h2 id="我是一个web服务器">我是一个web服务器</h2>
+<p>我是一个web服务器，我的工作是给人类提供上网服务，我每天要为数以万计的人提供网页浏览服务。</p>
+<img src="https://images.shiguangping.com/imgs/20200926114956.image" alt="img" style="zoom:50%;" />
+<p>已经是深夜了，我还在和手下几个兄弟为了一件事紧张讨论着。</p>
+<p>“老大，现在咱们每天处理的请求越来越多了，session同步的问题不能再拖了，必须想个办法”</p>
+<p>“二哥说的是啊，老大，不能再拖了”</p>
+<p>“老二，老三，咱们是一个集群，你们说的问题我不是不知道，我昨天听程序员们在讨论说要给我们接入一个叫<strong>Redis</strong>的家伙，相信这一问题很快就能得到解决啦，大家再忍忍。”</p>
+<img src="https://images.shiguangping.com/imgs/20200926115009.image" alt="img" style="zoom:50%;" />
+<p>“Redis，他是谁，什么来头？怎么没听过这号人物”</p>
+<p>“我也没见过，等等看吧”</p>
+<h2 id="session-cookie时代">session-cookie时代</h2>
+<p>到底是什么问题，让我们兄弟几个如此着急上火？事情还得从多年以前说起······</p>
+<p>那时候，这俩兄弟还没来，就我一个web服务器，每天处理的不过是一些静态资源文件，像HTML、CSS、JS、图片等等，日子过的清闲自在。</p>
+<img src="https://images.shiguangping.com/imgs/20200926115025.image" alt="img" style="zoom:50%;" />
+<p>日子一天天过着，互联网却悄然发生着变化。除了静态网页之外，可以动态交互的网络应用开始如雨后春笋般涌现，像各种各样的论坛啊，购物网站啊之类的。</p>
+<p>这家公司的老板也不例外，招了一帮程序员要搞一套支持动态网页交互的网站出来。</p>
+<p>以往的时候，我只需要按照HTTP协议的规范处理请求就完事儿了。不过动态交互应用出现后，我还得记住每一个请求背后的用户是谁，要不然就张冠李戴，全乱套了。</p>
+<p>为了解决这个问题，程序员们想出了一个叫<strong>session</strong>的办法：</p>
+<p>浏览器登陆以后，我就分配一个session id，表示一个会话，然后返回给浏览器，让它保存着。后续再来请求的时候，就把它给带上，我就能知道是谁啦！</p>
+<img src="https://images.shiguangping.com/imgs/20200926115033.image" alt="img" style="zoom:50%;" />
+<p>还别说，这办法还是挺管用的，成功解决了用户身份识别的问题，这一用就是好几年。</p>
+<p>不过，互联网的发展实在是太快了，用户量蹭蹭上涨，而我却发起了愁。</p>
+<p>原先用户量少的时候，session id管理起来倒也简单，现在用户越来越多，对应的session id数量也与日俱增，我有点不堪重负了。</p>
+<p>终于前不久，公司对web服务器进行了扩展，给我找来了两个小弟，还专门添置了一个nginx来进行负载均衡，这一下我们变成了3台web服务器组成的小集群了。</p>
+<img src="https://images.shiguangping.com/imgs/20200926115041.image" alt="img" style="zoom:50%;" />
+<p>我的工作一下轻松了许多，两位小兄弟为了分担了不少。我原以为以后的日子要好过一些了，可没想到，两位小兄弟的加入却引入了新的问题。</p>
+<p>原先的session id虽然很多，我一个人累是累点，但是方便管理啊！现在人手是增加了，可是这个session id的管理问题却变得复杂起来。</p>
+<p>因为咱们现在是个集群，请求如果发到我这，我给登记了session id，但下一次请求说不定就发到老二那里，一会儿又发到老三那里，这个就说不准了，这样我们几个手头的信息不一致，就会出现一些异常情况，用户估计要破口大骂：这什么辣鸡网站？</p>
+<p>后来我们跟nginx商量了一下，让他同一个用户来的请求都发给我们固定的一个人，这才稳住了局面。</p>
+<p>不过好景不长，后面我们三兄弟都相继出现过宕机的情况，这时候nginx还是得把请求交给还在工作的兄弟，原来的问题就又出现了！</p>
+<p>我们几个逼急了，商量了一下，干脆大家伙来同步session id的信息好了，有新增、失效的情况都给其他几个兄弟招呼一下，大家都管理一份，这样就不会出现不一致的问题了。</p>
+<img src="https://images.shiguangping.com/imgs/20200926115049.image" alt="img" style="zoom:50%;" />
+<p>搞了半天，又变成以前一个人管理所有session id的情况了，不仅如此，还要抽出时间和几位兄弟同步，把session id搬来搬去，工作量不减反增了。</p>
+<p>就这样艰难的过了一段日子，大家都怨声载道，所以有了开头的那一番讨论。</p>
+<p>这一次，希望这位新来的叫Redis的伙伴能拯救我们。</p>
+<h2 id="独立缓存redis">独立缓存——Redis</h2>
+<p>过了几天，总算把这个叫Redis的小伙伴给盼来了！</p>
+<p>这小子看起来特别精神，了解清楚情况后，告诉我们说：“三位老哥，以后这session id都统一存在我这里吧，你们别各自保存了，这不是各位的擅长”</p>
+<p>“你行吗？”，老二看着不太相信他的话，一脸不屑。</p>
+<p>“行不行，试试不就知道了吗？”</p>
+<img src="https://images.shiguangping.com/imgs/20200926115055.image" alt="img" style="zoom:50%;" />
+<p>接下来，我们听从了Redis的建议，不再保存这烦人的session id，全部一股脑儿交给了他，我们需要的时候再找他获取。</p>
+<p>你还别说，这小子个子不大，本事不小，读写速度都特快，让我们头疼的问题总算是解决了！</p>
+<h2 id="token时代">Token时代</h2>
+<p>几个月后的一天···</p>
+<p>“听说了吗？程序员们又要更改session id的存储方案了”，这一天，老二神神秘秘的说到。</p>
+<p>“不对不对，我听到的版本是以后不用session id了，要变天了！”，老三也凑了上来。</p>
+<p>一旁的redis老哥一听不乐意了，“咋的？是嫌我干的不好吗？”</p>
+<p>我也赶紧催促，“你俩就别卖关子了，听到了什么，快说说”</p>
+<img src="https://images.shiguangping.com/imgs/20200926115102.image" alt="img" style="zoom:50%;" />
+<p>老三示意大家围拢一些，小声说到：“我上次听两个程序员在议论，不知道他们在哪里学来了一套叫<strong>JWT（JSON Web Token）</strong> 的技术，硬说让我们来管理保存session id负担太重了，以后不保存了！还说，还说···”</p>
+<p>“还说啥，你倒是说啊！”</p>
+<p>“还说，Redis也不是万能的，也有崩溃的风险，一崩溃就全完了，所以要革新技术”，老三继续说到。</p>
+<p>Redis一听更着急上火了，“我工作这么久以来，从没有撂过挑子吧，怎么能这么说我呢？再不行我也可以像你们搞个集群嘛”</p>
+<p>“Redis老弟你先别急。唉，老三，这不保存session id，以后怎么鉴别用户呢？你有没有听到他们怎么说的？”</p>
+<p>“听他们说，没有session id，但是换了一个<strong>token</strong>，用它来识别用户”</p>
+<p>老二一听不以为意：“换了个名字，换汤不换药嘛！咱们还不是要保存token，才能匹配谁是谁”</p>
+<p>老三摇了摇头：“不是的，这可不只是改了个名字那么简单！这个token是由三部分构成，就像这样：”</p>
+<img src="https://images.shiguangping.com/imgs/20200926115110.image" alt="img" style="zoom:50%;" />
+<p>“你们看，第一部分是JWT的基本信息，然后把用户的身份信息放在第二部分，接着和第一部分合在一起做一个计算，计算的时候加入了一个只有我们才知道的密钥<code>secretkey</code>，计算结果作为第三部分。最后三部分拼在一起作为最终的token发送给客户端保存着···”</p>
+<p>还没等老三说完，老二点出了其中的关键：“我知道了，后面咱们再收到这个token的时候，就可以通过同样的算法验证前面两部分的结果和第三部分是不是相同，就知道这个token是不是伪造的啦！因为密钥只有我们知道，别人没办法伪造出一个token的！最后确认有效之后，再取第二部分的用户身份信息，就知道这是谁了！”</p>
+<img src="https://images.shiguangping.com/imgs/20200926115118.image" alt="img" style="zoom:50%;" />
+<p>听完他们的分析，我和Redis老兄都默默的点了点头，“有点意思啊，这样一来，咱们确实不用存了！不过现在咱们几个工作配合的也挺好的，他们费这么大劲是为了什么啊？”</p>
+<p>“我猜他们是想节约开支，把Redis老哥给裁掉！”，老二说到。</p>
+<p>老三摇了摇头，“依我看，八成他们是想展示技术给领导看，这不又快到职级晋升答辩了，他们想搞事情！唉，老大，这事你怎么看？”</p>
+<p>“我啊，我···”</p>
+<p>朋友们，你怎么看？session-cookie和JWT，你更倾向谁？</p>
+<hr>
+<p><strong>转载自：<a href="https://www.cnblogs.com/xuanyuan/p/13722483.html">https://www.cnblogs.com/xuanyuan/p/13722483.html</a></strong></p>
+
+        </div>
+        <!-- Share to Twitter, Weibo, Telegram -->
+        <div class="flex items-center">
+          <div class="mr-4 flex items-center">
+            <i class="ri-share-forward-line text-gray-500"></i>
+          </div>
+          <div class="px-4 cursor-pointer text-blue-500 hover:bg-blue-100 dark:hover:bg-gray-600 inline-flex" @click="shareToTwitter">
+            <i class="ri-twitter-line"></i>
+          </div>
+          <div class="px-4 cursor-pointer text-red-500 hover:bg-red-100 dark:hover:bg-gray-600 inline-flex" @click="shareToWeibo">
+            <i class="ri-weibo-line"></i>
+          </div>
+          <div class="px-4 cursor-pointer text-indigo-500 hover:bg-indigo-100 dark:hover:bg-gray-600 inline-flex" @click="shareToTelegram">
+            <i class="ri-telegram-line"></i>
+          </div>
+        </div>
+      </div>
+
+      
+
+      
+        <div id="vlaine-comment"></div>
+      
+
+      <footer class="py-12 text-center px-4 md:px-0" v-pre>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">時光瓶</a>
+</footer>
+    </div>
+
+    <!-- TOC Container -->
+    <div class="fixed right-0 bottom-0 mb-16 mr-4 shadow w-8 h-8 rounded-full flex justify-center items-center z-10 cursor-pointer bg-white dark:bg-gray-500 dark:text-gray-200 hover:shadow-lg transition-all animated fadeInRight" @click="showToc = true">
+      <i class="ri-file-list-line"></i>
+    </div>
+
+    <div class="fixed right-0 top-0 bottom-0 overflow-y-auto w-64 bg-white dark:bg-gray-800 p-4 border-l border-gray-100 dark:border-gray-600 z-10 transition-fast" :class="{ '-mr-64': !showToc }">
+      <div class="flex mb-4 justify-end">
+        <div class="w-8 h-8 inline-flex justify-center items-center rounded-full cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-fast" @click="showToc = false">
+          <i class="ri-close-line text-lg"></i>
+        </div>
+      </div>
+      <div class="post-toc-container">
+        <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E6%88%91%E6%98%AF%E4%B8%80%E4%B8%AAweb%E6%9C%8D%E5%8A%A1%E5%99%A8">我是一个web服务器</a></li>
+<li><a href="#session-cookie%E6%97%B6%E4%BB%A3">session-cookie时代</a></li>
+<li><a href="#%E7%8B%AC%E7%AB%8B%E7%BC%93%E5%AD%98redis">独立缓存——Redis</a></li>
+<li><a href="#token%E6%97%B6%E4%BB%A3">Token时代</a></li>
+</ul>
+</li>
+</ul>
+
+      </div>
+    </div>
+
+    <!-- Back to top -->
+    <div class="fixed right-0 bottom-0 mb-4 mr-4 shadow w-8 h-8 rounded-full flex justify-center items-center z-10 cursor-pointer bg-white hover:shadow-lg transition-all dark:bg-gray-500 dark:text-gray-200" @click="backToUp" v-show="scrolled">
+      <i class="ri-arrow-up-line"></i>
+    </div>
+  </div>
+
+  <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+  <!-- Background of PhotoSwipe. 
+        It's a separate element as animating opacity is faster than rgba(). -->
+  <div class="pswp__bg">
+  </div>
+  <!-- Slides wrapper with overflow:hidden. -->
+  <div class="pswp__scroll-wrap">
+    <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+    <div class="pswp__container">
+      <div class="pswp__item">
+      </div>
+      <div class="pswp__item">
+      </div>
+      <div class="pswp__item">
+      </div>
+    </div>
+    <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+    <div class="pswp__ui pswp__ui--hidden">
+      <div class="pswp__top-bar">
+        <!--  Controls are self-explanatory. Order can be changed. -->
+        <div class="pswp__counter">
+        </div>
+        <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+        <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+        <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+        <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+        <!-- element will get class pswp__preloader--active when preloader is running -->
+        <div class="pswp__preloader">
+          <div class="pswp__preloader__icn">
+            <div class="pswp__preloader__cut">
+              <div class="pswp__preloader__donut">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+        <div class="pswp__share-tooltip">
+        </div>
+      </div>
+      <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+      </button>
+      <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+      </button>
+      <div class="pswp__caption">
+        <div class="pswp__caption__center">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://www.shiguangping.com/media/scripts/main.js"></script>
+  
+  <!-- Code Highlight -->
+  
+    <script src="https://www.shiguangping.com/media/prism.js"></script>
+    <script>
+      Prism.highlightAll()
+    </script>
+  
+
+  <script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+  <script>
+    //拿到预览框架，也就是上面的html代码
+    var pswpElement = document.querySelectorAll('.pswp')[0];
+    //定义图片数组变量
+    var imgitems;
+    /**
+    * 用于显示预览界面
+    * @param index 图片数组下标
+    */
+    function viewImg(index) {
+      //其它选项这里不做过多阐述，详情见官网
+      var pswpoptions = {
+        index: parseInt(index, 10), // 开始幻灯片索引。0是第一张幻灯片。必须是整数，而不是字符串。
+        bgOpacity: 0.7, // 背景透明度，0-1
+        maxSpreadZoom: 3, // 缩放级别，不要太大
+      };
+      //初始化并打开PhotoSwipe，pswpElement对应上面预览框架，PhotoSwipeUI_Default为皮肤，imgitems为图片数组，pswpoptions为选项
+      var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, imgitems, pswpoptions);
+      gallery.init()
+    }
+    /**
+    * 用于添加图片点击事件
+    * @param img 图片元素
+    * @param index 所属下标（在imgitems中的位置）
+    */
+    function addImgClick(img, index) {
+      img.onclick = function() {
+        viewImg(index)
+      }
+    }
+    /**
+    * 轮询所有图片，获取src、width、height等数据，加入imgitems，并给图片元素添加事件
+    * 最好在onload中执行该方法，本站因放在最底部，所以直接初始化
+    * 异步加载图片可在图片元素创建完成后调用此方法
+    */
+    function initImg() {
+      //重置图片数组
+      imgitems = [];
+      //查找class:markdown 下的所有img元素并遍历
+      var imgs = document.querySelectorAll('.markdown img');
+      for (var i = 0; i < imgs.length; i++) {
+        var img = imgs[i];
+        //本站相册初始为loading图片，真实图片放在data-src
+        var ds = img.getAttribute("data-src");
+        //创建image对象，用于获取图片宽高
+        var imgtemp = new Image();
+        //判断是否存在data-src
+        if (ds != null && ds.length > 0) {
+          imgtemp.src = ds
+        } else {
+          imgtemp.src = img.src
+        }
+        //判断是否存在缓存
+        if (imgtemp.complete) {
+          var imgobj = {
+            "src": imgtemp.src,
+            "w": imgtemp.width,
+            "h": imgtemp.height,
+          };
+          imgitems[i] = imgobj;
+          addImgClick(img, i);
+        } else {
+          console.log('进来了2')
+          imgtemp.index = i;
+          imgtemp.img = img;
+          imgtemp.onload = function() {
+            var imgobj = {
+              "src": this.src,
+              "w": this.width,
+              "h": this.height,
+            };
+            //不要使用push，因为onload前后顺序会不同
+            imgitems[this.index] = imgobj
+            //添加点击事件
+            addImgClick(this.img, this.index);
+          }
+        }
+      }
+    }
+    //初始化
+    initImg();
+  </script>
+  
+    <script type="application/javascript" src="https://unpkg.com/valine"></script>
+<script type="application/javascript">
+  new Valine({
+    el: '#vlaine-comment',
+    appId: 'iScdY0hF5Y8TgKyMtfvp9CcM-gzGzoHsz',
+    appKey: 'XH2m9KIiA88R6N2lYiSObDH7',
+    pageSize: 10,
+    notify: false,
+    avatar: 'mp',
+    verify: false,
+    placeholder: '来都来了，不妨评论一下',
+    visitor: true,
+    highlight: false,
+    recordIP: false,
+  })
+</script>
+  
+  
+</body>
+
+</html>

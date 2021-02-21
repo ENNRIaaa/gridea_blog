@@ -1,0 +1,490 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>内网穿透工具-Frp - 時光瓶</title>
+<link rel="shortcut icon" href="https://www.shiguangping.com/favicon.ico">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.2.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css">
+<link rel="stylesheet" href="https://www.shiguangping.com/media/css/tailwind.css">
+<link rel="stylesheet" href="https://www.shiguangping.com/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="内网穿透工具-Frp - 時光瓶 - Atom Feed" href="https://www.shiguangping.com/atom.xml">
+
+    
+
+  <meta name="description" content="准备工作：
+
+具有固定公网IP的主机（如阿里云、腾讯云主机）
+主角：Frp工具，下载页面
+内网主机（最终需要在外网访问的内网主机）
+
+
+配置服务端（VPS）
+下载Frp
+Github地址：https://github.com/fatedie..." />
+  <meta property="og:title" content="内网穿透工具-Frp - 時光瓶">
+  <meta property="og:description" content="准备工作：
+
+具有固定公网IP的主机（如阿里云、腾讯云主机）
+主角：Frp工具，下载页面
+内网主机（最终需要在外网访问的内网主机）
+
+
+配置服务端（VPS）
+下载Frp
+Github地址：https://github.com/fatedie..." />
+  <meta property="og:type" content="articles">
+  <meta property="og:url" content="https://www.shiguangping.com/post/frp-install/" />
+  <meta property="og:image" content="https://www.shiguangping.com/images/avatar.png">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:width" content="1200">
+  <meta name="twitter:title" content="内网穿透工具-Frp - 時光瓶">
+  <meta name="twitter:description" content="准备工作：
+
+具有固定公网IP的主机（如阿里云、腾讯云主机）
+主角：Frp工具，下载页面
+内网主机（最终需要在外网访问的内网主机）
+
+
+配置服务端（VPS）
+下载Frp
+Github地址：https://github.com/fatedie...">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://www.shiguangping.com/post/frp-install/">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css">
+ 
+  
+    <link rel="stylesheet" href="https://www.shiguangping.com/media/css/prism-atom-dark.css">
+  
+
+  
+</head>
+
+<body>
+  <div class="antialiased flex flex-col min-h-screen" id="app">
+    <a href="https://www.shiguangping.com" class="fixed top-0 left-0 mt-4 bg-black text-white dark:text-gray-700 dark:bg-yellow-50 dark:hover:bg-black dark:hover:text-white inline-flex p-2 pl-8 hover:text-gray-700 hover:bg-yellow-50 font-bold z-10 transition-fast animated fadeInLeft">
+      時光瓶
+    </a>
+    <div class="max-w-4xl w-full mx-auto">
+      <div class="shadow-box bg-white dark:bg-gray-600 rounded-lg pt-32 md:pt-64 px-4 md:px-8 pb-8 animated fadeIn mb-8">
+        <h1 class="text-5xl font-semibold leading-normal pb-8 mb-8 border-b-8 border-gray-700">
+          内网穿透工具-Frp
+        </h1>
+        
+        <div class="mb-8 flex flex-wrap">
+          <div class="text-gray-400 text-sm mr-4">2020-10-06 · 4 min read</div>
+          
+            <a href="https://www.shiguangping.com/tag/dUNPJczal0/" class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
+              <i class="ri-hashtag"></i>
+              内网穿透
+            </a>
+          
+        </div>
+        <div class="markdown mb-8" v-pre>
+          <h1 id="准备工作">准备工作：</h1>
+<ul>
+<li>具有固定公网IP的主机（如阿里云、腾讯云主机）</li>
+<li>主角：<strong>Frp</strong>工具，<a href="https://github.com/fatedier/frp/releases">下载页面</a></li>
+<li>内网主机（最终需要在外网访问的内网主机）</li>
+</ul>
+<hr>
+<h1 id="配置服务端vps">配置服务端（VPS）</h1>
+<h3 id="下载frp">下载Frp</h3>
+<p>Github地址：<a href="https://github.com/fatedier/frp/releases">https://github.com/fatedier/frp/releases</a></p>
+<pre><code class="language-bash">wget https://github.com/fatedier/frp/releases/download/v0.34.0/frp_0.34.0_linux_amd64.tar.gz
+</code></pre>
+<blockquote>
+<p><em>下载速度不理想可以先下载到本地，再上传到Linux服务器上</em></p>
+<p>1、从服务器上下载文件</p>
+<pre><code class="language-bash">scp username@servername:/path/filename /var/www/local_dir（本地目录）
+</code></pre>
+<p>2、上传本地文件到服务器</p>
+<pre><code class="language-bash">scp /path/filename username@servername:/path
+</code></pre>
+<p>3、从服务器下载整个目录</p>
+<pre><code class="language-bash">scp -r username@servername:/var/www/remote_dir/（远程目录） /var/www/local_dir（本地目录）
+</code></pre>
+<p>4、上传目录到服务器</p>
+<pre><code class="language-bash">scp  -r local_dir username@servername:remote_dir
+</code></pre>
+</blockquote>
+<p><strong>解压：</strong></p>
+<pre><code class="language-bash">tar -zxvf frp_0.34.0_linux_amd64.tar.gz
+</code></pre>
+<p><strong>进入目录：</strong></p>
+<figure data-type="image" tabindex="1"><img src="https://images.shiguangping.com/imgs/20201006125017.png" alt="image-20201006125017260" loading="lazy"></figure>
+<p>目录中主要文件：</p>
+<ul>
+<li>
+<p><code>frps</code>：服务端可执行程序</p>
+</li>
+<li>
+<p><code>frps.ini</code>：服务端配置文件</p>
+</li>
+<li>
+<p><code>frps_full.ini</code>：服务端所有配置项</p>
+</li>
+<li>
+<p><code>frpc</code>：客户端可执行程序</p>
+</li>
+<li>
+<p><code>frpc.ini</code>：客户端配置文件</p>
+</li>
+<li>
+<p><code>frpc_full.ini</code>：客户端所有配置项</p>
+</li>
+<li>
+<p><code>LICENSE</code>：许可证</p>
+</li>
+</ul>
+<h3 id="编辑frpsini">编辑<code>frps.ini</code></h3>
+<pre><code class="language-bash">vim frps.ini
+</code></pre>
+<p>配置文件：</p>
+<pre><code class="language-ini">[common]
+# 服务端端口号
+# 用于与客户端进行连接通信
+bind_port = 7000
+
+# 连接认证token(可选)
+token = 12345678
+
+# 访问内网主机的web服务时配置（可选）
+vhost_http_port = 80
+vhost_https_port = 443
+
+# 仪表盘端口，只有设置了才能使用仪表盘（即后台）
+dashboard_port = 81
+# 仪表盘访问的用户名密码，如果不设置，则默认都是 admin
+dashboard_user = admin
+dashboard_pwd = admin
+</code></pre>
+<h3 id="启动frps">启动frps</h3>
+<pre><code class="language-bash">screen -S frps ./frps -c frps.ini
+</code></pre>
+<blockquote>
+<p>安装screen：</p>
+<pre><code class="language-bash">yum install screen
+</code></pre>
+</blockquote>
+<p>使用快捷键Ctrl+A D(即按住Ctrl，依次再按A,D)，使程序在后台运行。</p>
+<hr>
+<h1 id="配置客户端内网主机">配置客户端（内网主机）</h1>
+<h3 id="下载frp-2">下载Frp</h3>
+<p>在内网主机中下载Frp，或通过本地上传：</p>
+<pre><code class="language-bash">wget https://github.com/fatedier/frp/releases/download/v0.34.0/frp_0.34.0_linux_amd64.tar.gz
+</code></pre>
+<p><strong>同服务端操作一样，解压后进入目录：</strong></p>
+<h3 id="编辑frpcini">编辑<code>frpc.ini</code></h3>
+<p>配置文件：</p>
+<pre><code class="language-ini">[common]
+# 服务端ip
+server_addr = 121.197.190.123
+# 服务端端口号
+server_port = 7000
+# 服务端设置的token
+token = 12345678
+
+[ssh]
+type = tcp
+# 本地服务端口号
+local_port = 22
+# 映射到服务端主机的端口号
+remote_port = 6000
+# 加密和压缩
+use_encryption = true
+use_compression = true
+</code></pre>
+<p>通过访问<code>远程主机IP:remote_port</code>来访问内网主机的<code>local_port</code>端口的服务。</p>
+<p>例如在外网通过ssh连接到内网主机，<code>ssh -p 6000 121.197.190.123</code>来SSH连接到内网主机，<em>22端口是ssh的默认端口号</em>。</p>
+<h3 id="访问内网主机中的其他服务">访问内网主机中的其他服务</h3>
+<p>对于内网主机上部署了如mysql数据库、redis缓存等服务也可以通过这种方式配置：</p>
+<p>Mysql:</p>
+<pre><code class="language-ini">[mysql]
+type = tcp
+local_port = 3306
+remote_port = 3306
+use_encryption = true
+use_compression = true
+</code></pre>
+<p>Redis:</p>
+<pre><code class="language-ini">[redis]
+type = tcp
+local_port = 6379
+remote_port = 6379
+use_encryption = true
+use_compression = true
+</code></pre>
+<p><em>远程主机使用的是阿里云或者腾讯云等虚拟主机，要在安全组规则中放行端口</em></p>
+<h3 id="访问内网主机的web服务">访问内网主机的web服务</h3>
+<pre><code class="language-ini">[web]
+type = http
+本地web服务IP地址和端口号
+local_ip = 127.0.0.1
+local_port = 9000
+# 域名要解析到服务端主机IP
+custom_domains = www.liyan.run
+</code></pre>
+<p>访问<code>www.liyan.run:80</code>可访问到内网中的9000端口服务。</p>
+<p><em>80端口是在服务端frps.ini中vhost_http_port配置。http默认端口号是80，访问时可省略</em></p>
+<h3 id="启动frpc">启动frpc</h3>
+<pre><code class="language-bash">screen -S frpc ./frpc -c frpc.ini
+</code></pre>
+<h1 id="测试">测试</h1>
+<pre><code class="language-bash">ssh -p 6000 121.197.190.123
+</code></pre>
+<p>可以连接到内网主机，说明内网穿透成功。</p>
+<hr>
+<p>详细的文档：</p>
+<p>中文：<a href="https://gitee.com/dengweiwen/frp">https://gitee.com/dengweiwen/frp</a></p>
+<p>英文：<a href="https://github.com/fatedier/frp">https://github.com/fatedier/frp</a></p>
+
+        </div>
+        <!-- Share to Twitter, Weibo, Telegram -->
+        <div class="flex items-center">
+          <div class="mr-4 flex items-center">
+            <i class="ri-share-forward-line text-gray-500"></i>
+          </div>
+          <div class="px-4 cursor-pointer text-blue-500 hover:bg-blue-100 dark:hover:bg-gray-600 inline-flex" @click="shareToTwitter">
+            <i class="ri-twitter-line"></i>
+          </div>
+          <div class="px-4 cursor-pointer text-red-500 hover:bg-red-100 dark:hover:bg-gray-600 inline-flex" @click="shareToWeibo">
+            <i class="ri-weibo-line"></i>
+          </div>
+          <div class="px-4 cursor-pointer text-indigo-500 hover:bg-indigo-100 dark:hover:bg-gray-600 inline-flex" @click="shareToTelegram">
+            <i class="ri-telegram-line"></i>
+          </div>
+        </div>
+      </div>
+
+      
+
+      
+        <div id="vlaine-comment"></div>
+      
+
+      <footer class="py-12 text-center px-4 md:px-0" v-pre>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">時光瓶</a>
+</footer>
+    </div>
+
+    <!-- TOC Container -->
+    <div class="fixed right-0 bottom-0 mb-16 mr-4 shadow w-8 h-8 rounded-full flex justify-center items-center z-10 cursor-pointer bg-white dark:bg-gray-500 dark:text-gray-200 hover:shadow-lg transition-all animated fadeInRight" @click="showToc = true">
+      <i class="ri-file-list-line"></i>
+    </div>
+
+    <div class="fixed right-0 top-0 bottom-0 overflow-y-auto w-64 bg-white dark:bg-gray-800 p-4 border-l border-gray-100 dark:border-gray-600 z-10 transition-fast" :class="{ '-mr-64': !showToc }">
+      <div class="flex mb-4 justify-end">
+        <div class="w-8 h-8 inline-flex justify-center items-center rounded-full cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-fast" @click="showToc = false">
+          <i class="ri-close-line text-lg"></i>
+        </div>
+      </div>
+      <div class="post-toc-container">
+        <ul class="markdownIt-TOC">
+<li><a href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C">准备工作：</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AE%E6%9C%8D%E5%8A%A1%E7%AB%AFvps">配置服务端（VPS）</a><br>
+*
+<ul>
+<li><a href="#%E4%B8%8B%E8%BD%BDfrp">下载Frp</a></li>
+<li><a href="#%E7%BC%96%E8%BE%91frpsini">编辑<code>frps.ini</code></a></li>
+<li><a href="#%E5%90%AF%E5%8A%A8frps">启动frps</a></li>
+</ul>
+</li>
+<li><a href="#%E9%85%8D%E7%BD%AE%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%86%85%E7%BD%91%E4%B8%BB%E6%9C%BA">配置客户端（内网主机）</a><br>
+*
+<ul>
+<li><a href="#%E4%B8%8B%E8%BD%BDfrp-2">下载Frp</a></li>
+<li><a href="#%E7%BC%96%E8%BE%91frpcini">编辑<code>frpc.ini</code></a></li>
+<li><a href="#%E8%AE%BF%E9%97%AE%E5%86%85%E7%BD%91%E4%B8%BB%E6%9C%BA%E4%B8%AD%E7%9A%84%E5%85%B6%E4%BB%96%E6%9C%8D%E5%8A%A1">访问内网主机中的其他服务</a></li>
+<li><a href="#%E8%AE%BF%E9%97%AE%E5%86%85%E7%BD%91%E4%B8%BB%E6%9C%BA%E7%9A%84web%E6%9C%8D%E5%8A%A1">访问内网主机的web服务</a></li>
+<li><a href="#%E5%90%AF%E5%8A%A8frpc">启动frpc</a></li>
+</ul>
+</li>
+<li><a href="#%E6%B5%8B%E8%AF%95">测试</a></li>
+</ul>
+
+      </div>
+    </div>
+
+    <!-- Back to top -->
+    <div class="fixed right-0 bottom-0 mb-4 mr-4 shadow w-8 h-8 rounded-full flex justify-center items-center z-10 cursor-pointer bg-white hover:shadow-lg transition-all dark:bg-gray-500 dark:text-gray-200" @click="backToUp" v-show="scrolled">
+      <i class="ri-arrow-up-line"></i>
+    </div>
+  </div>
+
+  <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+  <!-- Background of PhotoSwipe. 
+        It's a separate element as animating opacity is faster than rgba(). -->
+  <div class="pswp__bg">
+  </div>
+  <!-- Slides wrapper with overflow:hidden. -->
+  <div class="pswp__scroll-wrap">
+    <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+    <div class="pswp__container">
+      <div class="pswp__item">
+      </div>
+      <div class="pswp__item">
+      </div>
+      <div class="pswp__item">
+      </div>
+    </div>
+    <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+    <div class="pswp__ui pswp__ui--hidden">
+      <div class="pswp__top-bar">
+        <!--  Controls are self-explanatory. Order can be changed. -->
+        <div class="pswp__counter">
+        </div>
+        <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+        <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+        <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+        <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+        <!-- element will get class pswp__preloader--active when preloader is running -->
+        <div class="pswp__preloader">
+          <div class="pswp__preloader__icn">
+            <div class="pswp__preloader__cut">
+              <div class="pswp__preloader__donut">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+        <div class="pswp__share-tooltip">
+        </div>
+      </div>
+      <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+      </button>
+      <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+      </button>
+      <div class="pswp__caption">
+        <div class="pswp__caption__center">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://www.shiguangping.com/media/scripts/main.js"></script>
+  
+  <!-- Code Highlight -->
+  
+    <script src="https://www.shiguangping.com/media/prism.js"></script>
+    <script>
+      Prism.highlightAll()
+    </script>
+  
+
+  <script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+  <script>
+    //拿到预览框架，也就是上面的html代码
+    var pswpElement = document.querySelectorAll('.pswp')[0];
+    //定义图片数组变量
+    var imgitems;
+    /**
+    * 用于显示预览界面
+    * @param index 图片数组下标
+    */
+    function viewImg(index) {
+      //其它选项这里不做过多阐述，详情见官网
+      var pswpoptions = {
+        index: parseInt(index, 10), // 开始幻灯片索引。0是第一张幻灯片。必须是整数，而不是字符串。
+        bgOpacity: 0.7, // 背景透明度，0-1
+        maxSpreadZoom: 3, // 缩放级别，不要太大
+      };
+      //初始化并打开PhotoSwipe，pswpElement对应上面预览框架，PhotoSwipeUI_Default为皮肤，imgitems为图片数组，pswpoptions为选项
+      var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, imgitems, pswpoptions);
+      gallery.init()
+    }
+    /**
+    * 用于添加图片点击事件
+    * @param img 图片元素
+    * @param index 所属下标（在imgitems中的位置）
+    */
+    function addImgClick(img, index) {
+      img.onclick = function() {
+        viewImg(index)
+      }
+    }
+    /**
+    * 轮询所有图片，获取src、width、height等数据，加入imgitems，并给图片元素添加事件
+    * 最好在onload中执行该方法，本站因放在最底部，所以直接初始化
+    * 异步加载图片可在图片元素创建完成后调用此方法
+    */
+    function initImg() {
+      //重置图片数组
+      imgitems = [];
+      //查找class:markdown 下的所有img元素并遍历
+      var imgs = document.querySelectorAll('.markdown img');
+      for (var i = 0; i < imgs.length; i++) {
+        var img = imgs[i];
+        //本站相册初始为loading图片，真实图片放在data-src
+        var ds = img.getAttribute("data-src");
+        //创建image对象，用于获取图片宽高
+        var imgtemp = new Image();
+        //判断是否存在data-src
+        if (ds != null && ds.length > 0) {
+          imgtemp.src = ds
+        } else {
+          imgtemp.src = img.src
+        }
+        //判断是否存在缓存
+        if (imgtemp.complete) {
+          var imgobj = {
+            "src": imgtemp.src,
+            "w": imgtemp.width,
+            "h": imgtemp.height,
+          };
+          imgitems[i] = imgobj;
+          addImgClick(img, i);
+        } else {
+          console.log('进来了2')
+          imgtemp.index = i;
+          imgtemp.img = img;
+          imgtemp.onload = function() {
+            var imgobj = {
+              "src": this.src,
+              "w": this.width,
+              "h": this.height,
+            };
+            //不要使用push，因为onload前后顺序会不同
+            imgitems[this.index] = imgobj
+            //添加点击事件
+            addImgClick(this.img, this.index);
+          }
+        }
+      }
+    }
+    //初始化
+    initImg();
+  </script>
+  
+    <script type="application/javascript" src="https://unpkg.com/valine"></script>
+<script type="application/javascript">
+  new Valine({
+    el: '#vlaine-comment',
+    appId: 'iScdY0hF5Y8TgKyMtfvp9CcM-gzGzoHsz',
+    appKey: 'XH2m9KIiA88R6N2lYiSObDH7',
+    pageSize: 10,
+    notify: false,
+    avatar: 'mp',
+    verify: false,
+    placeholder: '来都来了，不妨评论一下',
+    visitor: true,
+    highlight: false,
+    recordIP: false,
+  })
+</script>
+  
+  
+</body>
+
+</html>

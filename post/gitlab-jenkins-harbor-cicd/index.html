@@ -1,0 +1,1290 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Jenkins构建部署微服务项目 - 時光瓶</title>
+<link rel="shortcut icon" href="https://www.shiguangping.com/favicon.ico">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.2.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css">
+<link rel="stylesheet" href="https://www.shiguangping.com/media/css/tailwind.css">
+<link rel="stylesheet" href="https://www.shiguangping.com/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Jenkins构建部署微服务项目 - 時光瓶 - Atom Feed" href="https://www.shiguangping.com/atom.xml">
+
+    
+
+  <meta name="description" content="通过Gitlab、Jenkins、Harbor、Docker部署Spring Cloud微服务项目，本文使用Mrbird的开源框架FEBS微服务权限系统演示。（项目启动需要Nacos、Mysql）
+准备工作
+Gitlab搭建：https:/..." />
+  <meta property="og:title" content="Jenkins构建部署微服务项目 - 時光瓶">
+  <meta property="og:description" content="通过Gitlab、Jenkins、Harbor、Docker部署Spring Cloud微服务项目，本文使用Mrbird的开源框架FEBS微服务权限系统演示。（项目启动需要Nacos、Mysql）
+准备工作
+Gitlab搭建：https:/..." />
+  <meta property="og:type" content="articles">
+  <meta property="og:url" content="https://www.shiguangping.com/post/gitlab-jenkins-harbor-cicd/" />
+  <meta property="og:image" content="https://www.shiguangping.com/images/avatar.png">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:width" content="1200">
+  <meta name="twitter:title" content="Jenkins构建部署微服务项目 - 時光瓶">
+  <meta name="twitter:description" content="通过Gitlab、Jenkins、Harbor、Docker部署Spring Cloud微服务项目，本文使用Mrbird的开源框架FEBS微服务权限系统演示。（项目启动需要Nacos、Mysql）
+准备工作
+Gitlab搭建：https:/...">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://www.shiguangping.com/post/gitlab-jenkins-harbor-cicd/">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css">
+ 
+  
+    <link rel="stylesheet" href="https://www.shiguangping.com/media/css/prism-atom-dark.css">
+  
+
+  
+</head>
+
+<body>
+  <div class="antialiased flex flex-col min-h-screen" id="app">
+    <a href="https://www.shiguangping.com" class="fixed top-0 left-0 mt-4 bg-black text-white dark:text-gray-700 dark:bg-yellow-50 dark:hover:bg-black dark:hover:text-white inline-flex p-2 pl-8 hover:text-gray-700 hover:bg-yellow-50 font-bold z-10 transition-fast animated fadeInLeft">
+      時光瓶
+    </a>
+    <div class="max-w-4xl w-full mx-auto">
+      <div class="shadow-box bg-white dark:bg-gray-600 rounded-lg pt-32 md:pt-64 px-4 md:px-8 pb-8 animated fadeIn mb-8">
+        <h1 class="text-5xl font-semibold leading-normal pb-8 mb-8 border-b-8 border-gray-700">
+          Jenkins构建部署微服务项目
+        </h1>
+        
+        <div class="mb-8 flex flex-wrap">
+          <div class="text-gray-400 text-sm mr-4">2020-11-23 · 20 min read</div>
+          
+            <a href="https://www.shiguangping.com/tag/ha7GxEvg5/" class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
+              <i class="ri-hashtag"></i>
+              Jenkins
+            </a>
+          
+        </div>
+        <div class="markdown mb-8" v-pre>
+          <p>通过Gitlab、Jenkins、Harbor、Docker部署Spring Cloud微服务项目，本文使用Mrbird的开源框架<a href="https://gitee.com/mrbirdd/">FEBS微服务权限系统</a>演示。（项目启动需要Nacos、Mysql）</p>
+<h2 id="准备工作">准备工作</h2>
+<p>Gitlab搭建：<a href="https://www.shiguangping.com/posts/docker-install-gitlab.html">https://www.shiguangping.com/posts/docker-install-gitlab.html</a></p>
+<p>Harbor搭建：<a href="https://www.shiguangping.com/posts/harbor-install.html">https://www.shiguangping.com/posts/harbor-install.html</a></p>
+<p>Jenkins搭建：<a href="https://www.shiguangping.com/posts/docker-install-jenkins.html">https://www.shiguangping.com/posts/docker-install-jenkins.html</a></p>
+<p>整个搭建过程分为两大部分：</p>
+<ul>
+<li>Jenkins 构建镜像</li>
+<li>Docker 部署服务</li>
+</ul>
+<h2 id="一-构建镜像">一、构建镜像</h2>
+<p>登陆Harbor，创建名为&quot;febs&quot;项目，Jenkins构建好的镜像都放到febs项目下。</p>
+<figure data-type="image" tabindex="1"><img src="https://images.shiguangping.com//imgs/20201123234440.png" alt="image-20201123234440416" loading="lazy"></figure>
+<p>可以创建一个名为<code>jenkins</code>的用户，并在项目中添加该用户，专门用于Jenkins登陆并推送镜像使用。</p>
+<hr>
+<p>打开后端项目，在<code>febs-cloud</code>根目录下编写以下脚本：</p>
+<img src="https://images.shiguangping.com//imgs/20201123232417.png" alt="image-20201123232417184" style="zoom:50%;" />
+<p>pipline脚本：</p>
+<p>::: details Jenkinsfile</p>
+<pre><code class="language-groovy">#!groovy
+pipeline {
+	agent none
+
+	parameters {
+		choice(
+				description: '你需要选择哪个模块进行构建 ?',
+				name: 'modulename',
+				choices: ['1:all', '8:system', '4:gateway', '5:auth', '2:monitor-admin', '3:tx-manager', '6:job', '7:generator']
+		)
+
+		choice(
+				description: '你需要选择哪个环境进行构建 ?',
+				name: 'profile',
+				choices: ['development', 'testing', 'production']
+		)
+
+		string(
+				description: '你要构建的版本 ?',
+				name: 'pversion',
+				defaultValue: '1.0.0',
+		)
+	}
+
+	stages {
+		stage('Build docker') {
+			agent any
+			environment {
+				ACCESS_DOCKER = credentials('docker-register')
+				REGISTRY_URL = 'localhost:7888'
+			}
+			steps {
+				sh &quot;docker login -u ${ACCESS_DOCKER_USR} -p ${ACCESS_DOCKER_PSW} ${REGISTRY_URL}&quot;
+				sh &quot;febs-cloud/jenkins-deploy.sh -p ${params.modulename} -e ${params.profile} -v ${params.pversion}&quot;
+			}
+		}
+	}
+}
+</code></pre>
+<p>:::</p>
+<p>Jenkins构建脚本：</p>
+<p>::: details jenkins-deploy.sh</p>
+<pre><code class="language-bash">#!/bin/bash
+##
+## Jenkins 部署脚本
+##
+## Started on 2020/11/22 Liyan &lt;18525589998@163.com&gt;
+## Last update 2020/11/22 Liyan &lt;18525589998@163.com&gt;
+##
+
+set -e
+
+version=&quot;1.0.0&quot;
+
+# Colours
+red=&quot;\033[91m&quot;
+green=&quot;\033[92m&quot;
+yellow=&quot;\033[93m&quot;
+magenta=&quot;\033[95m&quot;
+cyan=&quot;\033[96m&quot;
+none=&quot;\033[0m&quot;
+
+# 项目ID
+project_id=&quot;&quot;
+
+# 环境：development, testing, production
+profile_name=&quot;&quot;
+
+# 构建版本：1.0.0
+project_version=&quot;1.0.0&quot;
+
+# 模块相对项目根路径
+modules_path=(
+  all
+  febs-apm/febs-admin
+  febs-tx-manager
+  febs-gateway
+  febs-auth
+  febs-server/febs-server-job
+  febs-server/febs-server-generator
+  febs-server/febs-server-system
+)
+
+# 镜像仓库名
+register_names=(
+  all
+  febs-admin
+  febs-tx-manager
+  febs-gateway
+  febs-auth
+  febs-server-job
+  febs-server-generator
+  febs-server-system
+)
+
+# 镜像版本由 init 生成，如：febs-auth-server:1.0.0-SNAPSHOT
+image_tags=(
+  all
+)
+
+# 定义环境和镜像 tag 后缀映射
+declare -A image_tag_suffix_map=([&quot;development&quot;]=&quot;DEV&quot; [&quot;testing&quot;]=&quot;SNAPSHOT&quot; [&quot;production&quot;]=&quot;RELEASE&quot;)
+# declare -A maven_profile_map=([&quot;development&quot;]=&quot;dev&quot; [&quot;testing&quot;]=&quot;test&quot; [&quot;production&quot;]=&quot;prod&quot;)
+# 暂时处理，选择开发环境使用测试环境构建
+declare -A maven_profile_map=([&quot;development&quot;]=&quot;test&quot; [&quot;testing&quot;]=&quot;test&quot; [&quot;production&quot;]=&quot;prod&quot;)
+
+# 脚本执行工作路径
+work_path=$(
+  cd &quot;$(dirname &quot;$0&quot;)&quot;;
+  pwd
+)
+
+# 项目根目录
+project_root_path=$(
+  cd $work_path;
+  cd ..;
+  pwd
+)
+
+# docker 镜像仓库地址
+docker_registry_uri=&quot;localhost:7888/febs&quot;
+docker_file_path=&quot;${work_path}/Dockerfile&quot;
+
+init() {
+
+	# 截取字符 10:aid-abc -&gt; 10
+	project_id=${project_id%%:*}
+
+	# 映射 maven 环境
+	maven_profile=&quot;${maven_profile_map[$profile_name]}&quot;
+
+	# 根据环境映射镜像tag
+  for ((i = 1; i &lt; ${#register_names[@]}; i++)); do
+    ImageTag=${project_version}
+    image_tags[$i]=&quot;${ImageTag}-${image_tag_suffix_map[$profile_name]}&quot;
+  done
+}
+
+error() {
+  echo -e &quot;\n$red 输入错误！$none\n&quot;
+  exit 1
+}
+
+pause() {
+  read -rsp &quot;$(echo -e &quot;按${green} Enter 回车键 ${none}继续...或按${red} Ctrl + C ${none}取消.&quot;)&quot; -d $'\n'
+  echo
+}
+
+show_projects() {
+  for ((i = 1; i &lt;= ${#register_names[*]}; i++)); do
+    Item=&quot;${register_names[$i - 1]}&quot;
+    if [[ &quot;$i&quot; -le 9 ]]; then
+      # echo
+      echo -e &quot;$yellow  $i. $none${Item}&quot;
+    else
+      # echo
+      echo -e &quot;$yellow $i. $none${Item}&quot;
+    fi
+  done
+}
+
+show_deploy_projects() {
+  for ((i = 1; i &lt;= ${#image_tags[*]} - 1; i++)); do
+    ItemTag=&quot;${image_tags[$i]}&quot;
+    ItemName=&quot;${register_names[$i]}&quot;
+    echo -e &quot;$cyan ${docker_registry_uri}/${ItemName}:${ItemTag}$none&quot;
+  done
+}
+
+show_confirm_deploy() {
+  echo &quot;==============================&quot;
+  echo -e &quot;$yellow 即将部署 $none&quot;
+  echo
+  if test $project_id -eq 1; then
+    show_deploy_projects
+  else
+    echo -e &quot;$cyan ${docker_registry_uri}/${register_names[project_id - 1]}:${image_tags[$project_id - 1]}$none&quot;
+  fi
+  echo
+  echo &quot;==============================&quot;
+
+#  # 提示
+#  pause
+#
+  # 部署
+  deploy
+}
+
+deploy() {
+
+  # 部署所有项目
+  if test $project_id -eq 1; then
+		# 构建所有模块
+#		mvn clean install -Dmaven.test.skip=true -P${maven_profile}
+		mvn clean install -Dmaven.test.skip=true
+
+    for ((i = 1; i &lt;= ${#image_tags[*]} - 1; i++)); do
+      ItemTag=&quot;${image_tags[$i]}&quot;
+      ItemName=&quot;${register_names[$i]}&quot;
+      RegisterName=&quot;${register_names[$i]}&quot;
+      ProjectPath=${project_root_path}/${modules_path[$i]}
+
+      # 构建 docker 镜像并推送到镜像仓库
+      docker build -t &quot;${docker_registry_uri}/${RegisterName}:${ItemTag}&quot; -f ${docker_file_path} ${ProjectPath}
+      docker push &quot;${docker_registry_uri}/${RegisterName}:${ItemTag}&quot;
+
+    done
+  else
+
+    # 部署选择的项目
+    ItemTag=&quot;${image_tags[$project_id - 1]}&quot;
+    ItemName=&quot;${register_names[project_id - 1]}&quot;
+    RegisterName=&quot;${register_names[project_id - 1]}&quot;
+		ProjectPath=${project_root_path}/${modules_path[project_id - 1]}
+
+		# 构建指定模块
+#		mvn clean install -Dmaven.test.skip=true -pl :${RegisterName} -am -P${maven_profile}
+		mvn clean install -Dmaven.test.skip=true -pl :${RegisterName} -am
+
+    # 构建 docker 镜像并推送到镜像仓库
+    docker build -t &quot;${docker_registry_uri}/${RegisterName}:${ItemTag}&quot; -f ${docker_file_path} ${ProjectPath}
+    docker push &quot;${docker_registry_uri}/${RegisterName}:${ItemTag}&quot;
+  fi
+  echo
+  echo -e &quot;${green}===============部署成功===============${none}&quot;
+  echo
+}
+
+run() {
+
+  # clear
+  echo
+  while :; do
+    echo -e &quot;请选择要部署的项目 [${magenta}1-${#register_names[*]}$none]&quot;
+    echo
+
+    # 显示所有项目
+    show_projects
+
+    # 读取用户输入
+    # read -p &quot;$(echo -e &quot;(默认: ${cyan}all$none)&quot;):&quot; project_id
+
+    pwd
+
+    # project_id=1
+
+    case $project_id in
+    [1-9]|1[0-9])
+      echo
+      echo -e &quot;$yellow 已选择 $cyan${register_names[$project_id - 1]}$none&quot;
+      break
+      ;;
+    *)
+      error
+      ;;
+    esac
+  done
+
+  # 显示确认部署信息
+  show_confirm_deploy
+}
+
+usage() {
+  echo -e &quot;$red Usage:`basename $0` -p [Project ID] -e [development | testing | production] -v [Build Version]$none&quot;
+  echo -e &quot;$red `basename $0` -p 1:xxx -e testing -v 1.0.0 $none&quot;
+
+  show_projects
+
+  exit 1
+}
+
+# 获取输入参数
+while getopts &quot;hp:e:v:&quot; opt; do
+  case $opt in
+  h)
+    usage
+    ;;
+  p)
+    project_id=$OPTARG
+    ;;
+  e)
+    profile_name=$OPTARG
+    ;;
+  v)
+    project_version=$OPTARG
+    ;;
+  ?)
+    usage
+    ;;
+  esac
+done
+
+# 检查输入参数
+echo $*
+if [ $# == 0 ]; then
+  usage
+fi
+
+if [[ -z $project_id || -z $profile_name ]]; then
+  usage
+fi
+
+# 进入工作目录
+cd $work_path
+
+# 初始化
+init
+
+# 开始执行
+run
+</code></pre>
+<p>:::</p>
+<p>Dockerfile：</p>
+<p>::: details Dockerfile</p>
+<pre><code class="language-dockerfile">FROM openjdk:8-jre-alpine as builder
+
+WORKDIR application
+ARG JAR_FILE=target/*.jar
+COPY ${JAR_FILE} app.jar
+
+# 提取分层信息
+RUN java -Djarmode=layertools -jar app.jar extract
+
+# 第二阶段
+# FROM adoptopenjdk/openjdk8
+FROM openjdk:8-jre-alpine
+
+# apk 镜像源
+#RUN echo -e &quot;https://mirror.tuna.tsinghua.edu.cn/alpine/v3.9/main\n\
+#https://mirror.tuna.tsinghua.edu.cn/alpine/v3.9/community&quot; &gt; /etc/apk/repositories
+
+# 安装字体库，easyexcel 依赖
+RUN apk --update add ttf-dejavu &amp;&amp; \
+      rm -rf /var/cache/apk/*
+
+WORKDIR application
+
+# 制作镜像层
+COPY --from=builder application/dependencies/ ./
+COPY --from=builder application/spring-boot-loader/ ./
+COPY --from=builder application/snapshot-dependencies/ ./
+COPY --from=builder application/application/ ./
+
+ENV TZ=&quot;Asia/Shanghai&quot; PORT=80 JAVA_OPTS=&quot; &quot; SPRING_OPTS=&quot; &quot;
+
+VOLUME [&quot;/log&quot;, &quot;/agent&quot;]
+
+EXPOSE $PORT
+
+ENTRYPOINT [&quot;sh&quot;, &quot;-c&quot;, &quot;java ${JAVA_OPTS} -Djava.security.egd=file:/dev/./urandom org.springframework.boot.loader.JarLauncher ${SPRING_OPTS}&quot;]
+</code></pre>
+<p>:::</p>
+<p>脚本中的仓库地址替换成实际的镜像仓库地址，脚本编辑好后将项目推送到Gitlab上。</p>
+<hr>
+<p>登陆Jenkins，系统管理 -&gt; 凭证管理中添加Gitlab凭证，为了后面Jenkins可以登陆Gitlab并拉取项目代码。（如果系统管理中没有<code>Manager Credentials</code>,则需要到插件管理中安装该插件）</p>
+<figure data-type="image" tabindex="2"><img src="https://images.shiguangping.com//imgs/20201123232847.png" alt="image-20201123232847835" loading="lazy"></figure>
+<p>添加凭证：</p>
+<figure data-type="image" tabindex="3"><img src="https://images.shiguangping.com//imgs/20201123233159.png" alt="image-20201123233159466" loading="lazy"></figure>
+<p><em>如果要构建的是Gitlab中的私有项目，要确保该账号已经添加到项目中，并有权限拉取代码。</em></p>
+<p>添加Harbor登陆凭证，用于登陆并推送镜像，配置同上：</p>
+<figure data-type="image" tabindex="4"><img src="https://images.shiguangping.com//imgs/20201123234236.png" alt="image-20201123234236275" loading="lazy"></figure>
+<p>凭证添加完后，回到Jenkins主页面，<strong>新建任务</strong>，输入项目名，选择创建<strong>多分支流水线</strong>：</p>
+<figure data-type="image" tabindex="5"><img src="https://images.shiguangping.com//imgs/20201123233625.png" alt="image-20201123233625601" loading="lazy"></figure>
+<p>在配置中添加<strong>分支源</strong>：</p>
+<figure data-type="image" tabindex="6"><img src="https://images.shiguangping.com//imgs/20201123233831.png" alt="image-20201123233831854" loading="lazy"></figure>
+<p>向下拉，在<strong>Build Configuration</strong>配置项添加Jenkinsfile脚本路径：</p>
+<figure data-type="image" tabindex="7"><img src="https://images.shiguangping.com//imgs/20201123233936.png" alt="image-20201123233936648" loading="lazy"></figure>
+<p>最后，点击保存。这时Jenkins会开始扫描多分支流水线，执行登陆仓库拉取代码，扫描仓库中的每一个分支，寻找Jenkinsfile脚本文件。</p>
+<figure data-type="image" tabindex="8"><img src="https://images.shiguangping.com//imgs/20201122105302.png" alt="image-20201122105302155" loading="lazy"></figure>
+<p>扫描完成之后，回到Jenkins首页，会在面板上看到刚刚添加的<code>FEBS-Cloud</code>任务：</p>
+<figure data-type="image" tabindex="9"><img src="https://images.shiguangping.com//imgs/20201123235834.png" alt="image-20201123235834687" loading="lazy"></figure>
+<p>点进去之后选择dev分支，点击左侧<code>Build with Parameters</code>，开始构建镜像。构建出现问题，可以查看日志，找到问题发生的步骤以及原因。</p>
+<hr>
+<p>打开febs-cloud-web项目，编写脚本文件：</p>
+<img src="https://images.shiguangping.com//imgs/20201124000634.png" alt="image-20201124000634274" style="zoom:50%;" />
+<p>Jenkins脚本：</p>
+<p>::: details Jenkinsfile</p>
+<pre><code class="language-groovy">#!groovy
+pipeline {
+	agent any
+
+	parameters {
+		choice(
+				description: '你需要选择哪个环境进行构建 ?',
+				name: 'profile',
+				choices: ['development', 'testing', 'production']
+		)
+
+		string(
+				description: '你要构建的版本 ?',
+				name: 'pversion',
+				defaultValue: '1.0.0',
+		)
+
+		choice(
+				description: '是否强制安装依赖？',
+				name: 'install',
+				choices: ['0', '1']
+		)
+	}
+
+	stages {
+		stage('Build docker') {
+			environment {
+				ACCESS_DOCKER = credentials('docker-register')
+				REGISTRY_URL = 'localhost:7888'
+				PROJECT_NAME = 'febs-cloud-web'
+			}
+			steps {
+				sh &quot;docker login -u ${ACCESS_DOCKER_USR} -p ${ACCESS_DOCKER_PSW} ${REGISTRY_URL}&quot;
+				sh &quot;./scripts/jenkins-deploy.sh -p ${PROJECT_NAME} -e ${params.profile} -v ${params.pversion} -i ${params.install}&quot;
+			}
+		}
+	}
+}
+</code></pre>
+<p>:::</p>
+<p>jenkins-deploy.sh脚本：</p>
+<p>::: details jenkins-deploy.sh</p>
+<pre><code class="language-bash">#!/bin/bash
+##
+## 自动化构建部署脚本
+##
+## Started on 2020/11/22 Liyan &lt;18525589998@163.com&gt;
+## Last update 2020/11/22 Liyan &lt;18525589998@163.com&gt;
+##
+
+set -e
+
+version=&quot;1.0.0&quot;
+
+# Colours
+red=&quot;\033[91m&quot;
+green=&quot;\033[92m&quot;
+yellow=&quot;\033[93m&quot;
+magenta=&quot;\033[95m&quot;
+cyan=&quot;\033[96m&quot;
+none=&quot;\033[0m&quot;
+
+# 项目名称
+project_name=&quot;&quot;
+
+# 环境：development, testing, production
+profile_name=development
+
+# 构建版本：1.0.0
+project_version=1.0.0
+
+# 强制安装依赖
+install_dependencies=0
+
+usage() {
+  echo -e &quot;$red Usage:`basename $0` -p [Project Name] -e [development | testing | production] -v [Build Version] | -i [install]$none&quot;
+
+  exit 1
+}
+
+# 获取输入参数
+while getopts &quot;hp:e:v:i:&quot; opt; do
+  case $opt in
+  h)
+    usage
+    ;;
+  p)
+    project_name=$OPTARG
+    ;;
+  e)
+    profile_name=$OPTARG
+    ;;
+  v)
+    project_version=$OPTARG
+    ;;
+  i)
+    install_dependencies=$OPTARG
+    ;;
+  ?)
+    usage
+    ;;
+  esac
+done
+
+# 检查输入参数
+echo $*
+if [ $# == 0 ]; then
+  usage
+fi
+
+if [ -z $project_name ]; then
+  usage
+fi
+
+# 脚本执行工作路径
+work_path=$(
+  cd &quot;$(dirname &quot;$0&quot;)&quot;;
+  pwd
+)
+project_path=$(
+  cd &quot;$work_path&quot;;
+  cd ../;
+  pwd
+)
+
+# docker 镜像仓库地址
+docker_registry_uri=&quot;localhost:7888/febs&quot;
+docker_file_path=&quot;${project_path}/Dockerfile&quot;
+
+# 定义环境和镜像 tag 后缀映射
+declare -A image_tag_suffix_map=([&quot;development&quot;]=&quot;dev&quot; [&quot;testing&quot;]=&quot;staging&quot; [&quot;production&quot;]=&quot;release&quot;)
+declare -A profile_map=([&quot;development&quot;]=&quot;stage&quot; [&quot;testing&quot;]=&quot;stage&quot; [&quot;production&quot;]=&quot;prod&quot;)
+
+# 镜像tag
+image_tag=&quot;${project_version}-${image_tag_suffix_map[$profile_name]}&quot;
+
+# 执行环境
+profile=&quot;${profile_map[$profile_name]}&quot;
+
+# 镜像地址
+image_path=&quot;${docker_registry_uri}/${project_name}:${image_tag}&quot;
+
+# package 签名
+package_lock=&quot;${project_path}/package-lock.json&quot;
+package_md5_file=&quot;${work_path}/package-md5&quot;
+touch $package_md5_file
+package_md5=$(head -n 1 ${package_md5_file})
+package_md5_changed=0
+
+# 校验 package 版本
+check_version() {
+  echo -e &quot;$cyan ==========比较依赖版本========== $none&quot;
+
+  current_package_md5=$(md5sum ${package_lock} | cut -d&quot; &quot; -f 1)
+
+  echo -e &quot;$cyan prev: ${package_md5} current: ${current_package_md5}  $none&quot;
+
+  if [ &quot;$current_package_md5&quot; != &quot;$package_md5&quot; ]; then
+    echo -e &quot;$cyan ==========依赖有变化========== $none&quot;
+    echo $current_package_md5 &gt;${package_md5_file}
+    package_md5_changed=1
+  else
+    echo -e &quot;$cyan ==========依赖无变化========== $none&quot;
+  fi
+}
+
+deploy() {
+  echo &quot;==============================&quot;
+  echo -e &quot;$yellow 即将部署 $none&quot;
+  echo
+  echo -e &quot;$cyan ${image_path} $none&quot;
+  echo
+  echo &quot;==============================&quot;
+
+  check_version
+
+  if [[ $package_md5_changed -eq 1 || $install_dependencies -eq 1 ]]; then
+    echo -e &quot;$cyan ==========安装依赖========== $none&quot;
+    pwd
+
+    # 安装依赖
+    npm install --registry=https://registry.npm.taobao.org --unsafe-perm=true --allow-root
+  fi
+
+  echo -e &quot;$cyan ==========开始构建========== $none&quot;
+  pwd
+
+  # 打包
+  npm run build:${profile}
+
+  echo -e &quot;$cyan ==========开始构建镜像文件========== $none&quot;
+  # 构建镜像
+  docker build -t &quot;${image_path}&quot; -f ${docker_file_path} ${project_path}
+
+  echo -e &quot;$cyan ==========发布镜像========== $none&quot;
+  # 发布镜像
+  docker push ${image_path}
+
+  echo
+  echo -e &quot;${green}===============部署成功===============${none}&quot;
+  echo
+
+}
+
+# 开始执行
+deploy
+</code></pre>
+<p>:::</p>
+<p>Dockerfile：</p>
+<p>::: details Dockerfile</p>
+<pre><code class="language-dockerfile">FROM nginx:alpine
+
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY dist/ /etc/nginx/html
+
+EXPOSE 80
+</code></pre>
+<p>:::</p>
+<p>脚本编辑好后，推送代码到Gitlab。</p>
+<p>回到Jenkins，新建任务，选择多分支流水线，添加分支源以及Jenkinsfile文件路径后点击保存。任务创建完成后，尝试构建项目。</p>
+<p>我在第一次构建时遇到了<code>npm: command not found</code>错误，这是因为Docker部署的Jenkins容器内没有node环境。</p>
+<p>::: details</p>
+<p>终端输入以下命令进入Jenkins容器：</p>
+<pre><code class="language-bash">docker exec -it Jenkins /bin/bash
+</code></pre>
+<p>下载nodejs并解压：</p>
+<pre><code class="language-bash">wget https://nodejs.org/dist/v14.15.1/node-v14.15.1-linux-x64.tar.xz
+
+tar -xvf node-v14.15.1-linux-x64.tar.xz
+</code></pre>
+<p>配置环境变量：</p>
+<pre><code class="language-bash">vim /etc/profile
+# 或者使用vi
+vi /etc/profile
+</code></pre>
+<p>profile:</p>
+<pre><code class="language-profile">export NODE=/opt/node-v15.2.1-linux-x64/bin
+export PATH=$NODE:$PATH
+</code></pre>
+<p>使环境变量生效：</p>
+<pre><code class="language-bash">source /etc/profile
+</code></pre>
+<p>打印当前环境变量：</p>
+<pre><code class="language-bash">echo $PATH
+</code></pre>
+<figure data-type="image" tabindex="10"><img src="https://images.shiguangping.com//imgs/20201124003656.png" alt="image-20201124003656181" loading="lazy"></figure>
+<p>复制终端输出的环境变量，回到Jenkins，系统管理 -&gt; 系统配置，全局属性中添加环境变量，如下图，将终端复制的环境变量粘贴过来，保存。</p>
+<figure data-type="image" tabindex="11"><img src="https://images.shiguangping.com//imgs/20201124003421.png" alt="image-20201124003421166" loading="lazy"></figure>
+<p>然后，回到前端任务，再次尝试构建。</p>
+<p>:::</p>
+<hr>
+<p>前后端分别构建成功后，登陆Harbor，进入febs项目，镜像都被推送到仓库中。至此，整个构建流程结束。</p>
+<figure data-type="image" tabindex="12"><img src="https://images.shiguangping.com//imgs/20201124004306.png" alt="image-20201124004306614" loading="lazy"></figure>
+<h2 id="二-部署服务">二、部署服务</h2>
+<p>创建Swarm集群，拉取镜像：</p>
+<pre><code class="language-bash">docker pull swarm
+</code></pre>
+<p>初始化：</p>
+<pre><code class="language-bash">docker swarm init
+</code></pre>
+<p>初始化Swarm，当前服务器节点成为管理节点，通过下图命令可以向Swarm中添加工作节点。</p>
+<figure data-type="image" tabindex="13"><img src="https://images.shiguangping.com//imgs/20201122194938.png" alt="image-20201122194938799" loading="lazy"></figure>
+<p>编写前后端docker-compose：</p>
+<p>docker-compose-backend.yml</p>
+<p>::: details docker-compose-backend.yml</p>
+<pre><code class="language-yaml">version: &quot;3&quot;
+
+services:
+  febs-gateway-service:
+    image: localhost:7888/febs/febs-gateway:1.0.0-SNAPSHOT
+    ports:
+      - &quot;8301:8301&quot;
+    networks:
+      - febs-net-test
+    extra_hosts:
+      - &quot;dockerhost:10.0.11.1&quot;
+    env_file:
+      - ./env
+    environment:
+      - SW_AGENT_NAME=gateway
+    volumes:
+      - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /root/docker-deploy/skywalking/agent:/agent
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      update_config:
+        parallelism: 1
+        delay: 10s
+      resources:
+        limits:
+          cpus: &quot;1&quot;
+          memory: 1024M
+    logging:
+      driver: &quot;json-file&quot;
+      options:
+        max-size: &quot;20m&quot;
+        max-file: &quot;2&quot;
+
+  febs-admin-service:
+    image: localhost:7888/febs/febs-admin:1.0.0-SNAPSHOT
+    ports:
+      - &quot;8401:8401&quot;
+    networks:
+      - febs-net-test
+    extra_hosts:
+      - &quot;dockerhost:10.0.11.1&quot;
+    env_file:
+      - ./env
+    environment:
+      - SW_AGENT_NAME=admin
+    volumes:
+      - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /root/docker-deploy/skywalking/agent:/agent
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      update_config:
+        parallelism: 1
+        delay: 10s
+      resources:
+        limits:
+          cpus: &quot;1&quot;
+          memory: 1024M
+    logging:
+      driver: &quot;json-file&quot;
+      options:
+        max-size: &quot;20m&quot;
+        max-file: &quot;2&quot;
+
+  febs-tx-manager-service:
+    image: localhost:7888/febs/febs-tx-manager:1.0.0-SNAPSHOT
+    ports:
+      - &quot;8888:8888&quot;
+      - &quot;8501:8501&quot;
+    networks:
+      - febs-net-test
+    extra_hosts:
+      - &quot;dockerhost:10.0.11.1&quot;
+    env_file:
+      - ./env
+    environment:
+      - SW_AGENT_NAME=tx-manager
+    volumes:
+      - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /root/docker-deploy/skywalking/agent:/agent
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      update_config:
+        parallelism: 1
+        delay: 10s
+      resources:
+        limits:
+          cpus: &quot;1&quot;
+          memory: 1024M
+    logging:
+      driver: &quot;json-file&quot;
+      options:
+        max-size: &quot;20m&quot;
+        max-file: &quot;2&quot;
+
+  febs-auth-service:
+    image: localhost:7888/febs/febs-auth:1.0.0-SNAPSHOT
+    networks:
+      - febs-net-test
+    extra_hosts:
+      - &quot;dockerhost:10.0.11.1&quot;
+    env_file:
+      - ./env
+    environment:
+      - SW_AGENT_NAME=auth
+    volumes:
+      - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /root/docker-deploy/skywalking/agent:/agent
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      update_config:
+        parallelism: 1
+        delay: 10s
+      resources:
+        limits:
+          cpus: &quot;1&quot;
+          memory: 1024M
+    logging:
+      driver: &quot;json-file&quot;
+      options:
+        max-size: &quot;20m&quot;
+        max-file: &quot;2&quot;
+
+  febs-job-service:
+    image: localhost:7888/febs/febs-server-job:1.0.0-SNAPSHOT
+    networks:
+      - febs-net-test
+    extra_hosts:
+      - &quot;dockerhost:10.0.11.1&quot;
+    env_file:
+      - ./env
+    environment:
+      - SW_AGENT_NAME=job
+    volumes:
+      - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /root/docker-deploy/skywalking/agent:/agent
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      update_config:
+        parallelism: 1
+        delay: 10s
+      resources:
+        limits:
+          cpus: &quot;1&quot;
+          memory: 1024M
+    logging:
+      driver: &quot;json-file&quot;
+      options:
+        max-size: &quot;20m&quot;
+        max-file: &quot;2&quot;
+
+  febs-generator-service:
+    image: localhost:7888/febs/febs-server-generator:1.0.0-SNAPSHOT
+    networks:
+      - febs-net-test
+    extra_hosts:
+      - &quot;dockerhost:10.0.11.1&quot;
+    env_file:
+      - ./env
+    environment:
+      - SW_AGENT_NAME=generator
+    volumes:
+      - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /root/docker-deploy/skywalking/agent:/agent
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      update_config:
+        parallelism: 1
+        delay: 10s
+      resources:
+        limits:
+          cpus: &quot;1&quot;
+          memory: 1024M
+    logging:
+      driver: &quot;json-file&quot;
+      options:
+        max-size: &quot;20m&quot;
+        max-file: &quot;2&quot;
+
+  febs-system-service:
+    image: localhost:7888/febs/febs-server-system:1.0.0-SNAPSHOT
+    networks:
+      - febs-net-test
+    extra_hosts:
+      - &quot;dockerhost:10.0.11.1&quot;
+    env_file:
+      - ./env
+    environment:
+      - SW_AGENT_NAME=system
+    volumes:
+      - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /root/docker-deploy/skywalking/agent:/agent
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      update_config:
+        parallelism: 1
+        delay: 10s
+      resources:
+        limits:
+          cpus: &quot;1&quot;
+          memory: 1024M
+    logging:
+      driver: &quot;json-file&quot;
+      options:
+        max-size: &quot;20m&quot;
+        max-file: &quot;2&quot;
+
+networks:
+  febs-net-test:
+    external: true
+</code></pre>
+<p>:::</p>
+<p>docker-compose-frontend.yml</p>
+<p>::: details docker-compose-frontend.yml</p>
+<pre><code class="language-yaml">version: &quot;3&quot;
+
+services:
+  febs-cloud-web:
+    image: localhost:7888/febs/febs-cloud-web:1.0.0-staging
+    ports:
+      - &quot;3901:80&quot;
+    volumes:
+      - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      update_config:
+        parallelism: 1
+        delay: 10s
+      resources:
+        limits:
+          cpus: &quot;0.5&quot;
+          memory: 512M
+    logging:
+      driver: &quot;json-file&quot;
+      options:
+        max-size: &quot;20m&quot;
+        max-file: &quot;2&quot;
+</code></pre>
+<p>:::</p>
+<p>env:</p>
+<p>::: details env</p>
+<pre><code># JVM
+JAVA_OPTS=-Xmx800m -Xms800m -javaagent:/agent/skywalking-agent.jar -Dskywalking.collector.backend_service=192.168.3.6:11800
+# SPRING_OPTS=--server.tomcat.max-threads=200
+SPRING_OPTS=--spring.cloud.nacos.discovery.namespace=febs-cloud-test --spring.cloud.nacos.config.namespace=febs-cloud-test
+
+NACOS_URL=192.168.3.6
+MYSQL_URL=192.168.3.6
+REDIS_URL=192.168.3.6
+MONGO_URL=192.168.3.6
+FEBS_TX_MANAGER=192.168.3.6
+FEBS_ADMIN=febs-admin-service
+FEBS_GATEWAY=febs-gateway-service
+</code></pre>
+<p>:::</p>
+<p>通过Portainer创建Networks，如下图：（或者在终端使用docker命令创建网络）</p>
+<figure data-type="image" tabindex="14"><img src="https://images.shiguangping.com//imgs/20201122201000.png" alt="image-20201122200959957" loading="lazy"></figure>
+<p>创建后端服务：</p>
+<pre><code class="language-bash">docker stack deploy -c docker-compose.backend.test.yml febs-cloud-backend --with-registry-auth
+</code></pre>
+<figure data-type="image" tabindex="15"><img src="https://images.shiguangping.com//imgs/20201122201107.png" alt="image-20201122201107858" loading="lazy"></figure>
+<p>创建前端服务：</p>
+<pre><code class="language-bash">docker stack deploy -c docker-compose.frontend.test.yml febs-cloud-frontend --with-registry-auth
+</code></pre>
+<figure data-type="image" tabindex="16"><img src="https://images.shiguangping.com//imgs/20201122203443.png" alt="image-20201122203443158" loading="lazy"></figure>
+<hr>
+<p>至此，微服务项目部署完成。（前端要修改后端API地址后才可正常访问服务）</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">演示地址</th>
+<th style="text-align:center">用户名</th>
+<th style="text-align:center">密码</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><a href="http://centos.liyan.run:3901/">http://centos.liyan.run:3901/</a></td>
+<td style="text-align:center">scott</td>
+<td style="text-align:center">1234qwer</td>
+</tr>
+</tbody>
+</table>
+<p><em>服务器性能和网络带宽问题，访问有点儿慢</em></p>
+
+        </div>
+        <!-- Share to Twitter, Weibo, Telegram -->
+        <div class="flex items-center">
+          <div class="mr-4 flex items-center">
+            <i class="ri-share-forward-line text-gray-500"></i>
+          </div>
+          <div class="px-4 cursor-pointer text-blue-500 hover:bg-blue-100 dark:hover:bg-gray-600 inline-flex" @click="shareToTwitter">
+            <i class="ri-twitter-line"></i>
+          </div>
+          <div class="px-4 cursor-pointer text-red-500 hover:bg-red-100 dark:hover:bg-gray-600 inline-flex" @click="shareToWeibo">
+            <i class="ri-weibo-line"></i>
+          </div>
+          <div class="px-4 cursor-pointer text-indigo-500 hover:bg-indigo-100 dark:hover:bg-gray-600 inline-flex" @click="shareToTelegram">
+            <i class="ri-telegram-line"></i>
+          </div>
+        </div>
+      </div>
+
+      
+
+      
+        <div id="vlaine-comment"></div>
+      
+
+      <footer class="py-12 text-center px-4 md:px-0" v-pre>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">時光瓶</a>
+</footer>
+    </div>
+
+    <!-- TOC Container -->
+    <div class="fixed right-0 bottom-0 mb-16 mr-4 shadow w-8 h-8 rounded-full flex justify-center items-center z-10 cursor-pointer bg-white dark:bg-gray-500 dark:text-gray-200 hover:shadow-lg transition-all animated fadeInRight" @click="showToc = true">
+      <i class="ri-file-list-line"></i>
+    </div>
+
+    <div class="fixed right-0 top-0 bottom-0 overflow-y-auto w-64 bg-white dark:bg-gray-800 p-4 border-l border-gray-100 dark:border-gray-600 z-10 transition-fast" :class="{ '-mr-64': !showToc }">
+      <div class="flex mb-4 justify-end">
+        <div class="w-8 h-8 inline-flex justify-center items-center rounded-full cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-fast" @click="showToc = false">
+          <i class="ri-close-line text-lg"></i>
+        </div>
+      </div>
+      <div class="post-toc-container">
+        <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C">准备工作</a></li>
+<li><a href="#%E4%B8%80-%E6%9E%84%E5%BB%BA%E9%95%9C%E5%83%8F">一、构建镜像</a></li>
+<li><a href="#%E4%BA%8C-%E9%83%A8%E7%BD%B2%E6%9C%8D%E5%8A%A1">二、部署服务</a></li>
+</ul>
+</li>
+</ul>
+
+      </div>
+    </div>
+
+    <!-- Back to top -->
+    <div class="fixed right-0 bottom-0 mb-4 mr-4 shadow w-8 h-8 rounded-full flex justify-center items-center z-10 cursor-pointer bg-white hover:shadow-lg transition-all dark:bg-gray-500 dark:text-gray-200" @click="backToUp" v-show="scrolled">
+      <i class="ri-arrow-up-line"></i>
+    </div>
+  </div>
+
+  <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+  <!-- Background of PhotoSwipe. 
+        It's a separate element as animating opacity is faster than rgba(). -->
+  <div class="pswp__bg">
+  </div>
+  <!-- Slides wrapper with overflow:hidden. -->
+  <div class="pswp__scroll-wrap">
+    <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+    <div class="pswp__container">
+      <div class="pswp__item">
+      </div>
+      <div class="pswp__item">
+      </div>
+      <div class="pswp__item">
+      </div>
+    </div>
+    <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+    <div class="pswp__ui pswp__ui--hidden">
+      <div class="pswp__top-bar">
+        <!--  Controls are self-explanatory. Order can be changed. -->
+        <div class="pswp__counter">
+        </div>
+        <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+        <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+        <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+        <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+        <!-- element will get class pswp__preloader--active when preloader is running -->
+        <div class="pswp__preloader">
+          <div class="pswp__preloader__icn">
+            <div class="pswp__preloader__cut">
+              <div class="pswp__preloader__donut">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+        <div class="pswp__share-tooltip">
+        </div>
+      </div>
+      <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+      </button>
+      <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+      </button>
+      <div class="pswp__caption">
+        <div class="pswp__caption__center">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://www.shiguangping.com/media/scripts/main.js"></script>
+  
+  <!-- Code Highlight -->
+  
+    <script src="https://www.shiguangping.com/media/prism.js"></script>
+    <script>
+      Prism.highlightAll()
+    </script>
+  
+
+  <script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+  <script>
+    //拿到预览框架，也就是上面的html代码
+    var pswpElement = document.querySelectorAll('.pswp')[0];
+    //定义图片数组变量
+    var imgitems;
+    /**
+    * 用于显示预览界面
+    * @param index 图片数组下标
+    */
+    function viewImg(index) {
+      //其它选项这里不做过多阐述，详情见官网
+      var pswpoptions = {
+        index: parseInt(index, 10), // 开始幻灯片索引。0是第一张幻灯片。必须是整数，而不是字符串。
+        bgOpacity: 0.7, // 背景透明度，0-1
+        maxSpreadZoom: 3, // 缩放级别，不要太大
+      };
+      //初始化并打开PhotoSwipe，pswpElement对应上面预览框架，PhotoSwipeUI_Default为皮肤，imgitems为图片数组，pswpoptions为选项
+      var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, imgitems, pswpoptions);
+      gallery.init()
+    }
+    /**
+    * 用于添加图片点击事件
+    * @param img 图片元素
+    * @param index 所属下标（在imgitems中的位置）
+    */
+    function addImgClick(img, index) {
+      img.onclick = function() {
+        viewImg(index)
+      }
+    }
+    /**
+    * 轮询所有图片，获取src、width、height等数据，加入imgitems，并给图片元素添加事件
+    * 最好在onload中执行该方法，本站因放在最底部，所以直接初始化
+    * 异步加载图片可在图片元素创建完成后调用此方法
+    */
+    function initImg() {
+      //重置图片数组
+      imgitems = [];
+      //查找class:markdown 下的所有img元素并遍历
+      var imgs = document.querySelectorAll('.markdown img');
+      for (var i = 0; i < imgs.length; i++) {
+        var img = imgs[i];
+        //本站相册初始为loading图片，真实图片放在data-src
+        var ds = img.getAttribute("data-src");
+        //创建image对象，用于获取图片宽高
+        var imgtemp = new Image();
+        //判断是否存在data-src
+        if (ds != null && ds.length > 0) {
+          imgtemp.src = ds
+        } else {
+          imgtemp.src = img.src
+        }
+        //判断是否存在缓存
+        if (imgtemp.complete) {
+          var imgobj = {
+            "src": imgtemp.src,
+            "w": imgtemp.width,
+            "h": imgtemp.height,
+          };
+          imgitems[i] = imgobj;
+          addImgClick(img, i);
+        } else {
+          console.log('进来了2')
+          imgtemp.index = i;
+          imgtemp.img = img;
+          imgtemp.onload = function() {
+            var imgobj = {
+              "src": this.src,
+              "w": this.width,
+              "h": this.height,
+            };
+            //不要使用push，因为onload前后顺序会不同
+            imgitems[this.index] = imgobj
+            //添加点击事件
+            addImgClick(this.img, this.index);
+          }
+        }
+      }
+    }
+    //初始化
+    initImg();
+  </script>
+  
+    <script type="application/javascript" src="https://unpkg.com/valine"></script>
+<script type="application/javascript">
+  new Valine({
+    el: '#vlaine-comment',
+    appId: 'iScdY0hF5Y8TgKyMtfvp9CcM-gzGzoHsz',
+    appKey: 'XH2m9KIiA88R6N2lYiSObDH7',
+    pageSize: 10,
+    notify: false,
+    avatar: 'mp',
+    verify: false,
+    placeholder: '来都来了，不妨评论一下',
+    visitor: true,
+    highlight: false,
+    recordIP: false,
+  })
+</script>
+  
+  
+</body>
+
+</html>
