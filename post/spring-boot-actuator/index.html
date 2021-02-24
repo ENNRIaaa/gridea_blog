@@ -24,16 +24,22 @@
     
 
   <meta name="description" content="Spring Boot 添加Actuator
+
+用来监控Spring Boot应用的运行情况
+
+添加Actuator
 引入依赖。
 &amp;lt;dependency&amp;gt;
-  &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt;
-  &amp;lt;artifact..." />
+  &amp;lt;groupId&amp;gt;org.springframework..." />
   <meta property="og:title" content="Spring Boot Actuator - 時光瓶">
   <meta property="og:description" content="Spring Boot 添加Actuator
+
+用来监控Spring Boot应用的运行情况
+
+添加Actuator
 引入依赖。
 &amp;lt;dependency&amp;gt;
-  &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt;
-  &amp;lt;artifact..." />
+  &amp;lt;groupId&amp;gt;org.springframework..." />
   <meta property="og:type" content="articles">
   <meta property="og:url" content="https://www.shiguangping.com/post/spring-boot-actuator/" />
   <meta property="og:image" content="https://www.shiguangping.com/images/avatar.png">
@@ -41,10 +47,13 @@
   <meta property="og:image:width" content="1200">
   <meta name="twitter:title" content="Spring Boot Actuator - 時光瓶">
   <meta name="twitter:description" content="Spring Boot 添加Actuator
+
+用来监控Spring Boot应用的运行情况
+
+添加Actuator
 引入依赖。
 &amp;lt;dependency&amp;gt;
-  &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt;
-  &amp;lt;artifact...">
+  &amp;lt;groupId&amp;gt;org.springframework...">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="canonical" href="https://www.shiguangping.com/post/spring-boot-actuator/">
 
@@ -70,7 +79,7 @@
         </h1>
         
         <div class="mb-8 flex flex-wrap">
-          <div class="text-gray-400 text-sm mr-4">2021-02-24 · 2 min read</div>
+          <div class="text-gray-400 text-sm mr-4">2021-02-24 · 7 min read</div>
           
             <a href="https://www.shiguangping.com/tag/DSYr5-EhS/" class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
               <i class="ri-hashtag"></i>
@@ -80,6 +89,10 @@
         </div>
         <div class="markdown mb-8" v-pre>
           <h2 id="spring-boot-添加actuator">Spring Boot 添加Actuator</h2>
+<blockquote>
+<p>用来监控Spring Boot应用的运行情况</p>
+</blockquote>
+<h3 id="添加actuator">添加Actuator</h3>
 <p>引入依赖。</p>
 <pre><code class="language-xml">&lt;dependency&gt;
   &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
@@ -116,14 +129,15 @@
 <li><code>/actuator</code></li>
 <li><code>/actuator/health</code>：健康状态</li>
 <li><code>/actuator/health/{*path}</code></li>
-<li><code>/actuator/info</code></li>
+<li><code>/actuator/info</code>：查看项目信息（需要在SpringBoot配置文件中设置info）</li>
 </ul>
-<p>点击<code>/actuator/health</code>端点，后端返回项目状态</p>
+<h3 id="健康状态">健康状态</h3>
+<p>点击<code>/actuator/health</code>端点，后端返回项目运行状况。</p>
 <pre><code class="language-json">{
   &quot;status&quot;: &quot;UP&quot;
 }
 </code></pre>
-<p>后端添加如下配置，重启SpringBoot应用。</p>
+<p>SpringBoot配置文件添加如下配置，重启SpringBoot应用。</p>
 <pre><code class="language-yaml"># Actuator展示详情
 management:
   endpoint:
@@ -149,8 +163,7 @@ management:
   }
 }
 </code></pre>
-<p>从返回数据可以看到磁盘空间，磁盘状态，当磁盘可用空间低于<code>threshold</code>值时，认为该磁盘是不健康的。</p>
-<p>还可以看到ping的状态。</p>
+<p>从返回数据可以看到磁盘空间、磁盘状态等信息，当磁盘可用空间低于<code>threshold</code>阀值时，认为该磁盘状态不健康。还可以看到ping的状态。</p>
 <p><code>status</code>的四种状态：</p>
 <ul>
 <li><code>UP</code>：正常</li>
@@ -158,6 +171,205 @@ management:
 <li><code>OUT OF SERVICE</code>：资源未在使用，或不该使用</li>
 <li><code>UNKNOW</code>：位置</li>
 </ul>
+<h3 id="项目信息">项目信息</h3>
+<p><code>/actuator/info</code>端点可以查看项目信息，该信息在SpringBoot配置文件中设置。</p>
+<p><code>key: valye</code>的形式。</p>
+<pre><code class="language-yaml"># Actuator信息描述
+info.name: spring-boot-actuator
+info.auth: liyan
+info.desc: SpringBoot使用Actuator项目示例
+info.date: 2021.2.24
+</code></pre>
+<p>重启应用，访问<code>/actuator/info</code>端点。</p>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;spring-boot-actuator&quot;,
+  &quot;auth&quot;: &quot;liyan&quot;,
+  &quot;desc&quot;: &quot;SpringBoot使用Actuator项目示例&quot;,
+  &quot;date&quot;: &quot;2021.2.24&quot;
+}
+</code></pre>
+<h3 id="暴露全部端点">暴露全部端点</h3>
+<p>配置文件中添加配置。</p>
+<pre><code class="language-yaml"># Actuator配置
+management:
+  # 健康状态显示详细信息
+  endpoint:
+    health:
+      show-details: always
+  # 设置Actuator要暴露的端点，*代表全部
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+</code></pre>
+<p>重启应用，访问<code>/actuator</code>。</p>
+<pre><code class="language-json">{
+  &quot;_links&quot;: {
+    &quot;self&quot;: {
+      &quot;href&quot;: &quot;http://localhost:8081/actuator&quot;,
+      &quot;templated&quot;: false
+    },
+    &quot;beans&quot;: {
+      &quot;href&quot;: &quot;http://localhost:8081/actuator/beans&quot;,
+      &quot;templated&quot;: false
+    },
+    &quot;caches&quot;: {
+      &quot;href&quot;: &quot;http://localhost:8081/actuator/caches&quot;,
+      &quot;templated&quot;: false
+    },
+    &quot;caches-cache&quot;: {
+      &quot;href&quot;: &quot;http://localhost:8081/actuator/caches/{cache}&quot;,
+      &quot;templated&quot;: true
+    },
+    &quot;health-path&quot;: {
+      &quot;href&quot;: &quot;http://localhost:8081/actuator/health/{*path}&quot;,
+      &quot;templated&quot;: true
+    },
+    &quot;health&quot;: {
+      &quot;href&quot;: &quot;http://localhost:8081/actuator/health&quot;,
+      &quot;templated&quot;: false
+    },
+    &quot;info&quot;: {
+      &quot;href&quot;: &quot;http://localhost:8081/actuator/info&quot;,
+      &quot;templated&quot;: false
+    },
+    &quot;conditions&quot;: {
+      &quot;href&quot;: &quot;http://localhost:8081/actuator/conditions&quot;,
+      &quot;templated&quot;: false
+    },
+    &quot;configprops&quot;: {
+      &quot;href&quot;: &quot;http://localhost:8081/actuator/configprops&quot;,
+      &quot;templated&quot;: false
+    },
+    &quot;env-toMatch&quot;: {
+      &quot;href&quot;: &quot;http://localhost:8081/actuator/env/{toMatch}&quot;,
+      &quot;templated&quot;: true
+    },
+    &quot;env&quot;: {
+      &quot;href&quot;: &quot;http://localhost:8081/actuator/env&quot;,
+      &quot;templated&quot;: false
+    },
+    &quot;loggers-name&quot;: {
+      &quot;href&quot;: &quot;http://localhost:8081/actuator/loggers/{name}&quot;,
+      &quot;templated&quot;: true
+    },
+    &quot;loggers&quot;: {
+      &quot;href&quot;: &quot;http://localhost:8081/actuator/loggers&quot;,
+      &quot;templated&quot;: false
+    },
+    &quot;heapdump&quot;: {
+      &quot;href&quot;: &quot;http://localhost:8081/actuator/heapdump&quot;,
+      &quot;templated&quot;: false
+    },
+    &quot;threaddump&quot;: {
+      &quot;href&quot;: &quot;http://localhost:8081/actuator/threaddump&quot;,
+      &quot;templated&quot;: false
+    },
+    &quot;metrics-requiredMetricName&quot;: {
+      &quot;href&quot;: &quot;http://localhost:8081/actuator/metrics/{requiredMetricName}&quot;,
+      &quot;templated&quot;: true
+    },
+    &quot;metrics&quot;: {
+      &quot;href&quot;: &quot;http://localhost:8081/actuator/metrics&quot;,
+      &quot;templated&quot;: false
+    },
+    &quot;scheduledtasks&quot;: {
+      &quot;href&quot;: &quot;http://localhost:8081/actuator/scheduledtasks&quot;,
+      &quot;templated&quot;: false
+    },
+    &quot;mappings&quot;: {
+      &quot;href&quot;: &quot;http://localhost:8081/actuator/mappings&quot;,
+      &quot;templated&quot;: false
+    }
+  }
+}
+</code></pre>
+<h3 id="预定义端点">预定义端点</h3>
+<table>
+<thead>
+<tr>
+<th>端点(SpringBoot 2.x)</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>/auditevents</td>
+<td>列出与安全审计相关的事件，例如用户登录/注销。此外，我们可以按主要或类型等字段进行过滤</td>
+</tr>
+<tr>
+<td>/beans</td>
+<td>在我们的BeanFactory中使用所有可用的bean</td>
+</tr>
+<tr>
+<td>/conditions</td>
+<td>SpringBoot 1.x时为/autoconfig，构建有关自动配置的条件报告</td>
+</tr>
+<tr>
+<td>/configprops</td>
+<td>允许我们获取所有@ConfigurationProperties的bean</td>
+</tr>
+<tr>
+<td>/env</td>
+<td>返回当前环境属性。此外，我们可以检索单个属性</td>
+</tr>
+<tr>
+<td>/flyway</td>
+<td>提供有关我们的Flyway数据库迁移的详细信息</td>
+</tr>
+<tr>
+<td>/health</td>
+<td>提供有关应用程序的运行状况的详细信息</td>
+</tr>
+<tr>
+<td>/heapdump</td>
+<td>从应用程序的JVM提供了一个堆转储</td>
+</tr>
+<tr>
+<td>/info</td>
+<td>提供有关应用程序的一般信息</td>
+</tr>
+<tr>
+<td>/liquibase</td>
+<td>提供有关Liquibase应用数据库的变更集信息</td>
+</tr>
+<tr>
+<td>/logfile</td>
+<td>可以访问应用程序的日志文件的内容</td>
+</tr>
+<tr>
+<td>/loggers</td>
+<td>可以访问和修改应用程序的记录程序及其级别的配置。</td>
+</tr>
+<tr>
+<td>/metrics</td>
+<td>详细说明我们的应用程序的指标。这可能包括通用指标和自定义指标</td>
+</tr>
+<tr>
+<td>/prometheus</td>
+<td>返回与metrics相同的指标，但格式化为与Prometheus服务器一起使用</td>
+</tr>
+<tr>
+<td>/scheduledtasks</td>
+<td>提供有关应用程序的计划任务的信息</td>
+</tr>
+<tr>
+<td>/sessions</td>
+<td>列出我们正在使用Spring Session的HTTP会话的信息</td>
+</tr>
+<tr>
+<td>/shutdown</td>
+<td>用来关闭应用程序</td>
+</tr>
+<tr>
+<td>/threaddump</td>
+<td>查看底层JVM的线程信息</td>
+</tr>
+</tbody>
+</table>
+<p><code>/actuator/metrics</code>查看虚拟机等指标，返回一个<code>names</code>数组，数组包含各种指标名称，通过访问<code>/actuator/metrics/指标名称</code>查看指标信息。</p>
+<h3 id="更多">更多</h3>
+<p>更多详情可以查看官方文档 <a href="https://docs.spring.io/spring-boot/docs/2.2.x/actuator-api/html/">Spring Boot Actuator Web API Documentation</a></p>
 
         </div>
         <!-- Share to Twitter, Weibo, Telegram -->
@@ -203,7 +415,16 @@ management:
         <ul class="markdownIt-TOC">
 <li>
 <ul>
-<li><a href="#spring-boot-%E6%B7%BB%E5%8A%A0actuator">Spring Boot 添加Actuator</a></li>
+<li><a href="#spring-boot-%E6%B7%BB%E5%8A%A0actuator">Spring Boot 添加Actuator</a>
+<ul>
+<li><a href="#%E6%B7%BB%E5%8A%A0actuator">添加Actuator</a></li>
+<li><a href="#%E5%81%A5%E5%BA%B7%E7%8A%B6%E6%80%81">健康状态</a></li>
+<li><a href="#%E9%A1%B9%E7%9B%AE%E4%BF%A1%E6%81%AF">项目信息</a></li>
+<li><a href="#%E6%9A%B4%E9%9C%B2%E5%85%A8%E9%83%A8%E7%AB%AF%E7%82%B9">暴露全部端点</a></li>
+<li><a href="#%E9%A2%84%E5%AE%9A%E4%B9%89%E7%AB%AF%E7%82%B9">预定义端点</a></li>
+<li><a href="#%E6%9B%B4%E5%A4%9A">更多</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
