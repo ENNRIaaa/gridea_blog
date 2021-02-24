@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://www.shiguangping.com</id>
     <title>時光瓶</title>
-    <updated>2021-02-24T14:57:27.966Z</updated>
+    <updated>2021-02-24T15:18:18.535Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://www.shiguangping.com"/>
     <link rel="self" href="https://www.shiguangping.com/atom.xml"/>
@@ -10,6 +10,93 @@
     <logo>https://www.shiguangping.com/images/avatar.png</logo>
     <icon>https://www.shiguangping.com/favicon.ico</icon>
     <rights>All rights reserved 2021, 時光瓶</rights>
+    <entry>
+        <title type="html"><![CDATA[Spring Boot Actuator]]></title>
+        <id>https://www.shiguangping.com/post/spring-boot-actuator/</id>
+        <link href="https://www.shiguangping.com/post/spring-boot-actuator/">
+        </link>
+        <updated>2021-02-24T14:23:00.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="spring-boot-添加actuator">Spring Boot 添加Actuator</h2>
+<p>引入依赖。</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+  &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+  &lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>启动项目，访问Actuator端点。</p>
+<pre><code>http://localhost:8081/actuator
+</code></pre>
+<p>后端返回Json数据，里面包含四个Actuator导航端点。</p>
+<pre><code class="language-json">{
+  &quot;_links&quot;: {
+    &quot;self&quot;: {
+      &quot;href&quot;: &quot;http://localhost:8081/actuator&quot;,
+      &quot;templated&quot;: false
+    },
+    &quot;health&quot;: {
+      &quot;href&quot;: &quot;http://localhost:8081/actuator/health&quot;,
+      &quot;templated&quot;: false
+    },
+    &quot;health-path&quot;: {
+      &quot;href&quot;: &quot;http://localhost:8081/actuator/health/{*path}&quot;,
+      &quot;templated&quot;: true
+    },
+    &quot;info&quot;: {
+      &quot;href&quot;: &quot;http://localhost:8081/actuator/info&quot;,
+      &quot;templated&quot;: false
+    }
+  }
+}
+</code></pre>
+<p>端点说明：</p>
+<ul>
+<li><code>/actuator</code></li>
+<li><code>/actuator/health</code>：健康状态</li>
+<li><code>/actuator/health/{*path}</code></li>
+<li><code>/actuator/info</code></li>
+</ul>
+<p>点击<code>/actuator/health</code>端点，后端返回项目状态</p>
+<pre><code class="language-json">{
+  &quot;status&quot;: &quot;UP&quot;
+}
+</code></pre>
+<p>后端添加如下配置，重启SpringBoot应用。</p>
+<pre><code class="language-yaml"># Actuator展示详情
+management:
+  endpoint:
+    health:
+      show-details: always
+</code></pre>
+<p>访问<code>/actuator/health</code>端点。</p>
+<pre><code class="language-json">{
+  &quot;status&quot;: &quot;UP&quot;,
+  &quot;components&quot;: {
+    &quot;diskSpace&quot;: {
+      &quot;status&quot;: &quot;UP&quot;,
+      &quot;details&quot;: {
+        &quot;total&quot;: 999995129856,
+        &quot;free&quot;: 796211884032,
+        &quot;threshold&quot;: 10485760,
+        &quot;exists&quot;: true
+      }
+    },
+    &quot;ping&quot;: {
+      &quot;status&quot;: &quot;UP&quot;
+    }
+  }
+}
+</code></pre>
+<p>从返回数据可以看到磁盘空间，磁盘状态，当磁盘可用空间低于<code>threshold</code>值时，认为该磁盘是不健康的。</p>
+<p>还可以看到ping的状态。</p>
+<p><code>status</code>的四种状态：</p>
+<ul>
+<li><code>UP</code>：正常</li>
+<li><code>DOWN</code>：遇到了问题</li>
+<li><code>OUT OF SERVICE</code>：资源未在使用，或不该使用</li>
+<li><code>UNKNOW</code>：位置</li>
+</ul>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[SpringBoot 统一异常处理]]></title>
         <id>https://www.shiguangping.com/post/spring-boot-exception-handle/</id>
@@ -1437,119 +1524,6 @@ public class SimpleTest {
 </ol>
 <h2 id="github源码">Github源码</h2>
 <p><a href="https://github.com/ENNRIaaa/SpringBootShip/tree/main/springboot-starter">springboot-starter</a></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[回顾Spring Boot]]></title>
-        <id>https://www.shiguangping.com/post/spring-boot-1/</id>
-        <link href="https://www.shiguangping.com/post/spring-boot-1/">
-        </link>
-        <updated>2021-01-08T16:00:00.000Z</updated>
-        <content type="html"><![CDATA[<p>2020年4月12日开始学习Java，8月17日进入公司工作，从此步入了程序员这一行，同时也做好了在这一行持续耕耘的准备。</p>
-<p>学习Java Web开发，必然要学习Spring框架，这是Java Web开发的春天。现在有了分布式、微服务的概念，必然也要学习Spring Boot，Spring项目快速开发脚手架。Spring开发需要手动配置Bean，配置各种依赖，在Spring Boot中不需要，一切都由Spring Boot做好了。引入一个Starter，极少量的配置，就可以愉快滴使用容器中的Bean。</p>
-<p>Spring Boot的概念一句话就能概括，<strong>自动配置，开箱即用</strong>，但是了解自动配置原理远比学习Spring的使用要复杂的多。</p>
-<h2 id="spring">Spring</h2>
-<p>Spring两个核心的概念：<strong>IoC</strong>控制反转（通过依赖注入实现），和<strong>AOP</strong>面向切面编程。Spring也被理解成是一个<strong>IoC容器</strong>，将一个个对象抽象成<strong>Bean</strong>存放到容器中，被Spring管理。</p>
-<h2 id="spring-boot特征">Spring Boot特征</h2>
-<ul>
-<li>可以创建单体应用，也是开发微服务项目的基础；</li>
-<li>内嵌 Tomcat, Jetty or Undertow容器，无需依赖 WAR 包，使得部署项目更便捷；</li>
-<li>提供了独特的<code>starter</code>依赖，简化配置；</li>
-<li>尽可能地自动配置Spring和第三方依赖；</li>
-<li>提供指标、运行状况检查和外部化配置等生产就绪功能；</li>
-<li>绝对不需要代码生成，也不需要配置XML。</li>
-</ul>
-<p>以上是Spring Boot的特点，它还有一个特征，就是使用简单，但学习成本高。因为它实现了自动配置，屏蔽了大多数细节，想真正理解、精通自动配置需要花费精力去学习。</p>
-<p>Spring官方地址：<a href="https://spring.io/">https://spring.io/</a></p>
-<h2 id="第一个spring-boot应用">第一个Spring Boot应用</h2>
-<p>官方文档：<a href="https://docs.spring.io/spring-boot/docs/current/reference/html/getting-started.html#getting-started-first-application-pom">https://docs.spring.io/spring-boot/docs/current/reference/html/getting-started.html#getting-started-first-application-pom</a></p>
-<h3 id="创建项目">创建项目</h3>
-<p>创建名为<code>tx_sboot</code>的Maven项目：</p>
-<figure data-type="image" tabindex="1"><img src="https://images.shiguangping.com/imgs/20210109121227.png" alt="image-20210109121227386" loading="lazy"></figure>
-<h3 id="pom添加依赖">POM添加依赖</h3>
-<p>在POM文件中引入Spring Boot：</p>
-<p>::: details POM</p>
-<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
-         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
-    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
-
-    &lt;groupId&gt;cn.tx.springboot&lt;/groupId&gt;
-    &lt;artifactId&gt;tx_sboot&lt;/artifactId&gt;
-    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
-  	&lt;!-- 打包方式 --&gt;
-    &lt;packaging&gt;pom&lt;/packaging&gt;
-		
-  	&lt;!-- 引入Spring Boot --&gt;
-    &lt;parent&gt;
-        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-        &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
-        &lt;version&gt;2.4.1&lt;/version&gt;
-    &lt;/parent&gt;
-
-    &lt;properties&gt;
-        &lt;maven.compiler.source&gt;8&lt;/maven.compiler.source&gt;
-        &lt;maven.compiler.target&gt;8&lt;/maven.compiler.target&gt;
-    &lt;/properties&gt;
-
-&lt;/project&gt;
-</code></pre>
-<p>:::</p>
-<p>添加<code>starter</code>依赖：</p>
-<p>:::details POM</p>
-<pre><code class="language-xml">&lt;dependencies&gt;
-  &lt;dependency&gt;
-    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-    &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
-  &lt;/dependency&gt;
-&lt;/dependencies&gt;
-</code></pre>
-<p>:::</p>
-<p><code>spring-boot-starter-web</code>依赖中包含了Spring MVC、Tomcat等一组依赖。</p>
-<figure data-type="image" tabindex="2"><img src="https://images.shiguangping.com/imgs/20210109121854.png" alt="image-20210109121854649" loading="lazy"></figure>
-<h3 id="写代码">写代码</h3>
-<p>创建Controller类：</p>
-<p>::: details 测试类</p>
-<pre><code class="language-java">package cn.tx.sboot;
-
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-/**
- * @author liyan
- */
-@RestController
-public class TestController {
-
-    @RequestMapping(&quot;hello&quot;)
-    public String hello(){
-        return &quot;Hello Spring Boot&quot;;
-    }
-}
-</code></pre>
-<p>:::</p>
-<p>创建启动类，Main方法：</p>
-<p>::: details 启动类</p>
-<pre><code class="language-java">package cn.tx.sboot;
-
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-/**
- * @author liyan
- */
-@SpringBootApplication
-public class FirstSpringApplication {
-
-    public static void main(String[] args) {
-      	// 通过主方法引导启动Spring Boot应用
-        SpringApplication.run(FirstSpringApplication.class, args);
-    }
-}
-</code></pre>
-<p>:::</p>
-<h3 id="创建可执行jar包">创建可执行Jar包</h3>
 ]]></content>
     </entry>
 </feed>
